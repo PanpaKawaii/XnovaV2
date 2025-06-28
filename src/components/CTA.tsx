@@ -7,10 +7,10 @@ const CTA: React.FC = () => {
     <section className="py-20 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-r from-neon-green/10 via-transparent to-light-purple/10"></div>
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-transparent via-card-bg/30 to-transparent"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-transparent via-light-card/30 dark:via-card-bg/30 to-transparent"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-br from-card-bg to-gray-800 rounded-3xl p-8 md:p-16 border border-gray-700 shadow-2xl relative overflow-hidden">
+        <div className="bg-gradient-to-br from-light-card to-gray-100 dark:from-card-bg dark:to-gray-800 rounded-3xl p-8 md:p-16 border border-gray-200 dark:border-gray-700 shadow-2xl relative overflow-hidden transition-colors duration-300">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-8 left-8">
@@ -26,13 +26,13 @@ const CTA: React.FC = () => {
           
           <div className="relative z-10 text-center">
             {/* Header */}
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <h2 className="text-4xl md:text-6xl font-bold text-light-text dark:text-white mb-6 leading-tight">
               Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-lime-400">Level Up</span>
               <br />
               Your Game?
             </h2>
             
-            <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
+            <p className="text-xl text-light-text-secondary dark:text-gray-300 mb-12 max-w-3xl mx-auto">
               Join the revolution in football field booking. Connect with amazing players, 
               book premium fields, and experience football like never before.
             </p>
@@ -61,21 +61,21 @@ const CTA: React.FC = () => {
             <div className="grid md:grid-cols-3 gap-8 text-left">
               <div className="bg-neon-green/10 rounded-2xl p-6 border border-neon-green/20 hover:bg-neon-green/20 transition-colors duration-300">
                 <h3 className="text-xl font-semibold text-neon-green mb-3">Instant Access</h3>
-                <p className="text-gray-300">
+                <p className="text-light-text-secondary dark:text-gray-300">
                   Book any field in seconds with our lightning-fast booking system
                 </p>
               </div>
               
               <div className="bg-light-purple/10 rounded-2xl p-6 border border-light-purple/20 hover:bg-light-purple/20 transition-colors duration-300">
                 <h3 className="text-xl font-semibold text-light-purple mb-3">Smart Matching</h3>
-                <p className="text-gray-300">
+                <p className="text-light-text-secondary dark:text-gray-300">
                   AI-powered teammate matching based on skill level and preferences
                 </p>
               </div>
               
               <div className="bg-yellow-400/10 rounded-2xl p-6 border border-yellow-400/20 hover:bg-yellow-400/20 transition-colors duration-300">
                 <h3 className="text-xl font-semibold text-yellow-400 mb-3">Premium Quality</h3>
-                <p className="text-gray-300">
+                <p className="text-light-text-secondary dark:text-gray-300">
                   Access only the highest-rated fields with professional maintenance
                 </p>
               </div>

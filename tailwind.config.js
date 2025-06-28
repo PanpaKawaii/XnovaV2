@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -8,6 +9,11 @@ export default {
         'light-purple': '#A259FF',
         'dark-bg': '#0F0F23',
         'card-bg': '#1A1A2E',
+        // Light theme colors
+        'light-bg': '#FFFFFF',
+        'light-card': '#F8F9FA',
+        'light-text': '#1A1A1A',
+        'light-text-secondary': '#6B7280',
       },
       fontFamily: {
         'display': ['Inter', 'system-ui', 'sans-serif'],

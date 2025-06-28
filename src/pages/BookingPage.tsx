@@ -74,10 +74,10 @@ const BookingPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-light-text dark:text-white mb-4">
             Book Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-lime-400">Perfect Field</span>
           </h1>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-light-text-secondary dark:text-gray-300">
             Choose from premium football fields across the city
           </p>
         </div>
@@ -85,22 +85,22 @@ const BookingPage: React.FC = () => {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-gradient-to-br from-card-bg to-gray-800 rounded-2xl p-6 border border-gray-700 sticky top-24">
+            <div className="bg-gradient-to-br from-light-card to-gray-100 dark:from-card-bg dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 sticky top-24 transition-colors duration-300">
               <div className="flex items-center space-x-2 mb-6">
                 <Filter className="w-5 h-5 text-neon-green" />
-                <h3 className="text-lg font-semibold text-white">Filters</h3>
+                <h3 className="text-lg font-semibold text-light-text dark:text-white">Filters</h3>
               </div>
 
               {/* Location Filter */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-light-text-secondary dark:text-gray-300 mb-2">
                   <MapPin className="w-4 h-4 inline mr-2" />
                   Location
                 </label>
                 <select
                   value={selectedLocation}
                   onChange={(e) => setSelectedLocation(e.target.value)}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-neon-green focus:outline-none"
+                  className="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-light-text dark:text-white focus:border-neon-green focus:outline-none transition-colors duration-300"
                 >
                   <option value="">All Locations</option>
                   {locations.map(location => (
@@ -111,7 +111,7 @@ const BookingPage: React.FC = () => {
 
               {/* Date Picker */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-light-text-secondary dark:text-gray-300 mb-2">
                   <Calendar className="w-4 h-4 inline mr-2" />
                   Date
                 </label>
@@ -119,13 +119,13 @@ const BookingPage: React.FC = () => {
                   type="date"
                   value={selectedDate.toISOString().split('T')[0]}
                   onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-neon-green focus:outline-none"
+                  className="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-light-text dark:text-white focus:border-neon-green focus:outline-none transition-colors duration-300"
                 />
               </div>
 
               {/* Time Slots */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-light-text-secondary dark:text-gray-300 mb-2">
                   <Clock className="w-4 h-4 inline mr-2" />
                   Time
                 </label>
@@ -137,7 +137,7 @@ const BookingPage: React.FC = () => {
                       className={`px-2 py-1 text-xs rounded-lg transition-colors duration-200 ${
                         selectedTime === time
                           ? 'bg-neon-green text-dark-bg'
-                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                          : 'bg-gray-200 dark:bg-gray-700 text-light-text-secondary dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
                       {time}
@@ -154,7 +154,7 @@ const BookingPage: React.FC = () => {
               {filteredFields.map(field => (
                 <div
                   key={field.id}
-                  className={`bg-gradient-to-br from-card-bg to-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-neon-green/50 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
+                  className={`bg-gradient-to-br from-light-card to-gray-100 dark:from-card-bg dark:to-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-neon-green/50 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
                     !field.available ? 'opacity-60' : ''
                   }`}
                 >
@@ -180,15 +180,15 @@ const BookingPage: React.FC = () => {
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 className="text-xl font-semibold text-white mb-1">{field.name}</h3>
-                        <div className="flex items-center text-gray-300 text-sm">
+                        <h3 className="text-xl font-semibold text-light-text dark:text-white mb-1">{field.name}</h3>
+                        <div className="flex items-center text-light-text-secondary dark:text-gray-300 text-sm">
                           <MapPin className="w-4 h-4 mr-1" />
                           {field.location}
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-neon-green">${field.price}</div>
-                        <div className="text-gray-400 text-sm">per hour</div>
+                        <div className="text-light-text-secondary dark:text-gray-400 text-sm">per hour</div>
                       </div>
                     </div>
 
@@ -196,7 +196,7 @@ const BookingPage: React.FC = () => {
                       {field.features.map(feature => (
                         <span
                           key={feature}
-                          className="bg-gray-700/50 text-gray-300 text-xs px-2 py-1 rounded-full"
+                          className="bg-gray-200/50 dark:bg-gray-700/50 text-light-text-secondary dark:text-gray-300 text-xs px-2 py-1 rounded-full"
                         >
                           {feature}
                         </span>
@@ -212,7 +212,7 @@ const BookingPage: React.FC = () => {
                       className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
                         field.available
                           ? 'bg-gradient-to-r from-neon-green to-lime-400 text-dark-bg hover:from-lime-400 hover:to-neon-green hover:shadow-lg hover:shadow-neon-green/25'
-                          : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                          : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                       }`}
                     >
                       {field.available ? 'Book Now' : 'Unavailable'}
@@ -228,30 +228,30 @@ const BookingPage: React.FC = () => {
       {/* Booking Modal */}
       {showBookingModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-card-bg to-gray-800 rounded-3xl p-8 max-w-md w-full border border-gray-700 animate-slide-up">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">
+          <div className="bg-gradient-to-br from-light-card to-gray-100 dark:from-card-bg dark:to-gray-800 rounded-3xl p-8 max-w-md w-full border border-gray-200 dark:border-gray-700 animate-slide-up transition-colors duration-300">
+            <h3 className="text-2xl font-bold text-light-text dark:text-white mb-6 text-center">
               Confirm Booking
             </h3>
             
             <div className="space-y-4 mb-6">
-              <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                <span className="text-gray-300">Field:</span>
-                <span className="text-white font-medium">Premium Stadium</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-300 dark:border-gray-700">
+                <span className="text-light-text-secondary dark:text-gray-300">Field:</span>
+                <span className="text-light-text dark:text-white font-medium">Premium Stadium</span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                <span className="text-gray-300">Date:</span>
-                <span className="text-white font-medium">{selectedDate.toLocaleDateString()}</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-300 dark:border-gray-700">
+                <span className="text-light-text-secondary dark:text-gray-300">Date:</span>
+                <span className="text-light-text dark:text-white font-medium">{selectedDate.toLocaleDateString()}</span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                <span className="text-gray-300">Time:</span>
-                <span className="text-white font-medium">{selectedTime || '18:00'}</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-300 dark:border-gray-700">
+                <span className="text-light-text-secondary dark:text-gray-300">Time:</span>
+                <span className="text-light-text dark:text-white font-medium">{selectedTime || '18:00'}</span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                <span className="text-gray-300">Duration:</span>
-                <span className="text-white font-medium">2 hours</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-300 dark:border-gray-700">
+                <span className="text-light-text-secondary dark:text-gray-300">Duration:</span>
+                <span className="text-light-text dark:text-white font-medium">2 hours</span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-300">Total:</span>
+                <span className="text-light-text-secondary dark:text-gray-300">Total:</span>
                 <span className="text-2xl font-bold text-neon-green">$150</span>
               </div>
             </div>
@@ -259,7 +259,7 @@ const BookingPage: React.FC = () => {
             <div className="flex space-x-4">
               <button
                 onClick={() => setShowBookingModal(false)}
-                className="flex-1 py-3 border border-gray-600 text-gray-300 rounded-xl hover:bg-gray-700 transition-colors duration-300"
+                className="flex-1 py-3 border border-gray-300 dark:border-gray-600 text-light-text-secondary dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               >
                 Cancel
               </button>

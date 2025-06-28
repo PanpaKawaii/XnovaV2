@@ -34,7 +34,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="bg-gradient-to-br from-card-bg to-gray-800 rounded-3xl p-8 max-w-md w-full border border-gray-700 animate-slide-up relative overflow-hidden">
+      <div className="bg-gradient-to-br from-light-card to-gray-100 dark:from-card-bg dark:to-gray-800 rounded-3xl p-8 max-w-md w-full border border-gray-200 dark:border-gray-700 animate-slide-up relative overflow-hidden transition-colors duration-300">
         {/* Background Pattern */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-neon-green/5 rounded-full blur-2xl"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-light-purple/5 rounded-full blur-2xl"></div>
@@ -42,7 +42,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-300"
+          className="absolute top-4 right-4 text-light-text-secondary dark:text-gray-400 hover:text-light-text dark:hover:text-white transition-colors duration-300"
         >
           <X className="w-6 h-6" />
         </button>
@@ -52,10 +52,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-neon-green/20 to-light-purple/20 rounded-2xl mb-4 border border-neon-green/30">
             <User className="w-8 h-8 text-neon-green" />
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">
+          <h2 className="text-3xl font-bold text-light-text dark:text-white mb-2">
             {isLogin ? 'Welcome Back' : 'Join Xnova'}
           </h2>
-          <p className="text-gray-300">
+          <p className="text-light-text-secondary dark:text-gray-300">
             {isLogin ? 'Sign in to your account' : 'Create your account to get started'}
           </p>
         </div>
@@ -74,56 +74,56 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
         {/* Divider */}
         <div className="flex items-center my-6 relative z-10">
-          <div className="flex-1 border-t border-gray-600"></div>
-          <span className="px-4 text-gray-400 text-sm">or</span>
-          <div className="flex-1 border-t border-gray-600"></div>
+          <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+          <span className="px-4 text-light-text-secondary dark:text-gray-400 text-sm">or</span>
+          <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
           {!isLogin && (
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-light-text-secondary dark:text-gray-400" />
               <input
                 type="text"
                 name="name"
                 placeholder="Full Name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full bg-gray-700/50 border border-gray-600 rounded-xl px-12 py-3 text-white placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-700 transition-all duration-300"
+                className="w-full bg-gray-100/50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-xl px-12 py-3 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-all duration-300"
                 required={!isLogin}
               />
             </div>
           )}
 
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-light-text-secondary dark:text-gray-400" />
             <input
               type="email"
               name="email"
               placeholder="Email Address"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full bg-gray-700/50 border border-gray-600 rounded-xl px-12 py-3 text-white placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-700 transition-all duration-300"
+              className="w-full bg-gray-100/50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-xl px-12 py-3 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-all duration-300"
               required
             />
           </div>
 
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-light-text-secondary dark:text-gray-400" />
             <input
               type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="Password"
               value={formData.password}
               onChange={handleInputChange}
-              className="w-full bg-gray-700/50 border border-gray-600 rounded-xl px-12 pr-12 py-3 text-white placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-700 transition-all duration-300"
+              className="w-full bg-gray-100/50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-xl px-12 pr-12 py-3 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-all duration-300"
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-gray-400 hover:text-light-text dark:hover:text-white transition-colors duration-300"
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -131,14 +131,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
           {!isLogin && (
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-light-text-secondary dark:text-gray-400" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className="w-full bg-gray-700/50 border border-gray-600 rounded-xl px-12 py-3 text-white placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-700 transition-all duration-300"
+                className="w-full bg-gray-100/50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-xl px-12 py-3 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-all duration-300"
                 required={!isLogin}
               />
             </div>
@@ -146,8 +146,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
           {isLogin && (
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center space-x-2 text-gray-300">
-                <input type="checkbox" className="rounded border-gray-600 bg-gray-700" />
+              <label className="flex items-center space-x-2 text-light-text-secondary dark:text-gray-300">
+                <input type="checkbox" className="rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700" />
                 <span>Remember me</span>
               </label>
               <button type="button" className="text-neon-green hover:text-lime-400 transition-colors duration-300">
@@ -166,7 +166,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
         {/* Toggle */}
         <div className="text-center mt-6 relative z-10">
-          <span className="text-gray-300">
+          <span className="text-light-text-secondary dark:text-gray-300">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
           </span>
           <button
