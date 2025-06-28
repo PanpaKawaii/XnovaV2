@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Zap, User, Calendar, Users } from 'lucide-react';
+import ThemeToggle from '../../components/ui/ThemeToggle';
 
-interface NavbarProps {
+interface HeaderProps {
   onLoginClick: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
+const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -26,8 +27,8 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-dark-bg/95 backdrop-blur-lg shadow-lg' : 'bg-transparent'
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-light-bg/95 dark:bg-dark-bg/95 backdrop-blur-lg shadow-lg' : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -37,13 +38,13 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
               <Zap className="w-8 h-8 text-neon-green group-hover:rotate-12 transition-transform duration-300" />
               <div className="absolute inset-0 bg-neon-green/30 blur-lg rounded-full animate-pulse"></div>
             </div>
-            <span className="text-2xl font-bold text-white group-hover:text-neon-green transition-colors duration-300">
+            <span className="text-2xl font-bold text-light-text dark:text-white group-hover:text-neon-green transition-colors duration-300">
               Xnova
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-8">
             {navLinks.map(({ to, icon: Icon, label }) => (
               <Link
                 key={to}
@@ -51,17 +52,18 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
                 className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-neon-green/10 hover:text-neon-green ${
                   location.pathname === to
                     ? 'text-neon-green bg-neon-green/10'
-                    : 'text-gray-300'
+                    : 'text-light-text-secondary dark:text-gray-300'
                 }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{label}</span>
               </Link>
             ))}
-          </div>
+          </nav>
 
           {/* Login Button */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             <button
               onClick={onLoginClick}
               className="flex items-center space-x-2 bg-gradient-to-r from-neon-green to-lime-400 text-dark-bg px-6 py-2 rounded-full font-semibold hover:from-lime-400 hover:to-neon-green transition-all duration-300 hover:shadow-lg hover:shadow-neon-green/25 hover:scale-105"
@@ -74,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white hover:text-neon-green transition-colors duration-300"
+            className="md:hidden text-light-text dark:text-white hover:text-neon-green transition-colors duration-300"
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -83,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-dark-bg/95 backdrop-blur-lg border-t border-gray-800 animate-slide-in">
+        <div className="md:hidden bg-light-bg/95 dark:bg-dark-bg/95 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800 animate-slide-in">
           <div className="px-4 py-6 space-y-4">
             {navLinks.map(({ to, icon: Icon, label }) => (
               <Link
@@ -93,7 +95,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
                   location.pathname === to
                     ? 'text-neon-green bg-neon-green/10'
-                    : 'text-gray-300 hover:text-neon-green hover:bg-neon-green/5'
+                    : 'text-light-text-secondary dark:text-gray-300 hover:text-neon-green hover:bg-neon-green/5'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -110,11 +112,14 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
               <User className="w-5 h-5" />
               <span>Login</span>
             </button>
+            <div className="flex justify-center pt-2">
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 };
 
-export default Navbar;
+export default Header; 

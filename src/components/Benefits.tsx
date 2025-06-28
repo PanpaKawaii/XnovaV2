@@ -87,10 +87,10 @@ const Benefits: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-light-text dark:text-white mb-6">
             Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-lime-400">Xnova</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-light-text-secondary dark:text-gray-300 max-w-3xl mx-auto">
             Experience the future of football field booking with cutting-edge technology and unmatched convenience
           </p>
         </div>
@@ -102,16 +102,16 @@ const Benefits: React.FC = () => {
             return (
               <div
                 key={index}
-                className={`group bg-gradient-to-br from-card-bg to-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-${benefit.color}/50 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-${benefit.color}/10 animate-slide-up`}
+                className={`group bg-gradient-to-br from-light-card to-gray-100 dark:from-card-bg dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:border-${benefit.color}/50 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-${benefit.color}/10 animate-slide-up`}
                 style={{ animationDelay: `${benefit.delay}ms` }}
               >
                 <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-${benefit.color}/10 border border-${benefit.color}/20 mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className={`w-6 h-6 text-${benefit.color}`} />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-neon-green transition-colors duration-300">
+                <h3 className="text-xl font-semibold text-light-text dark:text-white mb-2 group-hover:text-neon-green transition-colors duration-300">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
+                <p className="text-light-text-secondary dark:text-gray-300 group-hover:text-light-text dark:group-hover:text-gray-200 transition-colors duration-300">
                   {benefit.description}
                 </p>
               </div>
@@ -126,7 +126,7 @@ const Benefits: React.FC = () => {
             return (
               <div
                 key={index}
-                className={`relative bg-gradient-to-br from-gray-800 to-card-bg rounded-3xl p-8 border border-gray-700 hover:border-neon-green/50 transition-all duration-500 group animate-fade-in`}
+                className={`relative bg-gradient-to-br from-gray-100 to-light-card dark:from-gray-800 dark:to-card-bg rounded-3xl p-8 border border-gray-200 dark:border-gray-700 hover:border-neon-green/50 transition-all duration-500 group animate-fade-in`}
                 style={{ animationDelay: `${600 + index * 200}ms` }}
               >
                 <div className="absolute top-4 right-4 text-neon-green font-mono text-sm bg-neon-green/10 px-3 py-1 rounded-full border border-neon-green/20">
@@ -137,16 +137,16 @@ const Benefits: React.FC = () => {
                   <div className="bg-neon-green/10 rounded-2xl p-4 border border-neon-green/20 group-hover:bg-neon-green/20 transition-colors duration-300">
                     <Icon className="w-8 h-8 text-neon-green" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white group-hover:text-neon-green transition-colors duration-300">
+                  <h3 className="text-2xl font-bold text-light-text dark:text-white group-hover:text-neon-green transition-colors duration-300">
                     {feature.title}
                   </h3>
                 </div>
                 
-                <p className="text-gray-300 text-lg group-hover:text-gray-200 transition-colors duration-300">
+                <p className="text-light-text-secondary dark:text-gray-300 text-lg group-hover:text-light-text dark:group-hover:text-gray-200 transition-colors duration-300">
                   {feature.description}
                 </p>
                 
-                <div className="mt-6 h-1 bg-gray-700 rounded-full overflow-hidden">
+                <div className="mt-6 h-1 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div className="h-full bg-gradient-to-r from-neon-green to-lime-400 rounded-full group-hover:animate-pulse transition-all duration-500"></div>
                 </div>
               </div>
