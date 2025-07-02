@@ -39,33 +39,33 @@ export const FindTeammatePage: React.FC = () => {
   const communityRef = useScrollAnimation();
 
   const skillLevels = [
-    { value: 'beginner', label: 'Beginner', icon: Target, color: 'bg-green-500' },
-    { value: 'intermediate', label: 'Intermediate', icon: Zap, color: 'bg-blue-500' },
-    { value: 'advanced', label: 'Advanced', icon: Trophy, color: 'bg-purple-500' },
-    { value: 'pro', label: 'Professional', icon: Crown, color: 'bg-yellow-500' }
+    { value: 'beginner', label: 'Mới bắt đầu', icon: Target, color: 'bg-green-500' },
+    { value: 'intermediate', label: 'Trung bình', icon: Zap, color: 'bg-blue-500' },
+    { value: 'advanced', label: 'Nâng cao', icon: Trophy, color: 'bg-purple-500' },
+    { value: 'pro', label: 'Chuyên nghiệp', icon: Crown, color: 'bg-yellow-500' }
   ];
 
   const locations = [
-    'District 1, Ho Chi Minh City',
-    'District 3, Ho Chi Minh City',
-    'District 7, Ho Chi Minh City',
-    'Binh Thanh District, Ho Chi Minh City',
-    'Thu Duc City, Ho Chi Minh City'
+    'Quận 1, TP. Hồ Chí Minh',
+    'Quận 3, TP. Hồ Chí Minh',
+    'Quận 7, TP. Hồ Chí Minh',
+    'Quận Bình Thạnh, TP. Hồ Chí Minh',
+    'TP. Thủ Đức, TP. Hồ Chí Minh'
   ];
 
   const timeSlots = [
-    'Morning (6:00 - 12:00)',
-    'Afternoon (12:00 - 18:00)',
-    'Evening (18:00 - 22:00)'
+    'Buổi sáng (6:00 - 12:00)',
+    'Buổi chiều (12:00 - 18:00)',
+    'Buổi tối (18:00 - 22:00)'
   ];
 
   const matches: Match[] = [
     {
       id: '1',
-      title: 'Sunday League Match',
+      title: 'Trận đấu Chủ Nhật',
       date: '2025-01-15',
       time: '16:00',
-      location: 'District 1, Ho Chi Minh City',
+      location: 'Quận 1, TP. Hồ Chí Minh',
       playersNeeded: 3,
       currentPlayers: 8,
       skillLevel: 'intermediate',
@@ -75,17 +75,17 @@ export const FindTeammatePage: React.FC = () => {
         name: 'Alex Johnson',
         avatar: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
         skillLevel: 'intermediate',
-        location: 'District 1',
-        bio: 'Passionate footballer, playing for 8 years',
+        location: 'Quận 1',
+        bio: 'Đam mê bóng đá, chơi 8 năm',
         rating: 4.8
       }
     },
     {
       id: '2',
-      title: 'Friendly 7v7 Game',
+      title: 'Giao hữu 7v7',
       date: '2025-01-16',
       time: '18:30',
-      location: 'District 7, Ho Chi Minh City',
+      location: 'Quận 7, TP. Hồ Chí Minh',
       playersNeeded: 2,
       currentPlayers: 12,
       skillLevel: 'beginner',
@@ -95,17 +95,17 @@ export const FindTeammatePage: React.FC = () => {
         name: 'Maria Santos',
         avatar: 'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
         skillLevel: 'beginner',
-        location: 'District 7',
-        bio: 'Just started playing, love the game!',
+        location: 'Quận 7',
+        bio: 'Mới bắt đầu chơi, rất yêu bóng đá!',
         rating: 4.5
       }
     },
     {
       id: '3',
-      title: 'Competitive Match',
+      title: 'Trận đấu cạnh tranh',
       date: '2025-01-17',
       time: '20:00',
-      location: 'Thu Duc City, Ho Chi Minh City',
+      location: 'TP. Thủ Đức, TP. Hồ Chí Minh',
       playersNeeded: 1,
       currentPlayers: 21,
       skillLevel: 'advanced',
@@ -115,8 +115,8 @@ export const FindTeammatePage: React.FC = () => {
         name: 'David Kim',
         avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
         skillLevel: 'advanced',
-        location: 'Thu Duc',
-        bio: 'Former semi-pro player, tactical minded',
+        location: 'TP. Thủ Đức',
+        bio: 'Cựu cầu thủ bán chuyên, tư duy chiến thuật',
         rating: 4.9
       }
     }
@@ -128,8 +128,8 @@ export const FindTeammatePage: React.FC = () => {
       name: 'Alex Johnson',
       avatar: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
       skillLevel: 'intermediate',
-      location: 'District 1, Ho Chi Minh City',
-      bio: 'Passionate midfielder with 8 years of experience. Love tactical play and team coordination.',
+      location: 'Quận 1, TP. Hồ Chí Minh',
+      bio: 'Tiền vệ đam mê với 8 năm kinh nghiệm. Yêu thích chiến thuật và phối hợp đồng đội.',
       rating: 4.8
     },
     {
@@ -137,8 +137,8 @@ export const FindTeammatePage: React.FC = () => {
       name: 'Maria Santos',
       avatar: 'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
       skillLevel: 'beginner',
-      location: 'District 7, Ho Chi Minh City',
-      bio: 'New to football but eager to learn! Looking for friendly matches and patient teammates.',
+      location: 'Quận 7, TP. Hồ Chí Minh',
+      bio: 'Mới chơi bóng nhưng rất ham học hỏi! Tìm kiếm trận giao hữu và đồng đội kiên nhẫn.',
       rating: 4.5
     },
     {
@@ -146,8 +146,8 @@ export const FindTeammatePage: React.FC = () => {
       name: 'David Kim',
       avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
       skillLevel: 'advanced',
-      location: 'Thu Duc City, Ho Chi Minh City',
-      bio: 'Former semi-professional striker. Excellent finishing and pace. Looking for competitive matches.',
+      location: 'TP. Thủ Đức, TP. Hồ Chí Minh',
+      bio: 'Tiền đạo bán chuyên. Dứt điểm tốt và tốc độ. Tìm kiếm trận đấu cạnh tranh.',
       rating: 4.9
     },
     {
@@ -155,8 +155,8 @@ export const FindTeammatePage: React.FC = () => {
       name: 'Sarah Chen',
       avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
       skillLevel: 'pro',
-      location: 'District 3, Ho Chi Minh City',
-      bio: 'Professional defender with national team experience. Technical skills and leadership qualities.',
+      location: 'Quận 3, TP. Hồ Chí Minh',
+      bio: 'Hậu vệ chuyên nghiệp từng thi đấu đội tuyển quốc gia. Kỹ thuật và lãnh đạo tốt.',
       rating: 5.0
     },
     {
@@ -164,8 +164,8 @@ export const FindTeammatePage: React.FC = () => {
       name: 'Michael Torres',
       avatar: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
       skillLevel: 'intermediate',
-      location: 'Binh Thanh District, Ho Chi Minh City',
-      bio: 'Versatile player who can play multiple positions. Great team player with positive attitude.',
+      location: 'Quận Bình Thạnh, TP. Hồ Chí Minh',
+      bio: 'Cầu thủ đa năng, chơi được nhiều vị trí. Đồng đội tốt, tinh thần tích cực.',
       rating: 4.7
     },
     {
@@ -173,8 +173,8 @@ export const FindTeammatePage: React.FC = () => {
       name: 'Emma Wilson',
       avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
       skillLevel: 'advanced',
-      location: 'District 1, Ho Chi Minh City',
-      bio: 'Creative midfielder with excellent passing range. Love organizing plays and creating chances.',
+      location: 'Quận 1, TP. Hồ Chí Minh',
+      bio: 'Tiền vệ sáng tạo, chuyền bóng tốt. Yêu thích tổ chức lối chơi và tạo cơ hội.',
       rating: 4.8
     }
   ];
@@ -223,20 +223,20 @@ export const FindTeammatePage: React.FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-in fade-in slide-in-from-bottom duration-1000">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Find Your Perfect
-              <span className="block text-[#A8FF00] animate-pulse">Football Team</span>
+              Tìm Đội Bóng
+              <span className="block text-[#A8FF00] animate-pulse">Phù Hợp</span>
             </h1>
             <p className="text-xl text-purple-100 mb-8 max-w-3xl mx-auto">
-              Connect with players at your skill level, join exciting matches, and build lasting friendships through the beautiful game.
+              Kết nối với cầu thủ cùng trình độ, tham gia trận đấu hấp dẫn và xây dựng tình bạn lâu dài qua bóng đá.
             </p>
             <div className="flex justify-center gap-4">
               <Button size="lg" glow className="bg-[#A8FF00] text-black hover:bg-[#96E600]">
                 <Users className="mr-2" size={20} />
-                Join Community
+                Tham Gia Cộng Đồng
               </Button>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-purple-800">
                 <Heart className="mr-2" size={20} />
-                Create Match
+                Tạo Trận Đấu
               </Button>
             </div>
           </div>
@@ -250,7 +250,7 @@ export const FindTeammatePage: React.FC = () => {
             <div className="bg-[#A8FF00] p-2 rounded-lg">
               <Filter size={24} className="text-black" />
             </div>
-            <h2 className="text-2xl font-bold text-light-text dark:text-white">Find Your Match</h2>
+            <h2 className="text-2xl font-bold text-light-text dark:text-white">Tìm trận đấu phù hợp</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -259,7 +259,7 @@ export const FindTeammatePage: React.FC = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-text-secondary dark:text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Search matches or players..."
+                placeholder="Tìm kiếm trận đấu hoặc cầu thủ..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 rounded-xl focus:border-[#A8FF00] focus:ring-2 focus:ring-[#A8FF00]/20 outline-none transition-all duration-300"
@@ -272,7 +272,7 @@ export const FindTeammatePage: React.FC = () => {
               onChange={(e) => setSelectedSkillLevel(e.target.value)}
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-light-text dark:text-white rounded-xl focus:border-[#A8FF00] focus:ring-2 focus:ring-[#A8FF00]/20 outline-none transition-all duration-300"
             >
-              <option value="">All Skill Levels</option>
+              <option value="">Tất cả trình độ</option>
               {skillLevels.map((level) => (
                 <option key={level.value} value={level.value}>
                   {level.label}
@@ -286,7 +286,7 @@ export const FindTeammatePage: React.FC = () => {
               onChange={(e) => setSelectedLocation(e.target.value)}
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-light-text dark:text-white rounded-xl focus:border-[#A8FF00] focus:ring-2 focus:ring-[#A8FF00]/20 outline-none transition-all duration-300"
             >
-              <option value="">All Locations</option>
+              <option value="">Tất cả khu vực</option>
               {locations.map((location) => (
                 <option key={location} value={location}>
                   {location}
@@ -300,7 +300,7 @@ export const FindTeammatePage: React.FC = () => {
               onChange={(e) => setSelectedTime(e.target.value)}
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-light-text dark:text-white rounded-xl focus:border-[#A8FF00] focus:ring-2 focus:ring-[#A8FF00]/20 outline-none transition-all duration-300"
             >
-              <option value="">Any Time</option>
+              <option value="">Mọi khung giờ</option>
               {timeSlots.map((time) => (
                 <option key={time} value={time}>
                   {time}
@@ -318,7 +318,7 @@ export const FindTeammatePage: React.FC = () => {
                 <div className="bg-[#A259FF] p-2 rounded-lg">
                   <Trophy size={24} className="text-white" />
                 </div>
-                Available Matches ({filteredMatches.length})
+                Trận đấu khả dụng ({filteredMatches.length})
               </h2>
 
               <div className="space-y-6">
@@ -351,7 +351,7 @@ export const FindTeammatePage: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-2">
                               <Users size={16} />
-                              <span>{match.currentPlayers}/22 players</span>
+                              <span>{match.currentPlayers}/22 cầu thủ</span>
                             </div>
                           </div>
                         </div>
@@ -377,7 +377,7 @@ export const FindTeammatePage: React.FC = () => {
                             <div className="font-semibold text-light-text dark:text-white">{match.organizer.name}</div>
                             <div className="flex items-center gap-1 text-sm text-light-text-secondary dark:text-gray-600">
                               <Star size={14} className="text-yellow-400" fill="currentColor" />
-                              <span className="text-yellow-600 dark:text-yellow-400">{match.organizer.rating} rating</span>
+                              <span className="text-yellow-600 dark:text-yellow-400">{match.organizer.rating} điểm</span>
                             </div>
                           </div>
                         </div>
@@ -388,14 +388,14 @@ export const FindTeammatePage: React.FC = () => {
                               ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400' 
                               : 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400'
                           }`}>
-                            {match.playersNeeded === 0 ? 'Full' : `${match.playersNeeded} spots left`}
+                            {match.playersNeeded === 0 ? 'Đã đủ' : `${match.playersNeeded} chỗ trống`}
                           </div>
                           <Button 
                             size="sm" 
                             disabled={match.playersNeeded === 0}
                             className="bg-[#A8FF00] text-black hover:bg-[#96E600]"
                           >
-                            Join Match
+                            Tham gia trận đấu
                           </Button>
                         </div>
                       </div>
@@ -413,7 +413,7 @@ export const FindTeammatePage: React.FC = () => {
                 <div className="bg-[#A8FF00] p-2 rounded-lg">
                   <UserPlus size={24} className="text-black" />
                 </div>
-                Top Players
+                Cầu thủ nổi bật
               </h2>
 
               <div className="space-y-4">
@@ -470,19 +470,19 @@ export const FindTeammatePage: React.FC = () => {
                 </div>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Join the Xnova Player Community
+                Tham gia cộng đồng cầu thủ Xnova
               </h2>
               <p className="text-xl mb-8 opacity-80 max-w-2xl mx-auto">
-                Connect with over 10,000+ football enthusiasts, organize matches, and take your game to the next level.
+                Kết nối với hơn 10.000+ người yêu bóng đá, tổ chức trận đấu và nâng tầm kỹ năng của bạn.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" variant="secondary" glow>
                   <TrendingUp className="mr-2" size={20} />
-                  Join Community
+                  Tham gia cộng đồng
                 </Button>
                 <Button size="lg" variant="outline" className="border-black text-black hover:bg-black hover:text-white">
                   <Award className="mr-2" size={20} />
-                  Create Match
+                  Tạo trận đấu
                 </Button>
               </div>
             </div>
@@ -502,7 +502,7 @@ export const FindTeammatePage: React.FC = () => {
               <h2 className="text-2xl font-bold text-light-text dark:text-white mb-2">{selectedMatch.title}</h2>
               <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-medium ${getSkillColor(selectedMatch.skillLevel)}`}>
                 {React.createElement(getSkillIcon(selectedMatch.skillLevel), { size: 20 })}
-                {selectedMatch.skillLevel.charAt(0).toUpperCase() + selectedMatch.skillLevel.slice(1)} Level
+                {selectedMatch.skillLevel.charAt(0).toUpperCase() + selectedMatch.skillLevel.slice(1)} Trình độ
               </div>
             </div>
 
@@ -511,14 +511,14 @@ export const FindTeammatePage: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Calendar className="text-[#A8FF00]" size={20} />
                   <div>
-                    <div className="font-semibold text-light-text dark:text-white">Date</div>
+                    <div className="font-semibold text-light-text dark:text-white">Ngày</div>
                     <div className="text-light-text-secondary dark:text-gray-600">{new Date(selectedMatch.date).toLocaleDateString()}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Clock className="text-[#A8FF00]" size={20} />
                   <div>
-                    <div className="font-semibold text-light-text dark:text-white">Time</div>
+                    <div className="font-semibold text-light-text dark:text-white">Giờ</div>
                     <div className="text-light-text-secondary dark:text-gray-600">{selectedMatch.time}</div>
                   </div>
                 </div>
@@ -527,14 +527,14 @@ export const FindTeammatePage: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <MapPin className="text-[#A8FF00]" size={20} />
                   <div>
-                    <div className="font-semibold text-light-text dark:text-white">Location</div>
+                    <div className="font-semibold text-light-text dark:text-white">Khu vực</div>
                     <div className="text-light-text-secondary dark:text-gray-600">{selectedMatch.location}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Users className="text-[#A8FF00]" size={20} />
                   <div>
-                    <div className="font-semibold text-light-text dark:text-white">Players</div>
+                    <div className="font-semibold text-light-text dark:text-white">Cầu thủ</div>
                     <div className="text-light-text-secondary dark:text-gray-600">{selectedMatch.currentPlayers}/22</div>
                   </div>
                 </div>
@@ -542,7 +542,7 @@ export const FindTeammatePage: React.FC = () => {
             </div>
 
             <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
-              <h3 className="font-bold mb-3 text-light-text dark:text-white">Match Organizer</h3>
+              <h3 className="font-bold mb-3 text-light-text dark:text-white">Người tổ chức</h3>
               <div className="flex items-center gap-3">
                 <img
                   src={selectedMatch.organizer.avatar}
@@ -553,19 +553,19 @@ export const FindTeammatePage: React.FC = () => {
                   <div className="font-semibold text-light-text dark:text-white">{selectedMatch.organizer.name}</div>
                   <div className="flex items-center gap-1 text-sm text-light-text-secondary dark:text-gray-600">
                     <Star size={14} className="text-yellow-400" fill="currentColor" />
-                    <span className="text-yellow-600 dark:text-yellow-400">{selectedMatch.organizer.rating} rating</span>
+                    <span className="text-yellow-600 dark:text-yellow-400">{selectedMatch.organizer.rating} điểm</span>
                   </div>
                 </div>
                 <Button size="sm" variant="outline">
                   <MessageCircle size={16} className="mr-1" />
-                  Chat
+                  Nhắn tin
                 </Button>
               </div>
             </div>
 
             <div className="bg-[#A8FF00]/10 p-4 rounded-xl">
               <div className="flex justify-between items-center">
-                <span className="text-lg font-semibold text-light-text dark:text-white">Entry Fee:</span>
+                <span className="text-lg font-semibold text-light-text dark:text-white">Phí tham gia:</span>
                 <span className="text-2xl font-bold text-[#A8FF00]">{formatPrice(selectedMatch.price)}</span>
               </div>
             </div>
@@ -577,10 +577,11 @@ export const FindTeammatePage: React.FC = () => {
                 glow
                 disabled={selectedMatch.playersNeeded === 0}
               >
-                {selectedMatch.playersNeeded === 0 ? 'Match Full' : 'Join Match'}
+                {selectedMatch.playersNeeded === 0 ? 'Đã đủ' : 'Tham gia trận đấu'}
               </Button>
               <Button variant="outline" size="lg">
                 <MessageCircle size={20} />
+                Nhắn tin
               </Button>
             </div>
           </div>
@@ -604,7 +605,7 @@ export const FindTeammatePage: React.FC = () => {
               <h2 className="text-2xl font-bold text-light-text dark:text-white mb-2">{showPlayerProfile.name}</h2>
               <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-medium ${getSkillColor(showPlayerProfile.skillLevel)}`}>
                 {React.createElement(getSkillIcon(showPlayerProfile.skillLevel), { size: 20 })}
-                {showPlayerProfile.skillLevel.charAt(0).toUpperCase() + showPlayerProfile.skillLevel.slice(1)} Player
+                {showPlayerProfile.skillLevel.charAt(0).toUpperCase() + showPlayerProfile.skillLevel.slice(1)} Cầu thủ
               </div>
             </div>
 
@@ -614,7 +615,7 @@ export const FindTeammatePage: React.FC = () => {
                   <Star className="text-yellow-400" size={20} fill="currentColor" />
                   <span className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{showPlayerProfile.rating}</span>
                 </div>
-                <div className="text-sm text-light-text-secondary dark:text-gray-600">Rating</div>
+                <div className="text-sm text-light-text-secondary dark:text-gray-600">Đánh giá</div>
               </div>
               <div className="text-center">
                 <div className="flex items-center gap-1 justify-center mb-1">
@@ -625,14 +626,14 @@ export const FindTeammatePage: React.FC = () => {
             </div>
 
             <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
-              <h3 className="font-bold mb-2 text-light-text dark:text-white">About</h3>
+              <h3 className="font-bold mb-2 text-light-text dark:text-white">Giới thiệu</h3>
               <p className="text-light-text-secondary dark:text-gray-600">{showPlayerProfile.bio}</p>
             </div>
 
             <div className="flex gap-4">
               <Button className="flex-1" size="lg" glow>
                 <UserPlus size={20} className="mr-2" />
-                Invite to Match
+                Mời tham gia trận
               </Button>
               <Button variant="outline" size="lg">
                 <MessageCircle size={20} />

@@ -53,10 +53,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <User className="w-8 h-8 text-neon-green" />
           </div>
           <h2 className="text-3xl font-bold text-light-text dark:text-white mb-2">
-            {isLogin ? 'Welcome Back' : 'Join Xnova'}
+            {isLogin ? 'Chào mừng trở lại' : 'Tham gia Xnova'}
           </h2>
           <p className="text-light-text-secondary dark:text-gray-300">
-            {isLogin ? 'Sign in to your account' : 'Create your account to get started'}
+            {isLogin ? 'Đăng nhập vào tài khoản của bạn' : 'Tạo tài khoản để bắt đầu'}
           </p>
         </div>
 
@@ -64,18 +64,18 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         <div className="space-y-3 mb-6 relative z-10">
           <button className="w-full flex items-center justify-center space-x-3 bg-white text-gray-800 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-300">
             <Chrome className="w-5 h-5" />
-            <span>Continue with Google</span>
+            <span>Tiếp tục với Google</span>
           </button>
           <button className="w-full flex items-center justify-center space-x-3 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-300">
             <Facebook className="w-5 h-5" />
-            <span>Continue with Facebook</span>
+            <span>Tiếp tục với Facebook</span>
           </button>
         </div>
 
         {/* Divider */}
         <div className="flex items-center my-6 relative z-10">
           <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
-          <span className="px-4 text-light-text-secondary dark:text-gray-400 text-sm">or</span>
+          <span className="px-4 text-light-text-secondary dark:text-gray-400 text-sm">hoặc</span>
           <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
         </div>
 
@@ -87,7 +87,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 name="name"
-                placeholder="Full Name"
+                placeholder="Họ và tên"
                 value={formData.name}
                 onChange={handleInputChange}
                 className="w-full bg-gray-100/50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-xl px-12 py-3 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-all duration-300"
@@ -101,7 +101,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <input
               type="email"
               name="email"
-              placeholder="Email Address"
+              placeholder="Địa chỉ Email"
               value={formData.email}
               onChange={handleInputChange}
               className="w-full bg-gray-100/50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-xl px-12 py-3 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-all duration-300"
@@ -114,7 +114,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <input
               type={showPassword ? 'text' : 'password'}
               name="password"
-              placeholder="Password"
+              placeholder="Mật khẩu"
               value={formData.password}
               onChange={handleInputChange}
               className="w-full bg-gray-100/50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-xl px-12 pr-12 py-3 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-all duration-300"
@@ -135,7 +135,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="confirmPassword"
-                placeholder="Confirm Password"
+                placeholder="Nhập lại mật khẩu"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 className="w-full bg-gray-100/50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-xl px-12 py-3 text-light-text dark:text-white placeholder-light-text-secondary dark:placeholder-gray-400 focus:border-neon-green focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-all duration-300"
@@ -148,10 +148,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center space-x-2 text-light-text-secondary dark:text-gray-300">
                 <input type="checkbox" className="rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700" />
-                <span>Remember me</span>
+                <span>Ghi nhớ đăng nhập</span>
               </label>
               <button type="button" className="text-neon-green hover:text-lime-400 transition-colors duration-300">
-                Forgot password?
+                Quên mật khẩu?
               </button>
             </div>
           )}
@@ -160,20 +160,20 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             type="submit"
             className="w-full bg-gradient-to-r from-neon-green to-lime-400 text-dark-bg py-3 rounded-xl font-semibold hover:from-lime-400 hover:to-neon-green transition-all duration-300 hover:shadow-lg hover:shadow-neon-green/25"
           >
-            {isLogin ? 'Sign In' : 'Create Account'}
+            {isLogin ? 'Đăng Nhập' : 'Tạo Tài Khoản'}
           </button>
         </form>
 
         {/* Toggle */}
         <div className="text-center mt-6 relative z-10">
           <span className="text-light-text-secondary dark:text-gray-300">
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            {isLogin ? "Chưa có tài khoản? " : "Đã có tài khoản? "}
           </span>
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-light-purple hover:text-pink-400 font-semibold transition-colors duration-300"
           >
-            {isLogin ? 'Sign up' : 'Sign in'}
+            {isLogin ? 'Đăng ký' : 'Đăng nhập'}
           </button>
         </div>
       </div>

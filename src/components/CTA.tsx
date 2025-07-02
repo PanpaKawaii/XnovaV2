@@ -27,14 +27,14 @@ const CTA: React.FC = () => {
           <div className="relative z-10 text-center">
             {/* Header */}
             <h2 className="text-4xl md:text-6xl font-bold text-light-text dark:text-white mb-6 leading-tight">
-              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-lime-400">Level Up</span>
+              Sẵn Sàng <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-lime-400">Nâng Tầm</span>
               <br />
-              Your Game?
+              Trận Đấu Của Bạn?
             </h2>
             
             <p className="text-xl text-light-text-secondary dark:text-gray-300 mb-12 max-w-3xl mx-auto">
-              Join the revolution in football field booking. Connect with amazing players, 
-              book premium fields, and experience football like never before.
+              Tham gia cuộc cách mạng đặt sân bóng đá. Kết nối với cộng đồng cầu thủ tuyệt vời,
+              đặt sân chất lượng và trải nghiệm bóng đá như chưa từng có.
             </p>
             
             {/* CTA Buttons */}
@@ -44,7 +44,7 @@ const CTA: React.FC = () => {
                 className="group flex items-center space-x-3 bg-gradient-to-r from-neon-green to-lime-400 text-dark-bg px-10 py-5 rounded-full font-bold text-lg hover:from-lime-400 hover:to-neon-green transition-all duration-300 hover:shadow-xl hover:shadow-neon-green/25 hover:scale-105"
               >
                 <Zap className="w-6 h-6 group-hover:rotate-180 transition-transform duration-500" />
-                <span>Start Booking</span>
+                <span>Bắt Đầu Đặt Sân</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
               </Link>
               
@@ -53,30 +53,30 @@ const CTA: React.FC = () => {
                 className="group flex items-center space-x-3 border-2 border-light-purple text-light-purple px-10 py-5 rounded-full font-bold text-lg hover:bg-light-purple hover:text-white transition-all duration-300 hover:shadow-xl hover:shadow-light-purple/25"
               >
                 <Users className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
-                <span>Find Community</span>
+                <span>Tìm Cộng Đồng</span>
               </Link>
             </div>
             
             {/* Features Grid */}
             <div className="grid md:grid-cols-3 gap-8 text-left">
               <div className="bg-neon-green/10 rounded-2xl p-6 border border-neon-green/20 hover:bg-neon-green/20 transition-colors duration-300">
-                <h3 className="text-xl font-semibold text-neon-green mb-3">Instant Access</h3>
+                <h3 className="text-xl font-semibold text-neon-green mb-3">Truy Cập Nhanh</h3>
                 <p className="text-light-text-secondary dark:text-gray-300">
-                  Book any field in seconds with our lightning-fast booking system
+                  Đặt sân chỉ trong vài giây với hệ thống đặt sân siêu tốc
                 </p>
               </div>
               
               <div className="bg-light-purple/10 rounded-2xl p-6 border border-light-purple/20 hover:bg-light-purple/20 transition-colors duration-300">
-                <h3 className="text-xl font-semibold text-light-purple mb-3">Smart Matching</h3>
+                <h3 className="text-xl font-semibold text-light-purple mb-3">Ghép Thông Minh</h3>
                 <p className="text-light-text-secondary dark:text-gray-300">
-                  AI-powered teammate matching based on skill level and preferences
+                  Ghép đồng đội bằng AI dựa trên trình độ và sở thích
                 </p>
               </div>
               
               <div className="bg-yellow-400/10 rounded-2xl p-6 border border-yellow-400/20 hover:bg-yellow-400/20 transition-colors duration-300">
-                <h3 className="text-xl font-semibold text-yellow-400 mb-3">Premium Quality</h3>
+                <h3 className="text-xl font-semibold text-yellow-400 mb-3">Chất Lượng Cao Cấp</h3>
                 <p className="text-light-text-secondary dark:text-gray-300">
-                  Access only the highest-rated fields with professional maintenance
+                  Chỉ tiếp cận các sân được đánh giá cao, bảo trì chuyên nghiệp
                 </p>
               </div>
             </div>

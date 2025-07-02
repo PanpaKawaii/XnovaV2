@@ -71,10 +71,10 @@ const Testimonials: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-light-text dark:text-white mb-6">
-            What Players <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-purple to-pink-400">Say</span>
+            Cầu Thủ <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-purple to-pink-400">Nói Gì</span>
           </h2>
           <p className="text-xl text-light-text-secondary dark:text-gray-300 max-w-3xl mx-auto">
-            Join thousands of satisfied players who have transformed their football experience with Xnova
+            Tham gia cùng hàng ngàn cầu thủ hài lòng đã thay đổi trải nghiệm bóng đá với Xnova
           </p>
         </div>
 
@@ -159,19 +159,19 @@ const Testimonials: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-neon-green mb-2">4.9</div>
-            <div className="text-light-text-secondary dark:text-gray-300 text-sm">Average Rating</div>
+            <div className="text-light-text-secondary dark:text-gray-300 text-sm">Đánh Giá Trung Bình</div>
           </div>
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-light-purple mb-2">15k+</div>
-            <div className="text-light-text-secondary dark:text-gray-300 text-sm">Happy Customers</div>
+            <div className="text-light-text-secondary dark:text-gray-300 text-sm">Khách Hàng Hài Lòng</div>
           </div>
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">98%</div>
-            <div className="text-light-text-secondary dark:text-gray-300 text-sm">Satisfaction Rate</div>
+            <div className="text-light-text-secondary dark:text-gray-300 text-sm">Tỉ Lệ Hài Lòng</div>
           </div>
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">24/7</div>
-            <div className="text-light-text-secondary dark:text-gray-300 text-sm">Support</div>
+            <div className="text-light-text-secondary dark:text-gray-300 text-sm">Hỗ Trợ 24/7</div>
           </div>
         </div>
       </div>

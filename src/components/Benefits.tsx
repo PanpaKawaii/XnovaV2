@@ -15,43 +15,43 @@ const Benefits: React.FC = () => {
   const benefits = [
     {
       icon: Clock,
-      title: 'Instant Booking',
-      description: 'Book your field in seconds with real-time availability',
+      title: 'Đặt Sân Ngay',
+      description: 'Đặt sân chỉ trong vài giây với tình trạng sân cập nhật theo thời gian thực',
       color: 'neon-green',
       delay: '0'
     },
     {
       icon: Shield,
-      title: 'Secure Payments',
-      description: 'Protected transactions with money-back guarantee',
+      title: 'Thanh Toán An Toàn',
+      description: 'Giao dịch bảo vệ với cam kết hoàn tiền',
       color: 'light-purple',
       delay: '100'
     },
     {
       icon: Users,
-      title: 'Find Teammates',
-      description: 'Connect with players of your skill level instantly',
+      title: 'Tìm Đồng Đội',
+      description: 'Kết nối với cầu thủ cùng trình độ ngay lập tức',
       color: 'yellow-400',
       delay: '200'
     },
     {
       icon: MapPin,
-      title: 'Prime Locations',
-      description: 'Access premium fields in the best locations',
+      title: 'Vị Trí Đắc Địa',
+      description: 'Tiếp cận các sân bóng chất lượng ở vị trí thuận tiện nhất',
       color: 'blue-400',
       delay: '300'
     },
     {
       icon: Star,
-      title: 'Rated Fields',
-      description: 'Only the highest quality, rated fields',
+      title: 'Sân Được Đánh Giá',
+      description: 'Chỉ những sân chất lượng cao, được đánh giá tốt',
       color: 'orange-400',
       delay: '400'
     },
     {
       icon: Trophy,
-      title: 'Tournaments',
-      description: 'Join exclusive tournaments and competitions',
+      title: 'Giải Đấu',
+      description: 'Tham gia các giải đấu và cuộc thi độc quyền',
       color: 'pink-400',
       delay: '500'
     }
@@ -60,21 +60,21 @@ const Benefits: React.FC = () => {
   const features = [
     {
       icon: Calendar,
-      title: 'Smart Scheduling',
-      description: 'AI-powered scheduling that adapts to your preferences',
-      stats: '99.9% uptime'
+      title: 'Lên Lịch Thông Minh',
+      description: 'Lên lịch bằng AI phù hợp với sở thích của bạn',
+      stats: '99.9% hoạt động'
     },
     {
       icon: Target,
-      title: 'Skill Matching',
-      description: 'Advanced algorithm matches you with similar skill levels',
-      stats: '95% satisfaction'
+      title: 'Ghép Trình Độ',
+      description: 'Thuật toán nâng cao ghép bạn với người cùng trình độ',
+      stats: '95% hài lòng'
     },
     {
       icon: Zap,
-      title: 'Instant Notifications',
-      description: 'Real-time updates on bookings and teammate requests',
-      stats: '<1s response'
+      title: 'Thông Báo Nhanh',
+      description: 'Cập nhật tức thì về đặt sân và yêu cầu đồng đội',
+      stats: '<1s phản hồi'
     }
   ];
 
@@ -88,10 +88,10 @@ const Benefits: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-light-text dark:text-white mb-6">
-            Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-lime-400">Xnova</span>
+            Vì Sao Chọn <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-lime-400">Xnova</span>
           </h2>
           <p className="text-xl text-light-text-secondary dark:text-gray-300 max-w-3xl mx-auto">
-            Experience the future of football field booking with cutting-edge technology and unmatched convenience
+            Trải nghiệm tương lai của việc đặt sân bóng với công nghệ hiện đại và sự tiện lợi vượt trội
           </p>
         </div>
 

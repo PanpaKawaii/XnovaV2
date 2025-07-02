@@ -21,8 +21,8 @@ const Footer: React.FC = () => {
               </span>
             </Link>
             <p className="text-light-text-secondary dark:text-gray-300 mb-6 max-w-md">
-              Your premier destination for football field bookings and team coordination. 
-              Connect with players, book fields, and enjoy the beautiful game.
+              Điểm đến hàng đầu cho đặt sân bóng đá và kết nối đội nhóm.
+              Kết nối cầu thủ, đặt sân và tận hưởng bóng đá đỉnh cao.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-light-text-secondary dark:text-gray-300 hover:text-neon-green transition-colors duration-300">
@@ -39,21 +39,21 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-light-text dark:text-white mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold text-light-text dark:text-white mb-4">Liên kết nhanh</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="text-light-text-secondary dark:text-gray-300 hover:text-neon-green transition-colors duration-300">
-                  Home
+                  Trang chủ
                 </Link>
               </li>
               <li>
                 <Link to="/booking" className="text-light-text-secondary dark:text-gray-300 hover:text-neon-green transition-colors duration-300">
-                  Book Field
+                  Đặt Sân
                 </Link>
               </li>
               <li>
                 <Link to="/find-teammates" className="text-light-text-secondary dark:text-gray-300 hover:text-neon-green transition-colors duration-300">
-                  Find Teammates
+                  Tìm Đồng Đội
                 </Link>
               </li>
             </ul>
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold text-light-text dark:text-white mb-4">Contact</h3>
+            <h3 className="text-lg font-semibold text-light-text dark:text-white mb-4">Liên hệ</h3>
             <ul className="space-y-3">
               <li className="flex items-center space-x-2 text-light-text-secondary dark:text-gray-300">
                 <Mail className="w-4 h-4 text-neon-green" />
@@ -73,7 +73,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center space-x-2 text-light-text-secondary dark:text-gray-300">
                 <MapPin className="w-4 h-4 text-neon-green" />
-                <span>Ho Chi Minh City, Vietnam</span>
+                <span>Thành phố Hồ Chí Minh, Việt Nam</span>
               </li>
             </ul>
           </div>
@@ -86,10 +86,10 @@ const Footer: React.FC = () => {
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="text-light-text-secondary dark:text-gray-300 hover:text-neon-green transition-colors duration-300 text-sm">
-              Privacy Policy
+              Chính sách bảo mật
             </a>
             <a href="#" className="text-light-text-secondary dark:text-gray-300 hover:text-neon-green transition-colors duration-300 text-sm">
-              Terms of Service
+              Điều khoản sử dụng
             </a>
           </div>
         </div>
