@@ -23,6 +23,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { Match, Player } from '../types';
+import FindTeammateGround from '../asset/FindTeammateGround.jpg';
 
 export const FindTeammatePage: React.FC = () => {
   const [selectedSkillLevel, setSelectedSkillLevel] = useState('');
@@ -217,8 +218,8 @@ export const FindTeammatePage: React.FC = () => {
         ref={heroRef}
         className="relative bg-gradient-to-br from-[#A259FF] via-purple-600 to-purple-800 text-white py-16 lg:py-24 overflow-hidden"
       >
-        <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/274422/pexels-photo-274422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-transparent" />
+        <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: `url(${FindTeammateGround})` }} />
+        <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 to-transparent" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-in fade-in slide-in-from-bottom duration-1000">
