@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Layout } from './layouts';
 import Homepage from './pages/Homepage';
-import BookingPage from './pages/BookingPage';
-import {FindTeammatePage} from './pages/FindTeammatePage';
+import BookingPage from './pages/BookingPageV2';
+import FindTeammatePage from './pages/FindTeammatePage';
 import LoginModal from './components/LoginModal';
 import { ThemeProvider } from './hooks/ThemeContext';
 

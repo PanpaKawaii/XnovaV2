@@ -646,3 +646,5 @@ export const FindTeammatePage: React.FC = () => {
     </div>
   );
 };
+
+export default FindTeammatePage;
