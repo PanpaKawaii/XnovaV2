@@ -1,8 +1,7 @@
-import { Venue } from '../settings/venue';
 import { getNextDays } from '../app/hooks/dateUtils.js';
 
 // Generate mock availability for the next 30 days
-const generateAvailability = (venueId: string) => {
+const generateAvailability = (venueId) => {
   const dates = getNextDays(30);
   const timeSlots = [
     '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
@@ -20,7 +19,7 @@ const generateAvailability = (venueId: string) => {
   }));
 };
 
-export const venues: Venue[] = [
+export const venues = [
   {
     id: '1',
     name: 'Sân Cầu Lông Premium Quận 1',

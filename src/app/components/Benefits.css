@@ -1,0 +1,427 @@
+/* Benefits Section */
+.benefits {
+  padding: 5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefits__bg-element {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(3rem);
+}
+
+.benefits__bg-element--top-left {
+  top: 0;
+  left: 25%;
+  width: 16rem;
+  height: 16rem;
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.benefits__bg-element--bottom-right {
+  bottom: 0;
+  right: 25%;
+  width: 20rem;
+  height: 20rem;
+  background: rgba(147, 51, 234, 0.05);
+}
+
+.benefits__container {
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .benefits__container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .benefits__container {
+    padding: 0 2rem;
+  }
+}
+
+/* Header */
+.benefits__header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.benefits__title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .benefits__title {
+    font-size: 3rem;
+  }
+}
+
+.benefits__title-highlight {
+  background: linear-gradient(to right, #22c55e, #a3e635);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.benefits__subtitle {
+  font-size: 1.25rem;
+  color: #6b7280;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+/* Dark theme */
+[data-theme="dark"] .benefits__title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .benefits__subtitle {
+  color: #d1d5db;
+}
+
+/* Benefits Grid */
+.benefits__grid {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
+  .benefits__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .benefits__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.benefits__card {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  transition: all 0.5s ease;
+  animation: slideUp 0.8s ease-out forwards;
+  opacity: 0;
+  transform: translateY(2rem);
+}
+
+.benefits__card:hover {
+  transform: translateY(-0.5rem) scale(1.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Color variations */
+.benefits__card--neon-green:hover {
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(34, 197, 94, 0.1);
+}
+
+.benefits__card--light-purple:hover {
+  border-color: rgba(147, 51, 234, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.1);
+}
+
+.benefits__card--yellow-400:hover {
+  border-color: rgba(250, 204, 21, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(250, 204, 21, 0.1);
+}
+
+.benefits__card--blue-400:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(96, 165, 250, 0.1);
+}
+
+.benefits__card--orange-400:hover {
+  border-color: rgba(251, 146, 60, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(251, 146, 60, 0.1);
+}
+
+.benefits__card--pink-400:hover {
+  border-color: rgba(244, 114, 182, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(244, 114, 182, 0.1);
+}
+
+[data-theme="dark"] .benefits__card {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  border-color: #4b5563;
+}
+
+/* Icon */
+.benefits__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  border: 1px solid;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.benefits__card:hover .benefits__icon {
+  transform: scale(1.1);
+}
+
+.benefits__icon--neon-green {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.benefits__icon--light-purple {
+  background: rgba(147, 51, 234, 0.1);
+  border-color: rgba(147, 51, 234, 0.2);
+}
+
+.benefits__icon--yellow-400 {
+  background: rgba(250, 204, 21, 0.1);
+  border-color: rgba(250, 204, 21, 0.2);
+}
+
+.benefits__icon--blue-400 {
+  background: rgba(96, 165, 250, 0.1);
+  border-color: rgba(96, 165, 250, 0.2);
+}
+
+.benefits__icon--orange-400 {
+  background: rgba(251, 146, 60, 0.1);
+  border-color: rgba(251, 146, 60, 0.2);
+}
+
+.benefits__icon--pink-400 {
+  background: rgba(244, 114, 182, 0.1);
+  border-color: rgba(244, 114, 182, 0.2);
+}
+
+.benefits__icon-svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.benefits__icon--neon-green .benefits__icon-svg {
+  color: #22c55e;
+}
+
+.benefits__icon--light-purple .benefits__icon-svg {
+  color: #9333ea;
+}
+
+.benefits__icon--yellow-400 .benefits__icon-svg {
+  color: #facc15;
+}
+
+.benefits__icon--blue-400 .benefits__icon-svg {
+  color: #60a5fa;
+}
+
+.benefits__icon--orange-400 .benefits__icon-svg {
+  color: #fb923c;
+}
+
+.benefits__icon--pink-400 .benefits__icon-svg {
+  color: #f472b6;
+}
+
+/* Card content */
+.benefits__card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.benefits__card:hover .benefits__card-title {
+  color: #22c55e;
+}
+
+.benefits__card-description {
+  color: #6b7280;
+  transition: color 0.3s ease;
+}
+
+.benefits__card:hover .benefits__card-description {
+  color: #374151;
+}
+
+[data-theme="dark"] .benefits__card-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .benefits__card-description {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .benefits__card:hover .benefits__card-description {
+  color: #f3f4f6;
+}
+
+/* Features */
+.benefits__features {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .benefits__features {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.benefits__feature {
+  position: relative;
+  background: linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+  transition: all 0.5s ease;
+  animation: fadeIn 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.benefits__feature:hover {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+[data-theme="dark"] .benefits__feature {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  border-color: #4b5563;
+}
+
+.benefits__feature-stats {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: #22c55e;
+  font-family: monospace;
+  font-size: 0.875rem;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.benefits__feature-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.benefits__feature-icon {
+  background: rgba(34, 197, 94, 0.1);
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.benefits__feature:hover .benefits__feature-icon {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.benefits__feature-icon-svg {
+  width: 2rem;
+  height: 2rem;
+  color: #22c55e;
+}
+
+.benefits__feature-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #374151;
+  transition: color 0.3s ease;
+}
+
+.benefits__feature:hover .benefits__feature-title {
+  color: #22c55e;
+}
+
+.benefits__feature-description {
+  font-size: 1.125rem;
+  color: #6b7280;
+  transition: color 0.3s ease;
+}
+
+.benefits__feature:hover .benefits__feature-description {
+  color: #374151;
+}
+
+[data-theme="dark"] .benefits__feature-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .benefits__feature-description {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .benefits__feature:hover .benefits__feature-description {
+  color: #f3f4f6;
+}
+
+.benefits__feature-progress {
+  margin-top: 1.5rem;
+  height: 0.25rem;
+  background: #d1d5db;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .benefits__feature-progress {
+  background: #4b5563;
+}
+
+.benefits__feature-progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, #22c55e, #a3e635);
+  border-radius: 9999px;
+  width: 100%;
+  transition: all 0.5s ease;
+}
+
+.benefits__feature:hover .benefits__feature-progress-bar {
+  animation: pulse 2s infinite;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
