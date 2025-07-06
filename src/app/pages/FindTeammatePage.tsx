@@ -22,8 +22,8 @@ import {
   Globe,
   TrendingUp
 } from 'lucide-react';
-import { Match, Player } from '../types';
-import FindTeammateGround from '../asset/FindTeammateGround.jpg';
+import { Match, Player } from '../../settings';
+import FindTeammateGround from '../assets/FindTeammateGround.jpg';
 
 export const FindTeammatePage: React.FC = () => {
   const [selectedSkillLevel, setSelectedSkillLevel] = useState('');

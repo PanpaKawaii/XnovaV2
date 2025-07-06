@@ -1,3 +1,6 @@
+export { appConfig } from './config';
+
+// Type definitions
 export interface Field {
   id: string;
   name: string;

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Layout } from './layout';
+import { Layout } from './layouts';
 import Homepage from './pages/Homepage';
 import BookingPage from './pages/BookingPage';
 import {FindTeammatePage} from './pages/FindTeammatePage';
 import LoginModal from './components/LoginModal';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { ThemeProvider } from './hooks/ThemeContext';
 
 function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);

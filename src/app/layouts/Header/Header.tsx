@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Zap, User, Calendar, Users } from 'lucide-react';
 import ThemeToggle from '../../components/ui/ThemeToggle';
-import LOGO from '../../asset/LOGO.png';
-import VNFlag from '../../asset/vn.jpg';
-import UKFlag from '../../asset/uk.png';
+import LOGO from '../../assets/LOGO.png';
+import VNFlag from '../../assets/vn.jpg';
+import UKFlag from '../../assets/uk.png';
 import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {

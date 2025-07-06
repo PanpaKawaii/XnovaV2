@@ -1,9 +1,8 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { PlayCircle, ArrowRight, Star, Users, MapPin } from 'lucide-react';
-import HomeBackGround from '../asset/HomeBackGround.jpg';
+import HomeBackGround from '../assets/HomeBackGround.jpg';
 
-const Hero: React.FC = () => {
+const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Elements */}
