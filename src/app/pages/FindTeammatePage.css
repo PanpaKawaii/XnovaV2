@@ -52,26 +52,16 @@
   text-align: center;
 }
 
-@media (min-width: 640px) {
-  .find-teammate-page__hero-content {
-    padding: 0 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .find-teammate-page__hero-content {
-    padding: 0 2rem;
-  }
-}
-
 .find-teammate-page__hero-text {
-  animation: fadeIn 1s ease-out;
+  max-width: 48rem;
+  margin: 0 auto;
 }
 
 .find-teammate-page__hero-title {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+  line-height: 1.1;
 }
 
 @media (min-width: 768px) {
@@ -94,11 +84,9 @@
 
 .find-teammate-page__hero-description {
   font-size: 1.25rem;
-  color: #e9d5ff;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 2rem;
   max-width: 48rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .find-teammate-page__hero-buttons {
@@ -138,19 +126,7 @@
   padding: 3rem 1rem;
 }
 
-@media (min-width: 640px) {
-  .find-teammate-page__container {
-    padding: 3rem 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .find-teammate-page__container {
-    padding: 3rem 2rem;
-  }
-}
-
-/* Filters */
+/* Filters Section */
 .find-teammate-page__filters {
   padding: 1.5rem;
   margin-bottom: 3rem;
@@ -202,7 +178,6 @@
   }
 }
 
-/* Search */
 .find-teammate-page__search-wrapper {
   position: relative;
 }
@@ -221,22 +196,22 @@
 
 .find-teammate-page__search-input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
   border: 1px solid #d1d5db;
-  background: #f3f4f6;
+  background: #f9fafb;
   color: #374151;
   border-radius: 0.75rem;
-  transition: all 0.3s ease;
-}
-
-.find-teammate-page__search-input:focus {
   outline: none;
-  border-color: #a8ff00;
-  box-shadow: 0 0 0 2px rgba(168, 255, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
 .find-teammate-page__search-input::placeholder {
   color: #6b7280;
+}
+
+.find-teammate-page__search-input:focus {
+  border-color: #a8ff00;
+  box-shadow: 0 0 0 2px rgba(168, 255, 0, 0.2);
 }
 
 [data-theme="dark"] .find-teammate-page__search-input {
@@ -249,19 +224,22 @@
   color: #9ca3af;
 }
 
-/* Select */
+[data-theme="dark"] .find-teammate-page__search-input:focus {
+  border-color: #a8ff00;
+}
+
 .find-teammate-page__select {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem;
   border: 1px solid #d1d5db;
-  background: #f3f4f6;
+  background: #f9fafb;
   color: #374151;
   border-radius: 0.75rem;
+  outline: none;
   transition: all 0.3s ease;
 }
 
 .find-teammate-page__select:focus {
-  outline: none;
   border-color: #a8ff00;
   box-shadow: 0 0 0 2px rgba(168, 255, 0, 0.2);
 }
@@ -272,34 +250,33 @@
   color: #ffffff;
 }
 
-.find-teammate-page__select option {
-  background: #f3f4f6;
-  color: #374151;
+[data-theme="dark"] .find-teammate-page__select:focus {
+  border-color: #a8ff00;
 }
 
-[data-theme="dark"] .find-teammate-page__select option {
-  background: #374151;
-  color: #ffffff;
+/* Main Content Layout */
+.find-teammate-page__main-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
 
-/* Section */
-.find-teammate-page__matches,
-.find-teammate-page__players,
-.find-teammate-page__community {
-  margin-bottom: 4rem;
+@media (min-width: 1024px) {
+  .find-teammate-page__main-content {
+    grid-template-columns: 2fr 1fr;
+  }
 }
 
+/* Section Headers */
 .find-teammate-page__section-header {
-  text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .find-teammate-page__section-title {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-size: 2rem;
+  gap: 0.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #374151;
   margin-bottom: 0.5rem;
@@ -309,112 +286,129 @@
   color: #ffffff;
 }
 
-.find-teammate-page__section-icon {
-  color: #a8ff00;
+.find-teammate-page__section-title-icon {
+  background: #a259ff;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  color: #ffffff;
+}
+
+.find-teammate-page__players-section .find-teammate-page__section-title-icon {
+  background: #a8ff00;
+  color: #000000;
 }
 
 .find-teammate-page__section-subtitle {
-  font-size: 1.125rem;
   color: #6b7280;
+  font-size: 0.875rem;
 }
 
 [data-theme="dark"] .find-teammate-page__section-subtitle {
   color: #d1d5db;
 }
 
-/* Matches Grid */
-.find-teammate-page__matches-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+/* Matches Section */
+.find-teammate-page__matches-section {
+  animation: fadeIn 1s ease-out;
+}
+
+.find-teammate-page__matches-list {
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .find-teammate-page__matches-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .find-teammate-page__matches-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 /* Match Card */
 .find-teammate-page__match-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: slideInLeft 0.6s ease-out;
 }
 
 .find-teammate-page__match-card:hover {
   transform: translateY(-0.25rem);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.find-teammate-page__match-header {
+.find-teammate-page__match-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
 }
 
+.find-teammate-page__match-info {
+  flex: 1;
+}
+
 .find-teammate-page__match-title {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #374151;
-  flex: 1;
+  margin-bottom: 0.75rem;
 }
 
 [data-theme="dark"] .find-teammate-page__match-title {
   color: #ffffff;
 }
 
-.find-teammate-page__match-skill {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #ffffff;
+.find-teammate-page__match-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
 }
 
-.find-teammate-page__match-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+[data-theme="dark"] .find-teammate-page__match-details-grid {
+  color: #d1d5db;
 }
 
 .find-teammate-page__match-detail {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-[data-theme="dark"] .find-teammate-page__match-detail {
-  color: #d1d5db;
 }
 
 .find-teammate-page__match-detail-icon {
   color: #a8ff00;
+  flex-shrink: 0;
+}
+
+.find-teammate-page__match-meta {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.find-teammate-page__match-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.find-teammate-page__match-price {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #a8ff00;
+}
+
+.find-teammate-page__match-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .find-teammate-page__match-organizer {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  background: #f9fafb;
-  border-radius: 0.5rem;
-}
-
-[data-theme="dark"] .find-teammate-page__match-organizer {
-  background: #1f2937;
 }
 
 .find-teammate-page__organizer-avatar {
@@ -443,76 +437,90 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.875rem;
-  color: #6b7280;
-}
-
-[data-theme="dark"] .find-teammate-page__organizer-rating {
-  color: #d1d5db;
+  color: #fbbf24;
 }
 
 .find-teammate-page__organizer-star {
-  color: #fbbf24;
   fill: currentColor;
 }
 
-.find-teammate-page__match-footer {
+.find-teammate-page__match-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
 }
 
-.find-teammate-page__match-price {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #a8ff00;
+.find-teammate-page__match-status {
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.find-teammate-page__match-status--available {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+[data-theme="dark"] .find-teammate-page__match-status--available {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.find-teammate-page__match-status--full {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+[data-theme="dark"] .find-teammate-page__match-status--full {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
 }
 
 .find-teammate-page__match-join-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   background: #a8ff00;
   color: #000000;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
 }
 
 .find-teammate-page__match-join-btn:hover {
   background: #96e600;
 }
 
-/* Players Grid */
-.find-teammate-page__players-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
+.find-teammate-page__match-join-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-@media (min-width: 768px) {
-  .find-teammate-page__players-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Players Section */
+.find-teammate-page__players-section {
+  animation: fadeIn 1s ease-out;
 }
 
-@media (min-width: 1024px) {
-  .find-teammate-page__players-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.find-teammate-page__players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 /* Player Card */
 .find-teammate-page__player-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: slideInRight 0.6s ease-out;
 }
 
 .find-teammate-page__player-card:hover {
-  transform: translateY(-0.25rem);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-0.125rem);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .find-teammate-page__player-header {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1rem;
 }
 
 .find-teammate-page__player-avatar {
@@ -527,8 +535,7 @@
 }
 
 .find-teammate-page__player-name {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #374151;
   margin-bottom: 0.25rem;
 }
@@ -541,7 +548,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: #6b7280;
 }
 
@@ -549,261 +556,385 @@
   color: #d1d5db;
 }
 
+.find-teammate-page__player-meta {
+  text-align: right;
+}
+
 .find-teammate-page__player-skill {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   color: #ffffff;
+  margin-bottom: 0.25rem;
 }
 
-.find-teammate-page__player-bio {
-  color: #6b7280;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-}
-
-[data-theme="dark"] .find-teammate-page__player-bio {
-  color: #d1d5db;
-}
-
-.find-teammate-page__player-stats {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  background: #f9fafb;
-  border-radius: 0.5rem;
-}
-
-[data-theme="dark"] .find-teammate-page__player-stats {
-  background: #1f2937;
-}
-
-.find-teammate-page__player-stat {
+.find-teammate-page__player-rating {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: #6b7280;
+  justify-content: flex-end;
 }
 
-[data-theme="dark"] .find-teammate-page__player-stat {
-  color: #d1d5db;
+.find-teammate-page__player-rating-star {
+  color: #fbbf24;
+  fill: currentColor;
 }
 
-.find-teammate-page__player-stat-icon {
-  color: #a8ff00;
-}
-
-.find-teammate-page__player-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.find-teammate-page__player-view-btn,
-.find-teammate-page__player-connect-btn {
-  flex: 1;
-}
-
-.find-teammate-page__player-connect-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: #a8ff00;
-  color: #000000;
-}
-
-.find-teammate-page__player-connect-btn:hover {
-  background: #96e600;
-}
-
-/* Community */
+/* Community Section */
 .find-teammate-page__community {
   background: linear-gradient(135deg, #a8ff00 0%, #84cc16 100%);
   color: #000000;
   padding: 3rem;
   border-radius: 1rem;
   text-align: center;
+  margin-top: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.find-teammate-page__community::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://images.pexels.com/photos/274422/pexels-photo-274422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
 }
 
 .find-teammate-page__community-content {
-  max-width: 64rem;
+  position: relative;
+  max-width: 32rem;
   margin: 0 auto;
 }
 
+.find-teammate-page__community-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.find-teammate-page__community-icon svg {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 50%;
+}
+
 .find-teammate-page__community-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .find-teammate-page__community-title {
+    font-size: 2.5rem;
+  }
 }
 
 .find-teammate-page__community-subtitle {
   font-size: 1.25rem;
   margin-bottom: 2rem;
   opacity: 0.8;
+  max-width: 32rem;
 }
 
-.find-teammate-page__stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+.find-teammate-page__community-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
 }
 
-@media (min-width: 768px) {
-  .find-teammate-page__stats-grid {
-    grid-template-columns: repeat(4, 1fr);
+@media (min-width: 640px) {
+  .find-teammate-page__community-actions {
+    flex-direction: row;
   }
 }
 
-.find-teammate-page__stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.find-teammate-page__stat-icon {
-  width: 3rem;
-  height: 3rem;
-  opacity: 0.8;
-}
-
-.find-teammate-page__stat-content {
-  text-align: center;
-}
-
-.find-teammate-page__stat-number {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-}
-
-.find-teammate-page__stat-label {
-  font-size: 0.875rem;
-  opacity: 0.8;
-}
-
-/* Modals */
+/* Modal Styles */
 .find-teammate-page__match-modal,
 .find-teammate-page__player-modal {
-  padding: 1rem;
+  padding: 1.5rem;
+}
+
+.find-teammate-page__modal-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .find-teammate-page__modal-title {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
   color: #374151;
+  margin-bottom: 0.5rem;
 }
 
 [data-theme="dark"] .find-teammate-page__modal-title {
   color: #ffffff;
 }
 
-.find-teammate-page__modal-details {
+.find-teammate-page__modal-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.find-teammate-page__modal-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
-.find-teammate-page__modal-details p {
-  margin-bottom: 0.5rem;
-  color: #6b7280;
-}
-
-[data-theme="dark"] .find-teammate-page__modal-details p {
-  color: #d1d5db;
-}
-
-.find-teammate-page__modal-actions {
+.find-teammate-page__modal-detail {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   gap: 0.75rem;
 }
 
-.find-teammate-page__modal-join-btn,
-.find-teammate-page__modal-connect-btn {
-  background: #a8ff00;
-  color: #000000;
+.find-teammate-page__modal-detail-icon {
+  color: #a8ff00;
 }
 
-.find-teammate-page__modal-join-btn:hover,
-.find-teammate-page__modal-connect-btn:hover {
-  background: #96e600;
+.find-teammate-page__modal-detail-label {
+  font-weight: 600;
+  color: #374151;
 }
 
-/* Player Modal Specific */
-.find-teammate-page__modal-player-header {
+[data-theme="dark"] .find-teammate-page__modal-detail-label {
+  color: #ffffff;
+}
+
+.find-teammate-page__modal-detail-value {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .find-teammate-page__modal-detail-value {
+  color: #d1d5db;
+}
+
+.find-teammate-page__modal-organizer {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+[data-theme="dark"] .find-teammate-page__modal-organizer {
+  background: #374151;
+}
+
+.find-teammate-page__modal-organizer-title {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #374151;
+}
+
+[data-theme="dark"] .find-teammate-page__modal-organizer-title {
+  color: #ffffff;
+}
+
+.find-teammate-page__modal-organizer-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 0.75rem;
 }
 
-.find-teammate-page__modal-player-avatar {
-  width: 4rem;
-  height: 4rem;
+.find-teammate-page__modal-organizer-avatar {
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.find-teammate-page__modal-player-name {
-  font-size: 1.25rem;
+.find-teammate-page__modal-organizer-details {
+  flex: 1;
+}
+
+.find-teammate-page__modal-organizer-name {
   font-weight: 600;
   color: #374151;
   margin-bottom: 0.25rem;
+}
+
+[data-theme="dark"] .find-teammate-page__modal-organizer-name {
+  color: #ffffff;
+}
+
+.find-teammate-page__modal-organizer-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #fbbf24;
+}
+
+.find-teammate-page__modal-organizer-star {
+  fill: currentColor;
+}
+
+.find-teammate-page__modal-price {
+  background: rgba(168, 255, 0, 0.1);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.find-teammate-page__modal-price-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+[data-theme="dark"] .find-teammate-page__modal-price-label {
+  color: #ffffff;
+}
+
+.find-teammate-page__modal-price-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #a8ff00;
+}
+
+.find-teammate-page__modal-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Player Modal Specific */
+.find-teammate-page__modal-player-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.find-teammate-page__modal-player-avatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1rem;
+}
+
+.find-teammate-page__modal-player-info {
+  text-align: center;
+}
+
+.find-teammate-page__modal-player-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 0.5rem;
 }
 
 [data-theme="dark"] .find-teammate-page__modal-player-name {
   color: #ffffff;
 }
 
-.find-teammate-page__modal-player-location {
-  color: #6b7280;
-  font-size: 0.875rem;
-}
-
-[data-theme="dark"] .find-teammate-page__modal-player-location {
-  color: #d1d5db;
-}
-
-.find-teammate-page__modal-player-bio {
-  color: #6b7280;
-  margin-bottom: 1rem;
-}
-
-[data-theme="dark"] .find-teammate-page__modal-player-bio {
-  color: #d1d5db;
+.find-teammate-page__modal-player-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .find-teammate-page__modal-player-stats {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
-.find-teammate-page__modal-stat {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.find-teammate-page__modal-player-stat {
+  text-align: center;
+}
+
+.find-teammate-page__modal-player-stat-icon {
+  color: #a8ff00;
+  margin-bottom: 0.25rem;
+}
+
+.find-teammate-page__modal-player-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fbbf24;
+  display: block;
+}
+
+.find-teammate-page__modal-player-stat-label {
+  font-size: 0.875rem;
   color: #6b7280;
 }
 
-[data-theme="dark"] .find-teammate-page__modal-stat {
+[data-theme="dark"] .find-teammate-page__modal-player-stat-label {
   color: #d1d5db;
 }
 
-.find-teammate-page__modal-stat-icon {
-  color: #a8ff00;
+.find-teammate-page__modal-player-bio {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
-.find-teammate-page__modal-connect-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+[data-theme="dark"] .find-teammate-page__modal-player-bio {
+  background: #374151;
+}
+
+.find-teammate-page__modal-player-bio-title {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+[data-theme="dark"] .find-teammate-page__modal-player-bio-title {
+  color: #ffffff;
+}
+
+.find-teammate-page__modal-player-bio-text {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .find-teammate-page__modal-player-bio-text {
+  color: #d1d5db;
+}
+
+/* Skill Level Colors */
+.bg-green-500 {
+  background-color: #10b981;
+}
+
+.bg-blue-500 {
+  background-color: #3b82f6;
+}
+
+.bg-purple-500 {
+  background-color: #8b5cf6;
+}
+
+.bg-yellow-500 {
+  background-color: #f59e0b;
+}
+
+.bg-gray-500 {
+  background-color: #6b7280;
 }
 
 /* Animations */
@@ -818,11 +949,69 @@
   }
 }
 
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
   }
   50% {
     opacity: 0.8;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .find-teammate-page__match-card-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .find-teammate-page__match-meta {
+    text-align: left;
+  }
+  
+  .find-teammate-page__match-card-footer {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .find-teammate-page__match-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .find-teammate-page__modal-details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .find-teammate-page__modal-actions {
+    flex-direction: column;
+  }
+  
+  .find-teammate-page__modal-player-stats {
+    flex-direction: column;
+    gap: 1rem;
   }
 }
