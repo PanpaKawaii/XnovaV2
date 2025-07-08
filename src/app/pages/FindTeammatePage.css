@@ -1,12 +1,8 @@
 /* FindTeammatePage */
 .find-teammate-page {
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--bg-primary);
   transition: background-color 0.3s ease;
-}
-
-[data-theme="dark"] .find-teammate-page {
-  background: #0f172a;
 }
 
 /* Hero Section */
@@ -153,11 +149,7 @@
 .find-teammate-page__filters-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #374151;
-}
-
-[data-theme="dark"] .find-teammate-page__filters-title {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .find-teammate-page__filters-grid {
@@ -187,71 +179,43 @@
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #6b7280;
-}
-
-[data-theme="dark"] .find-teammate-page__search-icon {
-  color: #9ca3af;
+  color: var(--text-tertiary);
 }
 
 .find-teammate-page__search-input {
   width: 100%;
   padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
-  color: #374151;
+  border: 1px solid var(--border-secondary);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   border-radius: 0.75rem;
   outline: none;
   transition: all 0.3s ease;
 }
 
 .find-teammate-page__search-input::placeholder {
-  color: #6b7280;
+  color: var(--text-tertiary);
 }
 
 .find-teammate-page__search-input:focus {
-  border-color: #a8ff00;
-  box-shadow: 0 0 0 2px rgba(168, 255, 0, 0.2);
-}
-
-[data-theme="dark"] .find-teammate-page__search-input {
-  border-color: #4b5563;
-  background: #374151;
-  color: #ffffff;
-}
-
-[data-theme="dark"] .find-teammate-page__search-input::placeholder {
-  color: #9ca3af;
-}
-
-[data-theme="dark"] .find-teammate-page__search-input:focus {
-  border-color: #a8ff00;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-primary);
 }
 
 .find-teammate-page__select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
-  color: #374151;
+  border: 1px solid var(--border-secondary);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   border-radius: 0.75rem;
   outline: none;
   transition: all 0.3s ease;
 }
 
 .find-teammate-page__select:focus {
-  border-color: #a8ff00;
-  box-shadow: 0 0 0 2px rgba(168, 255, 0, 0.2);
-}
-
-[data-theme="dark"] .find-teammate-page__select {
-  border-color: #4b5563;
-  background: #374151;
-  color: #ffffff;
-}
-
-[data-theme="dark"] .find-teammate-page__select:focus {
-  border-color: #a8ff00;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-primary);
 }
 
 /* Main Content Layout */
@@ -278,12 +242,8 @@
   gap: 0.75rem;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #374151;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
-}
-
-[data-theme="dark"] .find-teammate-page__section-title {
-  color: #ffffff;
 }
 
 .find-teammate-page__section-title-icon {
@@ -299,12 +259,8 @@
 }
 
 .find-teammate-page__section-subtitle {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 0.875rem;
-}
-
-[data-theme="dark"] .find-teammate-page__section-subtitle {
-  color: #d1d5db;
 }
 
 /* Matches Section */

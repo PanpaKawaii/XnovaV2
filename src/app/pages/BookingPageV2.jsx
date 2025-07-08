@@ -15,11 +15,10 @@ const BookingPage = () => {
   const [preSelectedTimeSlot, setPreSelectedTimeSlot] = useState('');
   const [sortBy, setSortBy] = useState('relevant');
   
-  // Filter states with date as primary filter - removed venueType and showAdvancedFilters
   const [filters, setFilters] = useState({
     selectedDate: getTodayDate(),
     maxPrice: 1000000,
-    venueType: 'Cầu lông', // Fixed to badminton only
+    venueType: 'Cầu lông',
     location: '',
     amenities: [],
     rating: 0,
@@ -39,26 +38,22 @@ const BookingPage = () => {
 
   const filteredVenues = useMemo(() => {
     let filteredResults = venues.filter(venue => {
-      // Search filter
       const matchesSearch = venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            venue.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            venue.type.toLowerCase().includes(searchTerm.toLowerCase());
       
-      // Basic filters - removed venueType filter since it's fixed to badminton
       const matchesLocation = !filters.location || filters.location === 'Tất cả khu vực' || 
                              venue.location.includes(filters.location);
       const matchesAmenities = filters.amenities.length === 0 || 
                               filters.amenities.every(amenity => venue.amenities.includes(amenity));
       const matchesRating = venue.rating >= filters.rating;
 
-      // Date and time availability filter
       const dayAvailability = venue.availability.find(avail => avail.date === filters.selectedDate);
       if (!dayAvailability) return false;
 
       const availableSlots = dayAvailability.timeSlots.filter(slot => slot.isAvailable);
       if (availableSlots.length === 0) return false;
 
-      // Time slot filter
       let matchesTimeSlot = true;
       if (filters.timeSlot && filters.timeSlot !== 'Mọi khung giờ') {
         const timeRange = filters.timeSlot.split('-');
@@ -73,7 +68,6 @@ const BookingPage = () => {
         }
       }
 
-      // Price filter (check against available slots)
       const matchesPrice = availableSlots.some(slot => 
         (slot.price || venue.basePrice) <= filters.maxPrice
       );
@@ -82,7 +76,6 @@ const BookingPage = () => {
              matchesAmenities && matchesRating && matchesTimeSlot && matchesPrice;
     });
 
-    // Apply sorting
     switch (sortBy) {
       case 'price-low':
         filteredResults = filteredResults.sort((a, b) => a.basePrice - b.basePrice);
@@ -102,12 +95,11 @@ const BookingPage = () => {
         break;
       case 'relevant':
       default:
-        // Keep original order for relevance
         break;
     }
 
     return filteredResults;
-  }, [venues, searchTerm, filters, sortBy]);
+  }, [searchTerm, filters, sortBy]);
 
   const handleVenueBook = (venueId, _selectedDate, selectedTimeSlot) => {
     setSelectedVenue(venueId);
@@ -143,7 +135,7 @@ const BookingPage = () => {
     setFilters({
       selectedDate: getTodayDate(),
       maxPrice: 1000000,
-      venueType: '',
+      venueType: 'Cầu lông',
       location: '',
       amenities: [],
       rating: 0,
@@ -179,7 +171,6 @@ const BookingPage = () => {
               Hệ thống đặt sân thông minh với thông tin thời gian thực!
             </p>
             
-            {/* Scroll Indicator */}
             <div className="booking-page__scroll-indicator">
               <div className="booking-page__scroll-hint">
                 <span className="booking-page__scroll-text">🏸 Lướt xuống để bắt đầu đặt sân</span>
@@ -198,32 +189,19 @@ const BookingPage = () => {
           <div className="booking-page__filters-header">
             <div className="booking-page__filters-title">
               <Filter size={18} className="booking-page__filters-icon" />
-              <span>Bộ lọc tìm kiếm</span>
-              {activeFiltersCount > 0 && (
-                <span className="booking-page__filters-count">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </div>
-            <div className="booking-page__filters-results">
-              <span className="booking-page__results-text">
-                Tìm thấy {filteredVenues.length} sân
-              </span>
-              <Target size={16} className="booking-page__results-icon" />
+              Tìm sân cầu lông phù hợp
             </div>
           </div>
-
-          {/* Filter Controls */}
+          
           <div className="booking-page__filter-controls">
             <div className="booking-page__filter-row">
-              {/* Search */}
               <div className="booking-page__filter-group">
                 <label className="booking-page__filter-label">Tìm kiếm</label>
                 <div className="booking-page__search-wrapper">
                   <Search size={16} className="booking-page__search-icon" />
                   <input
                     type="text"
-                    placeholder="Tên sân, khu vực..."
+                    placeholder="Tìm kiếm sân cầu lông..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="booking-page__search-input"
@@ -231,7 +209,6 @@ const BookingPage = () => {
                 </div>
               </div>
 
-              {/* Date Filter */}
               <div className="booking-page__filter-group">
                 <label className="booking-page__filter-label">Ngày chơi</label>
                 <div className="booking-page__date-wrapper">
@@ -246,23 +223,24 @@ const BookingPage = () => {
                 </div>
               </div>
 
-              {/* Location Filter */}
               <div className="booking-page__filter-group">
                 <label className="booking-page__filter-label">Khu vực</label>
-                <select
-                  value={filters.location || ''}
-                  onChange={(e) => handleFilterChange('location', e.target.value)}
-                  className="booking-page__select"
-                >
-                  {locations.map(location => (
-                    <option key={location} value={location === 'Tất cả khu vực' ? '' : location}>
-                      {location}
-                    </option>
-                  ))}
-                </select>
+                <div className="booking-page__select-wrapper">
+                  <select
+                    value={filters.location || ''}
+                    onChange={(e) => handleFilterChange('location', e.target.value)}
+                    className="booking-page__select"
+                  >
+                    {locations.map(location => (
+                      <option key={location} value={location === 'Tất cả khu vực' ? '' : location}>
+                        {location}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="booking-page__select-arrow" size={14} />
+                </div>
               </div>
 
-              {/* Time Slot Filter */}
               <div className="booking-page__filter-group">
                 <label className="booking-page__filter-label">Khung giờ</label>
                 <div className="booking-page__time-wrapper">
@@ -278,14 +256,14 @@ const BookingPage = () => {
                       </option>
                     ))}
                   </select>
+                  <ChevronDown className="booking-page__select-arrow" size={14} />
                 </div>
               </div>
+            </div>
 
-              {/* Price Range Filter */}
+            <div className="booking-page__filter-row">
               <div className="booking-page__filter-group">
-                <label className="booking-page__filter-label">
-                  Giá tối đa: {filters.maxPrice.toLocaleString('vi-VN')}đ
-                </label>
+                <label className="booking-page__filter-label">Giá (VNĐ/giờ)</label>
                 <input
                   type="range"
                   min="50000"
@@ -296,22 +274,21 @@ const BookingPage = () => {
                   className="booking-page__price-range"
                 />
                 <div className="booking-page__price-labels">
-                  <span>50k</span>
-                  <span>1M</span>
+                  <span>50K</span>
+                  <span className="booking-page__price-value">
+                    {filters.maxPrice === 1000000 ? '1M+' : `${(filters.maxPrice / 1000).toFixed(0)}K`}
+                  </span>
+                  <span>1M+</span>
                 </div>
               </div>
-            </div>
 
-            {/* Second Row - Advanced Filters */}
-            <div className="booking-page__filter-row">
-              {/* Rating Filter */}
               <div className="booking-page__filter-group">
                 <label className="booking-page__filter-label">Đánh giá tối thiểu</label>
                 <div className="booking-page__rating-filter">
                   {[1, 2, 3, 4, 5].map(star => (
                     <button
                       key={star}
-                      onClick={() => handleFilterChange('rating', star)}
+                      onClick={() => handleFilterChange('rating', star === filters.rating ? 0 : star)}
                       className={`booking-page__rating-star ${
                         star <= filters.rating ? 'booking-page__rating-star--active' : ''
                       }`}
@@ -325,12 +302,11 @@ const BookingPage = () => {
                     onClick={() => handleFilterChange('rating', 0)}
                     className="booking-page__rating-reset-btn"
                   >
-                    Bỏ chọn 
+                    Bỏ chọn
                   </button>
                 </div>
               </div>
 
-              {/* Amenities Filter */}
               <div className="booking-page__filter-group">
                 <label className="booking-page__filter-label">Tiện ích</label>
                 <div className="booking-page__amenities-grid">
@@ -360,7 +336,6 @@ const BookingPage = () => {
                 </button>
               </div>
 
-              {/* Clear Filters & Sort */}
               <div className="booking-page__filter-group">
                 <label className="booking-page__filter-label">Sắp xếp theo</label>
                 <div className="booking-page__sort-controls">
@@ -395,13 +370,9 @@ const BookingPage = () => {
 
         {/* Main Content Layout */}
         <div className="booking-page__content">
-          {/* Left Column - Weather and Map (25%) */}
           <div className="booking-page__sidebar">
             <div className="booking-page__sidebar-sticky">
-              {/* Weather Widget */}
               <WeatherWidget />
-              
-              {/* Map Widget */}
               <MapWidget 
                 venues={filteredVenues.map(venue => ({
                   id: venue.id,
@@ -411,61 +382,190 @@ const BookingPage = () => {
                   rating: venue.rating,
                   price: venue.basePrice,
                   type: venue.type,
-                  coordinates: venue.coordinates
+                  lat: 10.7769 + Math.random() * 0.1,
+                  lng: 106.7009 + Math.random() * 0.1
                 }))}
-                onVenueSelect={(venueId) => handleVenueBook(venueId)}
+                selectedVenue={selectedVenue || undefined}
+                onVenueSelect={setSelectedVenue}
               />
             </div>
           </div>
 
-          {/* Right Column - Venue List (75%) */}
           <div className="booking-page__venues venues-list-section">
             <div className="booking-page__venues-header">
-              <h2 className="booking-page__venues-title">
-                Danh sách sân ({filteredVenues.length})
-              </h2>
-              {filteredVenues.length === 0 && (
-                <div className="booking-page__no-results">
-                  <div className="booking-page__no-results-icon">😔</div>
-                  <h3 className="booking-page__no-results-title">Không tìm thấy sân phù hợp</h3>
-                  <p className="booking-page__no-results-text">
-                    Hãy thử điều chỉnh bộ lọc hoặc tìm kiếm với từ khóa khác
-                  </p>
-                  <button
-                    onClick={clearFilters}
-                    className="booking-page__no-results-button"
-                  >
-                    Xóa tất cả bộ lọc
-                  </button>
+              <div className="booking-page__results-summary">
+                <div className="booking-page__results-content">
+                  <div className="booking-page__results-icon">
+                    <Calendar size={20} />
+                  </div>
+                  <div>
+                    <p className="booking-page__results-date">
+                      {new Date(filters.selectedDate).toLocaleDateString('vi-VN', {
+                        weekday: 'long',
+                        year: 'numeric', 
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
+                    <div className="booking-page__results-details">
+                      {filters.timeSlot && filters.timeSlot !== 'Mọi khung giờ' && (
+                        <span className="booking-page__results-time">
+                          <Clock size={14} />
+                          <span>{filters.timeSlot}</span>
+                        </span>
+                      )}
+                      <span className="booking-page__results-count">
+                        <Target size={14} />
+                        Tìm thấy <span>{filteredVenues.length}</span> sân cầu lông
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="booking-page__results-total">
+                  <div className="booking-page__results-number">{filteredVenues.length}</div>
+                  <div className="booking-page__results-label">Sân có sẵn</div>
+                </div>
+              </div>
+
+              {activeFiltersCount > 0 && (
+                <div className="booking-page__active-filters">
+                  <div className="booking-page__active-filters-list">
+                    {filters.location && filters.location !== 'Tất cả khu vực' && (
+                      <span className="booking-page__active-filter">
+                        <span className="booking-page__active-filter-dot"></span>
+                        {filters.location}
+                        <button
+                          onClick={() => handleFilterChange('location', '')}
+                          className="booking-page__active-filter-remove"
+                        >
+                          <X size={12} />
+                        </button>
+                      </span>
+                    )}
+                    {filters.timeSlot && filters.timeSlot !== 'Mọi khung giờ' && (
+                      <span className="booking-page__active-filter booking-page__active-filter--time">
+                        <span className="booking-page__active-filter-dot"></span>
+                        {filters.timeSlot}
+                        <button
+                          onClick={() => handleFilterChange('timeSlot', '')}
+                          className="booking-page__active-filter-remove"
+                        >
+                          <X size={12} />
+                        </button>
+                      </span>
+                    )}
+                    {filters.maxPrice < 1000000 && (
+                      <span className="booking-page__active-filter booking-page__active-filter--price">
+                        <span className="booking-page__active-filter-dot"></span>
+                        Dưới {(filters.maxPrice / 1000).toFixed(0)}K
+                        <button
+                          onClick={() => handleFilterChange('maxPrice', 1000000)}
+                          className="booking-page__active-filter-remove"
+                        >
+                          <X size={12} />
+                        </button>
+                      </span>
+                    )}
+                    {filters.rating > 0 && (
+                      <span className="booking-page__active-filter booking-page__active-filter--rating">
+                        <span className="booking-page__active-filter-dot"></span>
+                        {filters.rating}+ ⭐
+                        <button
+                          onClick={() => handleFilterChange('rating', 0)}
+                          className="booking-page__active-filter-remove"
+                        >
+                          <X size={12} />
+                        </button>
+                      </span>
+                    )}
+                    {filters.amenities.map(amenity => {
+                      const amenityLabel = amenityOptions.find(a => a.id === amenity)?.label || amenity;
+                      const amenityIcon = amenityOptions.find(a => a.id === amenity)?.icon || '';
+                      return (
+                        <span key={amenity} className="booking-page__active-filter booking-page__active-filter--amenity">
+                          <span className="booking-page__active-filter-dot"></span>
+                          {amenityIcon} {amenityLabel}
+                          <button
+                            onClick={() => handleAmenityToggle(amenity)}
+                            className="booking-page__active-filter-remove"
+                          >
+                            <X size={12} />
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
+
+              <div className="booking-page__venues-header-row">
+                <div className="booking-page__venues-title-section">
+                  <div className="booking-page__venues-title-icon">
+                    <span>🏸</span>
+                  </div>
+                  <h2 className="booking-page__venues-title">
+                    Danh sách sân cầu lông có sẵn
+                  </h2>
+                </div>
+                <div className="booking-page__venues-note">
+                  <span>🏸 Lưu ý: Kiểm tra giá và khung giờ trước khi đặt</span>
+                </div>
+              </div>
             </div>
 
             <div className="booking-page__venues-grid">
               {filteredVenues.map((venue) => (
-                <VenueCard
-                  key={venue.id}
-                  venue={venue}
-                  onBook={handleVenueBook}
-                  selectedDate={filters.selectedDate}
-                />
+                <div key={venue.id} className="booking-page__venue-card">
+                  <VenueCard
+                    venue={venue}
+                    selectedDate={filters.selectedDate}
+                    selectedTimeSlot={filters.timeSlot}
+                    onBook={handleVenueBook}
+                  />
+                </div>
               ))}
             </div>
+
+            {filteredVenues.length === 0 && (
+              <div className="booking-page__no-results">
+                <div className="booking-page__no-results-icon">😔</div>
+                <h3 className="booking-page__no-results-title">Không tìm thấy sân cầu lông phù hợp</h3>
+                <p className="booking-page__no-results-text">
+                  Không có sân cầu lông nào có sẵn cho ngày và khung giờ đã chọn. 
+                  Thử chọn ngày khác hoặc điều chỉnh bộ lọc.
+                </p>
+                <div className="booking-page__no-results-buttons">
+                  <button 
+                    onClick={() => handleFilterChange('selectedDate', getTodayDate())}
+                    className="booking-page__no-results-button booking-page__no-results-button--date"
+                  >
+                    <Calendar size={16} />
+                    Chọn hôm nay
+                  </button>
+                  <button 
+                    onClick={clearFilters}
+                    className="booking-page__no-results-button booking-page__no-results-button--clear"
+                  >
+                    <X size={16} />
+                    Xóa tất cả bộ lọc
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Booking Summary Modal */}
       {showBookingSummary && selectedVenue && (
         <BookingSummaryModal
-          venue={venues.find(v => v.id === selectedVenue)}
-          selectedDate={filters.selectedDate}
-          preSelectedTimeSlot={preSelectedTimeSlot}
+          isOpen={showBookingSummary}
           onClose={handleCloseBookingSummary}
+          venue={venues.find(v => v.id === selectedVenue)}
+          preSelectedDate={filters.selectedDate}
+          preSelectedTimeSlot={preSelectedTimeSlot || filters.timeSlot}
         />
       )}
 
-      {/* Scroll to Venues Floating Button */}
       <button
         onClick={() => {
           const venuesSection = document.querySelector('.venues-list-section');
