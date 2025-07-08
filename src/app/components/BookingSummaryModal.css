@@ -640,17 +640,18 @@
 
 .booking-summary-modal__progress-bar {
   width: 100%;
-  height: 12px;
-  background: #374151;
-  border-radius: 6px;
+  height: 8px;
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin: 1rem 0;
+  position: relative;
 }
 
 .booking-summary-modal__progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #8b5cf6 0%, #3b82f6 100%);
-  border-radius: 6px;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 4px;
   transition: width 0.5s ease;
   position: relative;
 }
@@ -662,37 +663,105 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
   animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% {
-    opacity: 0.5;
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Step prompt for user guidance */
+.booking-summary-modal__step-prompt {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* Step suggestion box */
+.booking-summary-modal__step-suggestion {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #0ea5e9;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-top: 0.75rem;
+}
+
+.booking-summary-modal__step-suggestion p {
+  margin: 0;
+  color: #0c4a6e;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.booking-summary-modal__step-suggestion strong {
+  color: #0369a1;
+}
+
+/* Warning toast */
+.booking-summary-modal__warning-toast {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+.booking-summary-modal__warning-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.booking-summary-modal__warning-icon {
+  font-size: 1.125rem;
+}
+
+.booking-summary-modal__warning-text {
+  color: #92400e;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
   }
-  50% {
+  to {
     opacity: 1;
-  }
-  100% {
-    opacity: 0.5;
+    transform: translateX(-50%) translateY(0);
   }
 }
 
-.booking-summary-modal__progress-text {
-  font-size: 12px;
-  color: #9ca3af;
-  margin: 0;
+/* Progress step interactions */
+.booking-summary-modal__progress-step-item.clickable {
+  transition: all 0.2s ease;
 }
 
-.booking-summary-modal__footer-note {
-  text-align: center;
-  margin-top: 12px;
+.booking-summary-modal__progress-step-item.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.booking-summary-modal__footer-note p {
-  font-size: 12px;
-  color: #9ca3af;
-  margin: 0;
+.booking-summary-modal__progress-step-item.clickable:hover .booking-summary-modal__progress-step-icon {
+  transform: scale(1.1);
+}
+
+.booking-summary-modal__progress-step-item.disabled {
+  opacity: 0.6;
+}
+
+.booking-summary-modal__progress-step-item.disabled:hover {
+  transform: none;
 }
 
 /* Responsive Design */
@@ -733,4 +802,22 @@
   .booking-summary-modal__step-content {
     padding: 16px;
   }
+}
+
+/* Progress guidance - more prominent positioning */
+.booking-summary-modal__progress-guidance {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #0ea5e9;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.booking-summary-modal__progress-guidance-text {
+  margin: 0;
+  color: #0c4a6e;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
