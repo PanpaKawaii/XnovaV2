@@ -1,24 +1,10 @@
 /* Card Component Styles */
 .card {
   border-radius: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-primary);
   transition: all 0.3s ease;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-primary);
-}
-
-/* Dark theme card background */
-.dark .card {
-  background-color: var(--bg-tertiary);
-  border-color: var(--border-secondary);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-}
-
-/* Light theme card background */
-.light .card {
-  background-color: #ffffff;
-  border-color: var(--border-primary);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* Card hover effects */
@@ -28,20 +14,14 @@
 
 .card--hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.dark .card--hover:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-tertiary);
+  border-color: var(--border-secondary);
 }
 
 /* Card glow effect */
 .card--glow:hover {
-  box-shadow: 0 20px 25px -5px rgba(168, 255, 0, 0.2), 0 10px 10px -5px rgba(168, 255, 0, 0.1);
-}
-
-.dark .card--glow:hover {
-  box-shadow: 0 20px 25px -5px rgba(168, 255, 0, 0.3), 0 10px 10px -5px rgba(168, 255, 0, 0.15);
+  box-shadow: 0 20px 25px -5px var(--accent-primary), var(--shadow-tertiary);
+  border-color: var(--accent-primary);
 }
 
 /* Card content padding variants */
@@ -63,7 +43,7 @@
 }
 
 .card--bordered-accent {
-  border: 2px solid #A8FF00;
+  border: 2px solid var(--accent-primary);
 }
 
 /* Card background variants */
@@ -75,10 +55,10 @@
 .card--glass {
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-secondary);
 }
 
 .dark .card--glass {
   background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-tertiary);
 }

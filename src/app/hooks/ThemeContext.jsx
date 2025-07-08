@@ -29,15 +29,20 @@ export const ThemeProvider = ({ children }) => {
     // Save theme preference to localStorage
     localStorage.setItem('theme', theme);
     
-    // Apply theme to document
+    // Apply theme to document using both class and data-theme for compatibility
     const root = document.documentElement;
     if (theme === 'light') {
       root.classList.add('light');
       root.classList.remove('dark');
+      root.setAttribute('data-theme', 'light');
     } else {
       root.classList.add('dark');
       root.classList.remove('light');
+      root.setAttribute('data-theme', 'dark');
     }
+    
+    // Also apply to body for better theme support
+    document.body.className = theme;
   }, [theme]);
 
   const toggleTheme = () => {
