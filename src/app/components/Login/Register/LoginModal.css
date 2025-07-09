@@ -5,8 +5,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,9 +16,9 @@
 }
 
 .login-modal__content {
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  background: var(--bg-secondary);
   border-radius: 1.5rem;
-  padding: 2rem;
+  padding: 2.5rem;
   max-width: 28rem;
   width: 100%;
   border: 1px solid var(--border-primary);
@@ -26,34 +26,58 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
+  box-shadow: 0 20px 40px var(--shadow-tertiary);
 }
 
 .dark .login-modal__content {
-  background: linear-gradient(135deg, var(--bg-tertiary) 0%, #1f2937 100%);
+  background: linear-gradient(135deg, #1a1d29 0%, #252b3a 100%);
   border-color: var(--border-secondary);
+}
+
+/* Light theme specific styles */
+.light .login-modal__content {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  border-color: var(--border-primary);
+  box-shadow: 0 20px 40px var(--shadow-tertiary);
+}
+
+/* Logo Styles */
+.login-modal__logo {
+  width: 80px;
+  height: auto;
+  max-height: 80px;
+  object-fit: contain;
 }
 
 /* Background Patterns */
 .login-modal__bg-pattern-1 {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 8rem;
-  height: 8rem;
-  background-color: rgba(168, 255, 0, 0.05);
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(168, 255, 0, 0.1) 0%, transparent 70%);
   border-radius: 50%;
-  filter: blur(2rem);
+  filter: blur(40px);
 }
 
 .login-modal__bg-pattern-2 {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 6rem;
-  height: 6rem;
-  background-color: rgba(162, 89, 255, 0.05);
+  bottom: -50px;
+  left: -50px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(162, 89, 255, 0.1) 0%, transparent 70%);
   border-radius: 50%;
-  filter: blur(2rem);
+  filter: blur(30px);
+}
+
+.light .login-modal__bg-pattern-1 {
+  background: radial-gradient(circle, rgba(168, 255, 0, 0.05) 0%, transparent 70%);
+}
+
+.light .login-modal__bg-pattern-2 {
+  background: radial-gradient(circle, rgba(162, 89, 255, 0.05) 0%, transparent 70%);
 }
 
 /* Close Button */
@@ -67,10 +91,13 @@
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 10;
+  padding: 0.5rem;
+  border-radius: 50%;
 }
 
 .login-modal__close:hover {
   color: var(--text-primary);
+  background-color: var(--bg-tertiary);
 }
 
 /* Header */
@@ -85,12 +112,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 4rem;
-  height: 4rem;
-  background: linear-gradient(45deg, rgba(168, 255, 0, 0.2), rgba(162, 89, 255, 0.2));
-  border-radius: 1rem;
   margin-bottom: 1rem;
-  border: 1px solid rgba(168, 255, 0, 0.3);
 }
 
 .login-modal__icon svg {
@@ -124,21 +146,23 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 0.75rem;
+  padding: 0.875rem;
   border-radius: 0.75rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .login-modal__oauth-button--google {
-  background-color: #ffffff;
-  color: #1f2937;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-secondary);
 }
 
 .login-modal__oauth-button--google:hover {
-  background-color: #f3f4f6;
+  background-color: var(--bg-tertiary);
 }
 
 .login-modal__oauth-button--facebook {
@@ -148,6 +172,7 @@
 
 .login-modal__oauth-button--facebook:hover {
   background-color: #166fe5;
+  transform: translateY(-1px);
 }
 
 /* Divider */
@@ -189,37 +214,44 @@
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   z-index: 1;
 }
 
 .login-modal__input {
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.5);
-  border: 1px solid var(--border-primary);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
   border-radius: 0.75rem;
-  padding: 0.75rem 3rem 0.75rem 3rem;
+  padding: 0.875rem 3rem 0.875rem 3rem;
   color: var(--text-primary);
   transition: all 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .dark .login-modal__input {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-color: var(--border-secondary);
+  background-color: #374151;
+  border-color: #4b5563;
 }
 
 .login-modal__input::placeholder {
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
 }
 
 .login-modal__input:focus {
   outline: none;
   border-color: #A8FF00;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: var(--bg-secondary);
+  box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
+}
+
+.light .login-modal__input:focus {
+  background-color: var(--bg-secondary);
+  border-color: #A8FF00;
 }
 
 .dark .login-modal__input:focus {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #4b5563;
 }
 
 .login-modal__password-toggle {
@@ -255,8 +287,14 @@
 
 .login-modal__remember input {
   border-radius: 0.25rem;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border-secondary);
   background-color: var(--bg-primary);
+  accent-color: #A8FF00;
+}
+
+.dark .login-modal__remember input {
+  border-color: #4b5563;
+  background-color: #374151;
 }
 
 .login-modal__forgot {
@@ -265,6 +303,7 @@
   color: #A8FF00;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 0.875rem;
 }
 
 .login-modal__forgot:hover {
@@ -278,15 +317,18 @@
   color: #000000;
   border: none;
   border-radius: 0.75rem;
-  padding: 0.75rem;
+  padding: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
 }
 
 .login-modal__submit:hover {
   background: linear-gradient(45deg, #96E600, #A8FF00);
-  box-shadow: 0 10px 15px -3px rgba(168, 255, 0, 0.25);
+  box-shadow: 0 10px 25px rgba(168, 255, 0, 0.3);
+  transform: translateY(-1px);
 }
 
 /* Toggle */
@@ -312,6 +354,116 @@
 
 .login-modal__toggle-button:hover {
   color: #9147E6;
+}
+
+/* OTP Verification Styles */
+.login-modal__otp-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-secondary);
+}
+
+.login-modal__otp-icon {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.login-modal__otp-text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.login-modal__input--otp {
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  font-family: 'Courier New', monospace;
+}
+
+.login-modal__otp-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.login-modal__resend-otp {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--border-secondary);
+  color: var(--accent-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-modal__resend-otp:hover:not(:disabled) {
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.login-modal__resend-otp:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-modal__back-button {
+  background: none;
+  border: 1px solid var(--border-secondary);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-modal__back-button:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+/* Dark theme OTP styles */
+.dark .login-modal__otp-info {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .login-modal__resend-otp {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .login-modal__back-button {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Light theme OTP styles */
+.light .login-modal__otp-info {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.light .login-modal__resend-otp {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.light .login-modal__back-button {
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 /* Animations */
@@ -342,7 +494,7 @@
   }
   
   .login-modal__content {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
     border-radius: 1rem;
   }
   
@@ -350,8 +502,31 @@
     font-size: 1.5rem;
   }
   
-  .login-modal__icon {
-    width: 3rem;
-    height: 3rem;
+  .login-modal__logo {
+    width: 60px;
+    height: auto;
   }
+  
+  .login-modal__oauth-button {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .login-modal__input {
+    padding: 0.75rem 2.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .login-modal__bg-pattern-1,
+  .login-modal__bg-pattern-2 {
+    opacity: 0.5;
+  }
+}
+
+/* Theme transition animations */
+.login-modal__content,
+.login-modal__input,
+.login-modal__oauth-button,
+.login-modal__close {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
