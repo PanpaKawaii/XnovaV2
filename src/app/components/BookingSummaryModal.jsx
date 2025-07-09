@@ -16,6 +16,8 @@ const BookingSummaryModal = ({
   const [showBookingSummary, setShowBookingSummary] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [bookingId, setBookingId] = useState('');
 
   // Refs for auto-scrolling
   const stepRefs = useRef({});
@@ -176,7 +178,12 @@ const BookingSummaryModal = ({
   ];
 
   const handleConfirmBooking = () => {
+    // Generate booking ID
+    const newBookingId = `BK${Date.now().toString().slice(-8)}`;
+    setBookingId(newBookingId);
+
     console.log('Booking confirmed:', {
+      bookingId: newBookingId,
       venue: venue?.id,
       date: selectedDate,
       time: selectedTime,
@@ -184,7 +191,14 @@ const BookingSummaryModal = ({
       paymentMethod,
       totalPrice
     });
-    onClose();
+
+    // Show success popup
+    setShowSuccessPopup(true);
+  };
+
+  const handleCloseSuccessPopup = () => {
+    setShowSuccessPopup(false);
+    onClose(); // Close main modal after success popup
   };
 
   const handleDateChange = (date) => {
@@ -652,6 +666,43 @@ const BookingSummaryModal = ({
           </div>
         )}
       </div>
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="booking-success-popup">
+          <div className="booking-success-popup__backdrop" onClick={handleCloseSuccessPopup} />
+          <div className="booking-success-popup__content">
+            <div className="booking-success-popup__header">
+              <div className="booking-success-popup__check-circle">
+                <div className="booking-success-popup__check-icon">✓</div>
+              </div>
+              <h2 className="booking-success-popup__title">Đặt sân thành công!</h2>
+            </div>
+
+            <div className="booking-success-popup__details">
+              <div className="booking-success-popup__booking-id">
+                <span className="booking-success-popup__id-label">Mã đặt sân</span>
+                <span className="booking-success-popup__id-value">{bookingId}</span>
+              </div>
+
+              <div className="booking-success-popup__summary">
+                <p>{venue?.name}</p>
+                <p>{selectedTime} • {new Date(selectedDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric' })}</p>
+                <p className="booking-success-popup__price">{(totalPrice / 1000).toFixed(0)}K VNĐ</p>
+              </div>
+            </div>
+
+            <div className="booking-success-popup__actions">
+              <button 
+                className="booking-success-popup__button"
+                onClick={handleCloseSuccessPopup}
+              >
+                Xong
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
