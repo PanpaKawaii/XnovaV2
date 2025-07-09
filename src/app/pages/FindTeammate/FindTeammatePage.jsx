@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { Modal } from '../components/ui/Modal';
-import { useScrollAnimation } from '../hooks/useAnimation';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { Modal } from '../../components/ui/Modal';
+import { useScrollAnimation } from '../../hooks/useAnimation';
 import { 
   MapPin, 
   Calendar, 
@@ -22,7 +22,7 @@ import {
   Globe,
   TrendingUp
 } from 'lucide-react';
-import FindTeammateGround from '../assets/FindTeammateGround.jpg';
+import FindTeammateGround from '../../assets/FindTeammateGround.jpg';
 import './FindTeammatePage.css';
 
 export const FindTeammatePage = () => {

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Zap, User, Calendar, Users } from 'lucide-react';
+import { Menu, X, Zap, User, Calendar, Users, LogOut, Settings, ChevronDown } from 'lucide-react';
 import ThemeToggle from '../../components/ui/ThemeToggle';
 import LOGO from '../../assets/LOGO.png';
 import VNFlag from '../../assets/vn.jpg';
 import UKFlag from '../../assets/uk.png';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../hooks/AuthContext/AuthContext';
 import './Header.css';
 
 const LANGUAGES = [
@@ -17,9 +18,12 @@ const Header = ({ onLoginClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [langDropdown, setLangDropdown] = useState(false);
+  const [userDropdown, setUserDropdown] = useState(false);
   const langBtnRef = useRef(null);
+  const userBtnRef = useRef(null);
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +43,22 @@ const Header = ({ onLoginClick }) => {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, [langDropdown]);
+
+  useEffect(() => {
+    if (!userDropdown) return;
+    const handleClick = (e) => {
+      if (userBtnRef.current && !userBtnRef.current.contains(e.target)) {
+        setUserDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [userDropdown]);
+
+  const handleLogout = () => {
+    logout();
+    setUserDropdown(false);
+  };
 
   const navLinks = [
     { to: '/', icon: Zap, label: t('Home') },
@@ -78,13 +98,66 @@ const Header = ({ onLoginClick }) => {
           {/* Login Button & Language Switcher */}
           <div className="header__actions">
             <ThemeToggle />
-            <button
-              onClick={onLoginClick}
-              className="header__login-btn"
-            >
-              <User className="header__login-icon" />
-              <span>{t('Login')}</span>
-            </button>
+            
+            {/* User Section */}
+            {user ? (
+              <div className="header__user-dropdown" ref={userBtnRef}>
+                <button
+                  className={`header__user-btn ${userDropdown ? 'header__user-btn--active' : ''}`}
+                  onClick={() => setUserDropdown((v) => !v)}
+                  aria-label="User menu"
+                >
+                  <div className="header__user-avatar">
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.name} className="header__user-avatar-img" />
+                    ) : (
+                      <User className="header__user-avatar-icon" />
+                    )}
+                  </div>
+                  <span className="header__user-name">{user.name || user.email.split('@')[0]}</span>
+                  <ChevronDown className="header__user-chevron" />
+                </button>
+                
+                {userDropdown && (
+                  <div className="header__user-menu">
+                    <div className="header__user-info">
+                      <div className="header__user-info-avatar">
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.name} className="header__user-info-avatar-img" />
+                        ) : (
+                          <User className="header__user-info-avatar-icon" />
+                        )}
+                      </div>
+                      <div className="header__user-info-details">
+                        <p className="header__user-info-name">{user.name || 'User'}</p>
+                        <p className="header__user-info-email">{user.email}</p>
+                      </div>
+                    </div>
+                    <div className="header__user-menu-divider"></div>
+                    <button className="header__user-menu-item">
+                      <Settings className="header__user-menu-icon" />
+                      <span>{t('Profile Settings')}</span>
+                    </button>
+                    <button 
+                      className="header__user-menu-item header__user-menu-item--logout"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="header__user-menu-icon" />
+                      <span>{t('Logout')}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={onLoginClick}
+                className="header__login-btn"
+              >
+                <User className="header__login-icon" />
+                <span>{t('Login')}</span>
+              </button>
+            )}
+            
             {/* Language Dropdown */}
             <div className="header__lang-dropdown" ref={langBtnRef}>
               <button
@@ -148,16 +221,51 @@ const Header = ({ onLoginClick }) => {
                 <span>{label}</span>
               </Link>
             ))}
-            <button
-              onClick={() => {
-                onLoginClick();
-                setIsMenuOpen(false);
-              }}
-              className="header__mobile-login"
-            >
-              <User className="header__mobile-login-icon" />
-              <span>{t('Login')}</span>
-            </button>
+            
+            {/* User Section Mobile */}
+            {user ? (
+              <div className="header__mobile-user">
+                <div className="header__mobile-user-info">
+                  <div className="header__mobile-user-avatar">
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.name} className="header__mobile-user-avatar-img" />
+                    ) : (
+                      <User className="header__mobile-user-avatar-icon" />
+                    )}
+                  </div>
+                  <div className="header__mobile-user-details">
+                    <p className="header__mobile-user-name">{user.name || 'User'}</p>
+                    <p className="header__mobile-user-email">{user.email}</p>
+                  </div>
+                </div>
+                <button className="header__mobile-user-menu-item">
+                  <Settings className="header__mobile-user-menu-icon" />
+                  <span>{t('Profile Settings')}</span>
+                </button>
+                <button 
+                  className="header__mobile-user-menu-item header__mobile-user-menu-item--logout"
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="header__mobile-user-menu-icon" />
+                  <span>{t('Logout')}</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  onLoginClick();
+                  setIsMenuOpen(false);
+                }}
+                className="header__mobile-login"
+              >
+                <User className="header__mobile-login-icon" />
+                <span>{t('Login')}</span>
+              </button>
+            )}
+            
             <div className="header__mobile-actions">
               <ThemeToggle />
               {/* Language Dropdown Mobile */}

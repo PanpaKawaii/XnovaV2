@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Filter, Search, Calendar, Clock, Target, X, ChevronDown, Star } from 'lucide-react';
-import VenueCard from '../components/VenueCard';
-import BookingSummaryModal from '../components/BookingSummaryModal';
-import WeatherWidget from '../components/WeatherWidget';
-import MapWidget from '../components/MapWidget';
-import { venues } from '../../mocks/venueData';
-import { getTodayDate } from '../hooks/dateUtils';
+import VenueCard from '../../components/booking/VenueCard';
+import BookingSummaryModal from '../../components/booking/BookingSummaryModal';
+import WeatherWidget from '../../components/booking/WeatherWidget';
+import MapWidget from '../../components/booking/MapWidget';
+import { venues } from '../../../mocks/venueData';
+import { getTodayDate } from '../../hooks/dateUtils';
 import './BookingPageV2.css';
 
 const BookingPage = () => {

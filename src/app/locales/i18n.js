@@ -8,6 +8,8 @@ const resources = {
       'Book Field': 'Book Field',
       'Find Teammates': 'Find Teammates',
       Login: 'Login',
+      'Profile Settings': 'Profile Settings',
+      Logout: 'Logout',
     },
   },
   vi: {
@@ -16,6 +18,8 @@ const resources = {
       'Book Field': 'Đặt sân',
       'Find Teammates': 'Tìm đồng đội',
       Login: 'Đăng nhập',
+      'Profile Settings': 'Cài đặt hồ sơ',
+      Logout: 'Đăng xuất',
     },
   },
 };
