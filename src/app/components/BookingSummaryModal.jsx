@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { X, MapPin, Calendar, Clock, Users, CreditCard, Check } from 'lucide-react';
 import './BookingSummaryModal.css';
 
@@ -14,6 +14,14 @@ const BookingSummaryModal = ({
   const [selectedField, setSelectedField] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [showBookingSummary, setShowBookingSummary] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [warningMessage, setWarningMessage] = useState('');
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [bookingId, setBookingId] = useState('');
+
+  // Refs for auto-scrolling
+  const stepRefs = useRef({});
+  const modalContentRef = useRef(null);
 
   // Auto-populate with pre-selected values
   useEffect(() => {
@@ -85,28 +93,63 @@ const BookingSummaryModal = ({
   const selectedTimeSlot = availableTimeSlots.find(slot => slot.time === selectedTime);
   const totalPrice = selectedTimeSlot?.price || venue?.basePrice || 0;
 
-  // Auto-select first available field when time is selected and fields are available
-  useEffect(() => {
-    if (selectedTime && !selectedField && availableFields.length > 0) {
-      setSelectedField(availableFields[0].id);
-    }
-  }, [selectedTime, selectedField, availableFields]);
+  // Remove auto-select first available field - let user choose
+  // useEffect(() => {
+  //   if (selectedTime && !selectedField && availableFields.length > 0) {
+  //     setSelectedField(availableFields[0].id);
+  //   }
+  // }, [selectedTime, selectedField, availableFields]);
 
   // Auto-scroll to step 3 when modal opens with preSelectedTimeSlot
   useEffect(() => {
     if (isOpen && preSelectedTimeSlot && selectedTime && selectedField) {
       // Small delay to ensure DOM is rendered
       setTimeout(() => {
-        const step3Element = document.querySelector('[data-step="3"]');
-        if (step3Element) {
+        const step3Element = stepRefs.current[3];
+        if (step3Element && modalContentRef.current) {
           step3Element.scrollIntoView({ 
             behavior: 'smooth', 
-            block: 'center' 
+            block: 'start' 
           });
         }
       }, 300);
     }
   }, [isOpen, preSelectedTimeSlot, selectedTime, selectedField]);
+
+  // Auto-scroll to next step when current step is completed
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const scrollToNextStep = (stepNumber) => {
+      setTimeout(() => {
+        const nextStepElement = stepRefs.current[stepNumber];
+        if (nextStepElement && modalContentRef.current) {
+          nextStepElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          });
+        }
+      }, 500); // Delay to allow user to see completion
+    };
+
+    // Scroll to step 2 when date is selected
+    if (selectedDate && !selectedTime) {
+      scrollToNextStep(2);
+    }
+    // Scroll to step 3 when time is selected
+    else if (selectedTime && !selectedField) {
+      scrollToNextStep(3);
+    }
+    // Scroll to step 4 when field is selected
+    else if (selectedField && !paymentMethod) {
+      scrollToNextStep(4);
+    }
+    // Scroll to summary when payment method is selected
+    else if (paymentMethod && showBookingSummary) {
+      scrollToNextStep(5);
+    }
+  }, [isOpen, selectedDate, selectedTime, selectedField, paymentMethod, showBookingSummary]);
 
   // Calculate current step for progress indicator
   const getCurrentStep = () => {
@@ -135,7 +178,12 @@ const BookingSummaryModal = ({
   ];
 
   const handleConfirmBooking = () => {
+    // Generate booking ID
+    const newBookingId = `BK${Date.now().toString().slice(-8)}`;
+    setBookingId(newBookingId);
+
     console.log('Booking confirmed:', {
+      bookingId: newBookingId,
       venue: venue?.id,
       date: selectedDate,
       time: selectedTime,
@@ -143,7 +191,14 @@ const BookingSummaryModal = ({
       paymentMethod,
       totalPrice
     });
-    onClose();
+
+    // Show success popup
+    setShowSuccessPopup(true);
+  };
+
+  const handleCloseSuccessPopup = () => {
+    setShowSuccessPopup(false);
+    onClose(); // Close main modal after success popup
   };
 
   const handleDateChange = (date) => {
@@ -164,11 +219,68 @@ const BookingSummaryModal = ({
     setPaymentMethod(''); // Reset payment method when field changes
   };
 
+  // Handle step navigation
+  const handleStepClick = (stepId) => {
+    // Determine max allowed step based on completed data
+    let maxAllowedStep = 1;
+    if (selectedDate) maxAllowedStep = 2;
+    if (selectedTime) maxAllowedStep = 3;
+    if (selectedField) maxAllowedStep = 4;
+    if (paymentMethod) maxAllowedStep = 5;
+
+    // Allow navigation to completed steps or current step
+    if (stepId <= maxAllowedStep) {
+      // Scroll to the selected step
+      setTimeout(() => {
+        const targetStepElement = stepRefs.current[stepId];
+        if (targetStepElement && modalContentRef.current) {
+          targetStepElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
+    } else {
+      // Show warning for inaccessible steps
+      const stepNames = {
+        2: 'chọn khung giờ',
+        3: 'chọn sân', 
+        4: 'chọn phương thức thanh toán',
+        5: 'xác nhận đặt sân'
+      };
+      
+      const requiredSteps = {
+        2: 'chọn ngày',
+        3: 'chọn ngày và khung giờ',
+        4: 'chọn ngày, khung giờ và sân',
+        5: 'hoàn thành tất cả các bước trước'
+      };
+
+      setWarningMessage(`Bạn cần ${requiredSteps[stepId]} trước khi ${stepNames[stepId]}!`);
+      setShowWarning(true);
+      
+      // Auto hide warning after 3 seconds
+      setTimeout(() => {
+        setShowWarning(false);
+      }, 3000);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="booking-summary-modal">
-      <div className="booking-summary-modal__content">
+      <div className="booking-summary-modal__content" ref={modalContentRef}>
+        {/* Warning Toast */}
+        {showWarning && (
+          <div className="booking-summary-modal__warning-toast">
+            <div className="booking-summary-modal__warning-content">
+              <span className="booking-summary-modal__warning-icon">⚠️</span>
+              <span className="booking-summary-modal__warning-text">{warningMessage}</span>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="booking-summary-modal__header">
           <h2 className="booking-summary-modal__title">Đặt sân - {venue?.name}</h2>
@@ -196,7 +308,10 @@ const BookingSummaryModal = ({
           {/* Left Side - Steps Content */}
           <div className="booking-summary-modal__steps">
             {/* Step 1: Date Selection */}
-            <div className={`booking-summary-modal__step ${currentStep >= 1 ? 'active' : 'inactive'}`}>
+            <div 
+              className={`booking-summary-modal__step ${currentStep >= 1 ? 'active' : 'inactive'}`}
+              ref={el => stepRefs.current[1] = el}
+            >
               <div className={`booking-summary-modal__step-content ${
                 currentStep === 1 ? 'current' : selectedDate ? 'completed' : 'pending'
               }`}>
@@ -230,7 +345,10 @@ const BookingSummaryModal = ({
 
             {/* Step 2: Time Selection */}
             {selectedDate && (
-              <div className={`booking-summary-modal__step ${currentStep >= 2 ? 'active' : 'inactive'}`}>
+              <div 
+                className={`booking-summary-modal__step ${currentStep >= 2 ? 'active' : 'inactive'}`}
+                ref={el => stepRefs.current[2] = el}
+              >
                 <div className={`booking-summary-modal__step-content ${
                   currentStep === 2 ? 'current' : selectedTime ? 'completed' : 'pending'
                 }`}>
@@ -273,7 +391,10 @@ const BookingSummaryModal = ({
 
             {/* Step 3: Field Selection */}
             {selectedTime && (
-              <div className={`booking-summary-modal__step ${currentStep >= 3 ? 'active' : 'inactive'}`} data-step="3">
+              <div 
+                className={`booking-summary-modal__step ${currentStep >= 3 ? 'active' : 'inactive'}`} 
+                ref={el => stepRefs.current[3] = el}
+              >
                 <div className={`booking-summary-modal__step-content ${
                   currentStep === 3 ? 'current' : selectedField ? 'completed' : 'pending'
                 }`}>
@@ -284,9 +405,13 @@ const BookingSummaryModal = ({
                     <div className="booking-summary-modal__step-info">
                       <h3 className="booking-summary-modal__step-title">Chọn sân</h3>
                       <p className="booking-summary-modal__step-subtitle">{availableFields.length} sân có sẵn</p>
-                      {selectedField && (
+                      {selectedField ? (
                         <p className="booking-summary-modal__step-selected">
                           Đã chọn: {availableFields.find(f => f.id === selectedField)?.name}
+                        </p>
+                      ) : (
+                        <p className="booking-summary-modal__step-prompt">
+                          👆 Vui lòng chọn sân để tiếp tục
                         </p>
                       )}
                     </div>
@@ -312,7 +437,12 @@ const BookingSummaryModal = ({
                   </div>
                   {currentStep === 3 && (
                     <div className="booking-summary-modal__step-tip">
-                      <p>💡 Chọn sân phù hợp với nhu cầu của bạn. Sân Premium có chất lượng cao hơn!</p>
+                      <p>💡 Chọn sân phù hợp với nhu cầu của bạn. Sân Premium có chất lượng cao hơn! Hãy xem xét kỹ trước khi quyết định.</p>
+                    </div>
+                  )}
+                  {!selectedField && currentStep === 3 && (
+                    <div className="booking-summary-modal__step-suggestion">
+                      <p>🎯 <strong>Gợi ý:</strong> Nếu đây là lần đầu chơi, hãy chọn sân Standard để trải nghiệm. Sân Premium phù hợp cho người chơi có kinh nghiệm.</p>
                     </div>
                   )}
                 </div>
@@ -321,7 +451,10 @@ const BookingSummaryModal = ({
 
             {/* Step 4: Payment Method Selection */}
             {selectedField && (
-              <div className={`booking-summary-modal__step ${currentStep >= 4 ? 'active' : 'inactive'}`}>
+              <div 
+                className={`booking-summary-modal__step ${currentStep >= 4 ? 'active' : 'inactive'}`}
+                ref={el => stepRefs.current[4] = el}
+              >
                 <div className={`booking-summary-modal__step-content ${
                   currentStep === 4 ? 'current' : paymentMethod ? 'completed' : 'pending'
                 }`}>
@@ -380,6 +513,28 @@ const BookingSummaryModal = ({
                 <div className="booking-summary-modal__progress-tip">
                   <p>💡 Bạn có thể quay lại chỉnh sửa bất kỳ bước nào đã hoàn thành</p>
                 </div>
+
+                {/* Progress Bar */}
+                <div className="booking-summary-modal__progress-bar">
+                  <div 
+                    className="booking-summary-modal__progress-fill" 
+                    style={{ 
+                      width: `${
+                        selectedDate ? (selectedTime ? (selectedField ? (paymentMethod ? 100 : 75) : 50) : 25) : 0
+                      }%` 
+                    }}
+                  />
+                </div>
+
+                {/* Footer Text - More Prominent */}
+                <div className="booking-summary-modal__progress-guidance">
+                  <p className="booking-summary-modal__progress-guidance-text">
+                    {!selectedDate && "👆 Bắt đầu bằng cách chọn ngày"}
+                    {selectedDate && !selectedTime && "👆 Tiếp theo, chọn giờ chơi"}
+                    {selectedTime && !selectedField && "👆 Chọn sân bạn muốn"}
+                    {selectedField && !paymentMethod && "👆 Chọn cách thức thanh toán"}
+                  </p>
+                </div>
                 
                 <div className="booking-summary-modal__progress-steps">
                   {steps.map((step) => {
@@ -387,8 +542,24 @@ const BookingSummaryModal = ({
                     const isActive = step.id === currentStep;
                     const isCompleted = step.completed;
                     
+                    // Determine if step is clickable
+                    let maxAllowedStep = 1;
+                    if (selectedDate) maxAllowedStep = 2;
+                    if (selectedTime) maxAllowedStep = 3;
+                    if (selectedField) maxAllowedStep = 4;
+                    if (paymentMethod) maxAllowedStep = 5;
+                    
+                    const isClickable = step.id <= maxAllowedStep;
+                    
                     return (
-                      <div key={step.id} className="booking-summary-modal__progress-step-item">
+                      <div 
+                        key={step.id} 
+                        className={`booking-summary-modal__progress-step-item ${
+                          isClickable ? 'clickable' : 'disabled'
+                        }`}
+                        onClick={() => handleStepClick(step.id)}
+                        style={{ cursor: isClickable ? 'pointer' : 'not-allowed' }}
+                      >
                         <div className={`booking-summary-modal__progress-step-icon ${
                           isCompleted ? 'completed' : isActive ? 'active' : 'pending'
                         }`}>
@@ -419,7 +590,10 @@ const BookingSummaryModal = ({
 
             {/* Booking Summary - Show when ready */}
             {showBookingSummary && (
-              <div className="booking-summary-modal__summary">
+              <div 
+                className="booking-summary-modal__summary"
+                ref={el => stepRefs.current[5] = el}
+              >
                 <div className="booking-summary-modal__summary-header">
                   <div className="booking-summary-modal__summary-check">✓</div>
                   <h4 className="booking-summary-modal__summary-title">Thông tin đặt sân</h4>
@@ -479,36 +653,56 @@ const BookingSummaryModal = ({
         {/* Action Buttons - Only show progress when not at final step */}
         {!showBookingSummary && (
           <div className="booking-summary-modal__footer">
-            <div className="booking-summary-modal__footer-content">
-              <div className="booking-summary-modal__footer-guidance">
-                <p className="booking-summary-modal__footer-text">
-                  {!selectedDate && "👆 Bắt đầu bằng cách chọn ngày"}
-                  {selectedDate && !selectedTime && "👆 Tiếp theo, chọn giờ chơi"}
-                  {selectedTime && !selectedField && "👆 Chọn sân bạn muốn"}
-                  {selectedField && !paymentMethod && "👆 Chọn cách thức thanh toán"}
-                </p>
-                <div className="booking-summary-modal__progress-bar">
-                  <div 
-                    className="booking-summary-modal__progress-fill" 
-                    style={{ 
-                      width: `${
-                        selectedDate ? (selectedTime ? (selectedField ? (paymentMethod ? 100 : 75) : 50) : 25) : 0
-                      }%` 
-                    }}
-                  />
-                </div>
-                <p className="booking-summary-modal__progress-text">
-                  Tiến trình: {selectedDate ? (selectedTime ? (selectedField ? (paymentMethod ? '100' : '75') : '50') : '25') : '0'}% hoàn thành
-                </p>
-              </div>
-            </div>
-            
             <div className="booking-summary-modal__footer-note">
-              <p>✓ Miễn phí hủy đến 24h trước giờ chơi | 📞 Hỗ trợ: 1900-xxxx</p>
+              <p>✓ Miễn phí hủy đến 2h trước giờ chơi | 📞 Hỗ trợ: 1900-xxxx</p>
             </div>
           </div>
         )}
+
+        {/* Warning Message - Show when user tries to skip steps */}
+        {showWarning && (
+          <div className="booking-summary-modal__warning" id="booking-summary-modal__warning">
+            <p className="booking-summary-modal__warning-message">{warningMessage}</p>
+          </div>
+        )}
       </div>
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="booking-success-popup">
+          <div className="booking-success-popup__backdrop" onClick={handleCloseSuccessPopup} />
+          <div className="booking-success-popup__content">
+            <div className="booking-success-popup__header">
+              <div className="booking-success-popup__check-circle">
+                <div className="booking-success-popup__check-icon">✓</div>
+              </div>
+              <h2 className="booking-success-popup__title">Đặt sân thành công!</h2>
+            </div>
+
+            <div className="booking-success-popup__details">
+              <div className="booking-success-popup__booking-id">
+                <span className="booking-success-popup__id-label">Mã đặt sân</span>
+                <span className="booking-success-popup__id-value">{bookingId}</span>
+              </div>
+
+              <div className="booking-success-popup__summary">
+                <p>{venue?.name}</p>
+                <p>{selectedTime} • {new Date(selectedDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric' })}</p>
+                <p className="booking-success-popup__price">{(totalPrice / 1000).toFixed(0)}K VNĐ</p>
+              </div>
+            </div>
+
+            <div className="booking-success-popup__actions">
+              <button 
+                className="booking-success-popup__button"
+                onClick={handleCloseSuccessPopup}
+              >
+                Xong
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
