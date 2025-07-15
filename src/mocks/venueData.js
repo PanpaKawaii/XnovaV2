@@ -127,7 +127,7 @@ export const venues = [
     rating: 4.9,
     reviews: 234,
     basePrice: 280000,
-    amenities: ['wifi', 'parking', 'camera', 'ac', 'free-water'],
+    
     type: 'Cầu lông',
     description: 'Sân cầu lông cao cấp với hệ thống chiếu sáng LED, máy lạnh trung tâm',
     availability: generateAvailability('8')

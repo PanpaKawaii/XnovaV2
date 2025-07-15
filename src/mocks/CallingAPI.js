@@ -1,7 +1,10 @@
-const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
-const apiKey = import.meta.env.VITE_REACT_APP_API_KEY;
+import { appConfig } from '../settings/config.js';
 
-console.log(apiUrl);
+const apiUrl = appConfig.api.baseUrl;
+const apiKey = appConfig.api.apiKey;
+
+console.log('API URL:', apiUrl);
+console.log('Environment:', import.meta.env.MODE);
 
 // Hàm gọi API GET
 export const fetchData = async (endpoint, token) => {

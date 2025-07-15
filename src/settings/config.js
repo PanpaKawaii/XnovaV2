@@ -6,8 +6,9 @@ export const appConfig = {
   
   // API Configuration
   api: {
-    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:3001',
+    baseUrl: import.meta.env.VITE_REACT_APP_API_URL || import.meta.env.VITE_API_URL || 'https://xnova-5coe.onrender.com/api/',
     timeout: 10000,
+    apiKey: import.meta.env.VITE_REACT_APP_API_KEY || 'your_api_key',
   },
   
   // Authentication
