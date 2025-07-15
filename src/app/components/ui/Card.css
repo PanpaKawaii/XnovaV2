@@ -1,0 +1,64 @@
+/* Card Component Styles */
+.card {
+  border-radius: 1rem;
+  box-shadow: var(--shadow-primary);
+  transition: all 0.3s ease;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+}
+
+/* Card hover effects */
+.card--hover {
+  cursor: pointer;
+}
+
+.card--hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-tertiary);
+  border-color: var(--border-secondary);
+}
+
+/* Card glow effect */
+.card--glow:hover {
+  box-shadow: 0 20px 25px -5px var(--accent-primary), var(--shadow-tertiary);
+  border-color: var(--accent-primary);
+}
+
+/* Card content padding variants */
+.card--padded {
+  padding: 1.5rem;
+}
+
+.card--padded-sm {
+  padding: 1rem;
+}
+
+.card--padded-lg {
+  padding: 2rem;
+}
+
+/* Card border variants */
+.card--bordered {
+  border: 2px solid var(--border-primary);
+}
+
+.card--bordered-accent {
+  border: 2px solid var(--accent-primary);
+}
+
+/* Card background variants */
+.card--transparent {
+  background-color: transparent;
+  backdrop-filter: blur(8px);
+}
+
+.card--glass {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-secondary);
+}
+
+.dark .card--glass {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-tertiary);
+}
