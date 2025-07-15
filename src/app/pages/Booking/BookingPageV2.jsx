@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Filter, Search, Calendar, Clock, Target, X, ChevronDown, Star } from 'lucide-react';
-import VenueCard from '../../components/booking/VenueCard';
-import BookingSummaryModal from '../../components/booking/BookingSummaryModal';
-import WeatherWidget from '../../components/booking/WeatherWidget';
-import MapWidget from '../../components/booking/MapWidget';
+import { Calendar, ChevronDown, Clock, Filter, Search, Star, Target, X } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { fetchData } from '../../../mocks/CallingAPI.js';
 import { useAuth } from '../../hooks/AuthContext/AuthContext';
 import { getTodayDate } from '../../hooks/dateUtils';
+import BookingSummaryModal from './BookingComponent/BookingSummaryModal.jsx';
+import MapWidget from './BookingComponent/MapWidget.jsx';
+import VenueCard from './BookingComponent/VenueCard.jsx';
+import WeatherWidget from './BookingComponent/WeatherWidget.jsx';
 import './BookingPageV2.css';
 
 const BookingPage = () => {
@@ -19,7 +19,7 @@ const BookingPage = () => {
   const [venuesData, setVenuesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const [filters, setFilters] = useState({
     selectedDate: getTodayDate(),
     maxPrice: 1000000,
@@ -32,7 +32,7 @@ const BookingPage = () => {
 
   const locations = ['Tất cả khu vực', 'Quận 1', 'Quận 2', 'Quận 3', 'Quận 7', 'Quận Bình Thạnh'];
   const timeSlots = ['Mọi khung giờ', '06:00-09:00', '09:00-12:00', '12:00-15:00', '15:00-18:00', '18:00-21:00', '21:00-24:00'];
-  
+
   const amenityOptions = [
     { id: 'wifi', label: 'WiFi miễn phí', icon: '📶' },
     { id: 'parking', label: 'Bãi đỗ xe', icon: '🚗' },
@@ -43,8 +43,8 @@ const BookingPage = () => {
 
   useEffect(() => {
     const fetchVenuesData = async () => {
+      const token = user?.token || null;
       try {
-        const token = user?.token || null; // Use null if token is not available
 
         // Fetch Venues
         const venuesResponse = await fetchData('Venue', token);
@@ -57,7 +57,7 @@ const BookingPage = () => {
         if (!badmintonType) throw new Error('Badminton type not found');
 
         // Filter venues by badminton type
-        const badmintonVenues = venues.filter(venue => 
+        const badmintonVenues = venues.filter(venue =>
           venue.fields?.some(field => field.typeId === badmintonType.id)
         );
 
@@ -80,7 +80,7 @@ const BookingPage = () => {
         const formattedVenues = badmintonVenues.map(venue => {
           const venueImages = images.filter(image => image.venueId === venue.id && image.status === 0);
           const venueFields = venue.fields?.filter(field => field.typeId === badmintonType.id) || [];
-          const venueSlots = activeSlots.filter(slot => 
+          const venueSlots = activeSlots.filter(slot =>
             venueFields.some(field => field.id === slot.fieldId)
           );
 
@@ -88,10 +88,10 @@ const BookingPage = () => {
             date: filters.selectedDate,
             timeSlots: venueSlots.map(slot => ({
               time: `${slot.startTime}-${slot.endTime}`,
-              isAvailable: !bookingSlots.some(bs => 
-                bs.slotId === slot.id && 
-                bookings.some(b => 
-                  b.id === bs.bookingId && b.date === filters.selectedDate && 
+              isAvailable: !bookingSlots.some(bs =>
+                bs.slotId === slot.id &&
+                bookings.some(b =>
+                  b.id === bs.bookingId && b.date === filters.selectedDate &&
                   b.status === 1
                 )
               ),
@@ -114,9 +114,9 @@ const BookingPage = () => {
         });
 
         setVenuesData(formattedVenues);
-        setLoading(false);
       } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -127,13 +127,13 @@ const BookingPage = () => {
   const filteredVenues = useMemo(() => {
     let filteredResults = venuesData.filter(venue => {
       const matchesSearch = venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           venue.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           venue.type.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesLocation = !filters.location || filters.location === 'Tất cả khu vực' || 
-                             venue.location.includes(filters.location);
-      const matchesAmenities = filters.amenities.length === 0 || 
-                              filters.amenities.every(amenity => venue.amenities.includes(amenity));
+        venue.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        venue.type.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesLocation = !filters.location || filters.location === 'Tất cả khu vực' ||
+        venue.location.includes(filters.location);
+      const matchesAmenities = filters.amenities.length === 0 ||
+        filters.amenities.every(amenity => venue.amenities.includes(amenity));
       const matchesRating = venue.rating >= filters.rating;
 
       const dayAvailability = venue.availability.find(avail => avail.date === filters.selectedDate);
@@ -148,7 +148,7 @@ const BookingPage = () => {
         if (timeRange.length === 2) {
           const startTime = timeRange[0];
           const endTime = timeRange[1];
-          matchesTimeSlot = availableSlots.some(slot => 
+          matchesTimeSlot = availableSlots.some(slot =>
             slot.time >= startTime && slot.time < endTime
           );
         } else {
@@ -156,12 +156,12 @@ const BookingPage = () => {
         }
       }
 
-      const matchesPrice = availableSlots.some(slot => 
+      const matchesPrice = availableSlots.some(slot =>
         (slot.price || venue.basePrice) <= filters.maxPrice
       );
 
-      return matchesSearch && matchesLocation && 
-             matchesAmenities && matchesRating && matchesTimeSlot && matchesPrice;
+      return matchesSearch && matchesLocation &&
+        matchesAmenities && matchesRating && matchesTimeSlot && matchesPrice;
     });
 
     switch (sortBy) {
@@ -263,7 +263,7 @@ const BookingPage = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Loading skeleton for the page structure */}
         <div className="booking-page__loading-skeleton-page">
           <div className="booking-page__container">
@@ -279,7 +279,7 @@ const BookingPage = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Cards skeleton */}
             <div className="booking-page__loading-skeleton">
               {[...Array(6)].map((_, index) => (
@@ -318,10 +318,10 @@ const BookingPage = () => {
               NHANH CHÓNG & TIỆN LỢI
             </h2>
             <p className="booking-page__hero-description">
-              Tìm và đặt sân cầu lông chất lượng cao trong khu vực của bạn. 
+              Tìm và đặt sân cầu lông chất lượng cao trong khu vực của bạn.
               Hệ thống đặt sân thông minh với thông tin thời gian thực!
             </p>
-            
+
             <div className="booking-page__scroll-indicator">
               <div className="booking-page__scroll-hint">
                 <span className="booking-page__scroll-text">🏸 Lướt xuống để bắt đầu đặt sân</span>
@@ -343,7 +343,7 @@ const BookingPage = () => {
               Tìm sân cầu lông phù hợp
             </div>
           </div>
-          
+
           <div className="booking-page__filter-controls">
             <div className="booking-page__filter-row">
               <div className="booking-page__filter-group">
@@ -440,9 +440,8 @@ const BookingPage = () => {
                     <button
                       key={star}
                       onClick={() => handleFilterChange('rating', star === filters.rating ? 0 : star)}
-                      className={`booking-page__rating-star ${
-                        star <= filters.rating ? 'booking-page__rating-star--active' : ''
-                      }`}
+                      className={`booking-page__rating-star ${star <= filters.rating ? 'booking-page__rating-star--active' : ''
+                        }`}
                     >
                       <Star size={20} className={star <= filters.rating ? 'booking-page__rating-star-filled' : ''} />
                     </button>
@@ -464,9 +463,8 @@ const BookingPage = () => {
                   {amenityOptions.map(amenity => (
                     <label
                       key={amenity.id}
-                      className={`booking-page__amenity-item ${
-                        filters.amenities.includes(amenity.id) ? 'booking-page__amenity-item--active' : ''
-                      }`}
+                      className={`booking-page__amenity-item ${filters.amenities.includes(amenity.id) ? 'booking-page__amenity-item--active' : ''
+                        }`}
                     >
                       <input
                         type="checkbox"
@@ -491,7 +489,7 @@ const BookingPage = () => {
                 <label className="booking-page__filter-label">Sắp xếp theo</label>
                 <div className="booking-page__sort-controls">
                   <div className="booking-page__sort-wrapper">
-                    <select 
+                    <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
                       className="booking-page__sort-select"
@@ -505,7 +503,7 @@ const BookingPage = () => {
                     <ChevronDown className="booking-page__sort-arrow" size={14} />
                   </div>
                   {(filters.location || filters.timeSlot || filters.maxPrice < 1000000 || filters.rating > 0 || filters.amenities.length > 0) && (
-                    <button 
+                    <button
                       onClick={clearFilters}
                       className="booking-page__clear-filters"
                       title="Xóa tất cả bộ lọc"
@@ -524,7 +522,7 @@ const BookingPage = () => {
           <div className="booking-page__sidebar">
             <div className="booking-page__sidebar-sticky">
               <WeatherWidget />
-              <MapWidget 
+              <MapWidget
                 venues={filteredVenues.map(venue => ({
                   id: venue.id,
                   name: venue.name,
@@ -553,7 +551,7 @@ const BookingPage = () => {
                     <p className="booking-page__results-date">
                       {new Date(filters.selectedDate).toLocaleDateString('vi-VN', {
                         weekday: 'long',
-                        year: 'numeric', 
+                        year: 'numeric',
                         month: 'long',
                         day: 'numeric'
                       })}
@@ -682,18 +680,18 @@ const BookingPage = () => {
                 <div className="booking-page__no-results-icon">😔</div>
                 <h3 className="booking-page__no-results-title">Không tìm thấy sân cầu lông phù hợp</h3>
                 <p className="booking-page__no-results-text">
-                  Không có sân cầu lông nào có sẵn cho ngày và khung giờ đã chọn. 
+                  Không có sân cầu lông nào có sẵn cho ngày và khung giờ đã chọn.
                   Thử chọn ngày khác hoặc điều chỉnh bộ lọc.
                 </p>
                 <div className="booking-page__no-results-buttons">
-                  <button 
+                  <button
                     onClick={() => handleFilterChange('selectedDate', getTodayDate())}
                     className="booking-page__no-results-button booking-page__no-results-button--date"
                   >
                     <Calendar size={16} />
                     Chọn hôm nay
                   </button>
-                  <button 
+                  <button
                     onClick={clearFilters}
                     className="booking-page__no-results-button booking-page__no-results-button--clear"
                   >

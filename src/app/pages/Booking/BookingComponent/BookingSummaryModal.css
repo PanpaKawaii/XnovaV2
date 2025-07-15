@@ -253,7 +253,7 @@
 /* Time Grid */
 .booking-summary-modal__time-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(5, minmax(100px, 1fr));
   gap: 12px;
 }
 
@@ -266,6 +266,10 @@
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
+}
+
+.booking-summary-modal__time-slot:disabled {
+  background-color: #ccc;
 }
 
 .booking-summary-modal__time-slot:hover {
@@ -1204,7 +1208,7 @@
   }
   
   .booking-summary-modal__time-grid {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-template-columns: repeat(4, minmax(80px, 1fr));
   }
   
   .booking-summary-modal__field-grid {
@@ -1272,7 +1276,7 @@
   }
   
   .booking-summary-modal__time-grid {
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    grid-template-columns: repeat(3, minmax(70px, 1fr));
     gap: 8px;
   }
   

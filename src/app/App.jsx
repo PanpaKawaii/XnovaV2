@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Layout } from './layouts';
 import { useAuth } from './hooks/AuthContext/AuthContext';
+import ChatBox from './components/ChatBox/ChatBox';
 import Homepage from './pages/Home/Homepage';
 import BookingPage from './pages/Booking/BookingPageV2';
 import FindTeammatePage from './pages/FindTeammate/FindTeammatePage';
@@ -10,8 +11,8 @@ import { ThemeProvider } from './hooks/ThemeContext';
 import './App.css';
 
 function App() {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { user } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
     <ThemeProvider>
@@ -23,11 +24,9 @@ function App() {
             <Route path="/find-teammates" element={<FindTeammatePage />} />
           </Routes>
         </Layout>
-        <LoginModal 
-          isOpen={isLoginModalOpen} 
-          onClose={() => setIsLoginModalOpen(false)} 
-        />
+        <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
       </Router>
+      <ChatBox />
     </ThemeProvider>
   );
 }
