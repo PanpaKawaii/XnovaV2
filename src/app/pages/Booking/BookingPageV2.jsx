@@ -1,19 +1,24 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Filter, Search, Calendar, Clock, Target, X, ChevronDown, Star } from 'lucide-react';
-import VenueCard from '../components/VenueCard';
-import BookingSummaryModal from '../components/BookingSummaryModal';
-import WeatherWidget from '../components/WeatherWidget';
-import MapWidget from '../components/MapWidget';
-import { venues } from '../../mocks/venueData';
-import { getTodayDate } from '../hooks/dateUtils';
+import VenueCard from '../../components/booking/VenueCard';
+import BookingSummaryModal from '../../components/booking/BookingSummaryModal';
+import WeatherWidget from '../../components/booking/WeatherWidget';
+import MapWidget from '../../components/booking/MapWidget';
+import { fetchData } from '../../../mocks/CallingAPI.js';
+import { useAuth } from '../../hooks/AuthContext/AuthContext';
+import { getTodayDate } from '../../hooks/dateUtils';
 import './BookingPageV2.css';
 
 const BookingPage = () => {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [showBookingSummary, setShowBookingSummary] = useState(false);
   const [preSelectedTimeSlot, setPreSelectedTimeSlot] = useState('');
   const [sortBy, setSortBy] = useState('relevant');
+  const [venuesData, setVenuesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   const [filters, setFilters] = useState({
     selectedDate: getTodayDate(),
@@ -36,8 +41,91 @@ const BookingPage = () => {
     { id: 'free-water', label: 'Nước miễn phí', icon: '💧' }
   ];
 
+  useEffect(() => {
+    const fetchVenuesData = async () => {
+      try {
+        const token = user?.token || null; // Use null if token is not available
+
+        // Fetch Venues
+        const venuesResponse = await fetchData('Venue', token);
+        const venues = Array.isArray(venuesResponse) ? venuesResponse : [venuesResponse];
+
+        // Fetch Type for Badminton
+        const typesResponse = await fetchData('Type', token);
+        const types = Array.isArray(typesResponse) ? typesResponse : [typesResponse];
+        const badmintonType = types.find(type => type.name.toLowerCase() === 'badminton');
+        if (!badmintonType) throw new Error('Badminton type not found');
+
+        // Filter venues by badminton type
+        const badmintonVenues = venues.filter(venue => 
+          venue.fields?.some(field => field.typeId === badmintonType.id)
+        );
+
+        // Fetch Images
+        const imagesResponse = await fetchData('Image', token);
+        const images = Array.isArray(imagesResponse) ? imagesResponse : [imagesResponse];
+
+        // Fetch Slots
+        const slotsResponse = await fetchData('Slot', token);
+        const slots = Array.isArray(slotsResponse) ? slotsResponse : [slotsResponse];
+        const activeSlots = slots.filter(slot => slot.status === 1);
+
+        // Fetch Bookings and BookingSlots
+        const bookingsResponse = await fetchData('Booking', token);
+        const bookings = Array.isArray(bookingsResponse) ? bookingsResponse : [bookingsResponse];
+        const bookingSlotsResponse = await fetchData('BookingSlot', token);
+        const bookingSlots = Array.isArray(bookingSlotsResponse) ? bookingSlotsResponse : [bookingSlotsResponse];
+
+        // Map venues data
+        const formattedVenues = badmintonVenues.map(venue => {
+          const venueImages = images.filter(image => image.venueId === venue.id && image.status === 0);
+          const venueFields = venue.fields?.filter(field => field.typeId === badmintonType.id) || [];
+          const venueSlots = activeSlots.filter(slot => 
+            venueFields.some(field => field.id === slot.fieldId)
+          );
+
+          const availability = [{
+            date: filters.selectedDate,
+            timeSlots: venueSlots.map(slot => ({
+              time: `${slot.startTime}-${slot.endTime}`,
+              isAvailable: !bookingSlots.some(bs => 
+                bs.slotId === slot.id && 
+                bookings.some(b => 
+                  b.id === bs.bookingId && b.date === filters.selectedDate && 
+                  b.status === 1
+                )
+              ),
+              price: slot.price
+            }))
+          }];
+
+          return {
+            id: venue.id,
+            name: venue.name,
+            location: venue.address,
+            distance: '0km', // Placeholder, needs actual calculation
+            rating: bookings.find(b => b.venueId === venue.id)?.rating || 0,
+            basePrice: venueSlots[0]?.price || 0,
+            type: badmintonType.name,
+            images: venueImages.map(image => image.link),
+            amenities: venueFields[0]?.amenities || [], // Adjust based on actual data
+            availability: availability
+          };
+        });
+
+        setVenuesData(formattedVenues);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchVenuesData();
+  }, [user, filters.selectedDate]);
+
   const filteredVenues = useMemo(() => {
-    let filteredResults = venues.filter(venue => {
+    let filteredResults = venuesData.filter(venue => {
       const matchesSearch = venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            venue.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            venue.type.toLowerCase().includes(searchTerm.toLowerCase());
@@ -99,7 +187,7 @@ const BookingPage = () => {
     }
 
     return filteredResults;
-  }, [searchTerm, filters, sortBy]);
+  }, [searchTerm, filters, sortBy, venuesData]);
 
   const handleVenueBook = (venueId, _selectedDate, selectedTimeSlot) => {
     setSelectedVenue(venueId);
@@ -152,6 +240,69 @@ const BookingPage = () => {
     filters.rating > 0,
     filters.maxPrice < 1000000
   ].filter(Boolean).length;
+
+  if (loading) {
+    return (
+      <div className="booking-page">
+        <div className="booking-page__loading">
+          <div className="booking-page__loading-container">
+            <div className="booking-page__loading-spinner">
+              <div className="booking-page__loading-badminton">
+                <div className="booking-page__loading-shuttlecock">🏸</div>
+                <div className="booking-page__loading-racket">🏸</div>
+              </div>
+            </div>
+            <div className="booking-page__loading-text">
+              <h2>Đang tải danh sách sân cầu lông...</h2>
+              <p>Vui lòng chờ trong giây lát</p>
+            </div>
+            <div className="booking-page__loading-progress">
+              <div className="booking-page__loading-bar">
+                <div className="booking-page__loading-fill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Loading skeleton for the page structure */}
+        <div className="booking-page__loading-skeleton-page">
+          <div className="booking-page__container">
+            {/* Filter skeleton */}
+            <div className="booking-page__loading-skeleton-filters">
+              <div className="booking-page__skeleton-filter-header"></div>
+              <div className="booking-page__skeleton-filter-controls">
+                <div className="booking-page__skeleton-filter-row">
+                  <div className="booking-page__skeleton-filter-item"></div>
+                  <div className="booking-page__skeleton-filter-item"></div>
+                  <div className="booking-page__skeleton-filter-item"></div>
+                  <div className="booking-page__skeleton-filter-item"></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Cards skeleton */}
+            <div className="booking-page__loading-skeleton">
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="booking-page__skeleton-card">
+                  <div className="booking-page__skeleton-image"></div>
+                  <div className="booking-page__skeleton-header"></div>
+                  <div className="booking-page__skeleton-line booking-page__skeleton-line--medium"></div>
+                  <div className="booking-page__skeleton-line booking-page__skeleton-line--short"></div>
+                  <div className="booking-page__skeleton-line booking-page__skeleton-line--long"></div>
+                  <div className="booking-page__skeleton-slots">
+                    <div className="booking-page__skeleton-slot"></div>
+                    <div className="booking-page__skeleton-slot"></div>
+                    <div className="booking-page__skeleton-slot"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="booking-page">
@@ -382,8 +533,8 @@ const BookingPage = () => {
                   rating: venue.rating,
                   price: venue.basePrice,
                   type: venue.type,
-                  lat: 10.7769 + Math.random() * 0.1,
-                  lng: 106.7009 + Math.random() * 0.1
+                  lat: parseFloat(venue.latitude) || 10.7769,
+                  lng: parseFloat(venue.longitude) || 106.7009
                 }))}
                 selectedVenue={selectedVenue || undefined}
                 onVenueSelect={setSelectedVenue}
@@ -560,7 +711,7 @@ const BookingPage = () => {
         <BookingSummaryModal
           isOpen={showBookingSummary}
           onClose={handleCloseBookingSummary}
-          venue={venues.find(v => v.id === selectedVenue)}
+          venue={venuesData.find(v => v.id === selectedVenue)}
           preSelectedDate={filters.selectedDate}
           preSelectedTimeSlot={preSelectedTimeSlot || filters.timeSlot}
         />

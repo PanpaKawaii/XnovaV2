@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { X, MapPin, Calendar, Clock, Users, CreditCard, Check } from 'lucide-react';
+import { X, MapPin, Calendar, Clock, Users, CreditCard, Check, Plus, Minus, Target, Settings } from 'lucide-react';
+import { fetchData } from '../../../mocks/CallingAPI.js';
+import { useAuth } from '../../hooks/AuthContext/AuthContext';
 import './BookingSummaryModal.css';
 
 const BookingSummaryModal = ({ 
@@ -9,8 +11,33 @@ const BookingSummaryModal = ({
   preSelectedDate,
   preSelectedTimeSlot 
 }) => {
+  const { user } = useAuth();
+  
+  // Helper function to format time from 00:00:00 to 00:00
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+    if (timeString.includes(':')) {
+      const parts = timeString.split(':');
+      if (parts.length >= 2) {
+        return `${parts[0]}:${parts[1]}`;
+      }
+    }
+    return timeString;
+  };
+
+  // Helper function to format time range
+  const formatTimeRange = (timeRange) => {
+    if (!timeRange || !timeRange.includes('-')) return timeRange;
+    
+    const [startTime, endTime] = timeRange.split('-');
+    const formattedStart = formatTime(startTime);
+    const formattedEnd = formatTime(endTime);
+    
+    return `${formattedStart}-${formattedEnd}`;
+  };
+
   const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTimes, setSelectedTimes] = useState([]);
   const [selectedField, setSelectedField] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [showBookingSummary, setShowBookingSummary] = useState(false);
@@ -18,6 +45,14 @@ const BookingSummaryModal = ({
   const [warningMessage, setWarningMessage] = useState('');
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [bookingId, setBookingId] = useState('');
+  
+  // API data states
+  const [venueFields, setVenueFields] = useState([]);
+  const [venueSlots, setVenueSlots] = useState([]);
+  const [bookingSlots, setBookingSlots] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Refs for auto-scrolling
   const stepRefs = useRef({});
@@ -29,92 +64,191 @@ const BookingSummaryModal = ({
       setSelectedDate(preSelectedDate);
     }
     if (preSelectedTimeSlot && preSelectedTimeSlot !== 'Mọi khung giờ') {
-      if (preSelectedTimeSlot.includes('-')) {
-        // Don't auto-select time ranges, let user choose specific time
-      } else {
-        setSelectedTime(preSelectedTimeSlot);
-      }
+      // Handle time slot selection
+      setSelectedTimes([preSelectedTimeSlot]);
     }
   }, [preSelectedDate, preSelectedTimeSlot]);
 
-  // Show booking summary when payment method is selected
+  // Fetch venue data when modal opens
   useEffect(() => {
-    if (paymentMethod && selectedDate && selectedTime && selectedField) {
+    const fetchVenueData = async () => {
+      if (!isOpen || !venue?.id) return;
+      
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const token = user?.token || null;
+
+        const fieldsResponse = await fetchData('Field', token);
+        const fields = Array.isArray(fieldsResponse) ? fieldsResponse : [fieldsResponse];
+        const venueFieldsData = fields.filter(field => field.venueId === venue.id);
+
+        const slotsResponse = await fetchData('Slot', token);
+        const slots = Array.isArray(slotsResponse) ? slotsResponse : [slotsResponse];
+        const venueSlotsData = slots.filter(slot => 
+          venueFieldsData.some(field => field.id === slot.fieldId) && slot.status === 1
+        );
+
+        const bookingsResponse = await fetchData('Booking', token);
+        const bookingsData = Array.isArray(bookingsResponse) ? bookingsResponse : [bookingsResponse];
+        
+        const bookingSlotsResponse = await fetchData('BookingSlot', token);
+        const bookingSlotsData = Array.isArray(bookingSlotsResponse) ? bookingSlotsResponse : [bookingSlotsResponse];
+
+        setVenueFields(venueFieldsData);
+        setVenueSlots(venueSlotsData);
+        setBookings(bookingsData);
+        setBookingSlots(bookingSlotsData);
+        
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching venue data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVenueData();
+  }, [isOpen, venue?.id, user?.token]);
+
+  // Show booking summary when all steps are completed
+  useEffect(() => {
+    if (paymentMethod && selectedDate && selectedTimes.length > 0) {
       setShowBookingSummary(true);
     } else {
       setShowBookingSummary(false);
     }
-  }, [paymentMethod, selectedDate, selectedTime, selectedField]);
+  }, [paymentMethod, selectedDate, selectedTimes]);
 
-  // Get available time slots for selected date
+  // Get available time slots for selected date using API data
   const availableTimeSlots = useMemo(() => {
-    if (!venue || !selectedDate) return [];
+    if (!selectedDate || venueSlots.length === 0) return [];
     
-    const dateAvailability = venue.availability && venue.availability.find(
-      avail => avail.date === selectedDate
-    );
+    const timeSlotMap = new Map();
     
-    if (dateAvailability) {
-      return dateAvailability.timeSlots.filter(slot => slot.isAvailable);
-    }
+    venueSlots.forEach(slot => {
+      const timeKey = `${slot.startTime}-${slot.endTime}`;
+      const displayTimeKey = formatTimeRange(timeKey);
+      
+      const isBooked = bookingSlots.some(bs => 
+        bs.slotId === slot.id && 
+        bookings.some(b => 
+          b.id === bs.bookingId && 
+          b.date === selectedDate && 
+          b.status === 1
+        )
+      );
+      
+      if (!timeSlotMap.has(timeKey)) {
+        timeSlotMap.set(timeKey, {
+          time: timeKey,
+          displayTime: displayTimeKey,
+          startTime: formatTime(slot.startTime),
+          endTime: formatTime(slot.endTime),
+          price: slot.price,
+          isAvailable: !isBooked,
+          slots: [slot]
+        });
+      } else {
+        const existing = timeSlotMap.get(timeKey);
+        existing.slots.push(slot);
+        if (!isBooked) {
+          existing.isAvailable = true;
+        }
+      }
+    });
     
-    // Mock time slots if no availability data
-    return [
-      { time: '06:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '07:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '08:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '09:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '10:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '11:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '14:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '15:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '16:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '17:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '18:00', price: venue.basePrice || 200000, isAvailable: true },
-      { time: '19:00', price: venue.basePrice || 200000, isAvailable: true }
-    ];
-  }, [venue, selectedDate]);
+    const availableSlots = Array.from(timeSlotMap.values())
+      .filter(slot => slot.isAvailable)
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    
+    return availableSlots;
+  }, [selectedDate, venueSlots, bookingSlots, bookings]);
 
-  // Get available fields for selected time slot
+  // Get available fields for selected time slot using API data
   const availableFields = useMemo(() => {
-    if (!selectedTime) return [];
+    if (!selectedTimes.length || venueFields.length === 0) return [];
     
-    // Mock field data - in real app this would come from the venue data
-    const fields = [
-      { id: 'field-1', name: 'Sân 1', type: venue?.type || 'Standard' },
-      { id: 'field-2', name: 'Sân 2', type: venue?.type || 'Standard' },
-      { id: 'field-3', name: 'Sân 3', type: venue?.type || 'Premium' }
-    ];
+    const selectedTimeSlots = availableTimeSlots.filter(slot => selectedTimes.includes(slot.time));
+    if (selectedTimeSlots.length === 0) return [];
     
-    // Filter based on availability (mock logic)
-    return fields.filter(() => Math.random() > 0.3); // 70% chance of being available
-  }, [selectedTime, venue]);
+    const availableFieldsData = venueFields.filter(field => {
+      return selectedTimeSlots.some(slot => 
+        slot.slots.some(s => s.fieldId === field.id)
+      );
+    });
+    
+    return availableFieldsData.map(field => ({
+      id: field.id,
+      name: field.name,
+      type: field.type || 'Standard',
+      description: field.description || ''
+    }));
+  }, [selectedTimes, selectedDate, venueFields, availableTimeSlots, bookingSlots, bookings]);
 
-  const selectedTimeSlot = availableTimeSlots.find(slot => slot.time === selectedTime);
-  const totalPrice = selectedTimeSlot?.price || venue?.basePrice || 0;
-
-  // Remove auto-select first available field - let user choose
-  // useEffect(() => {
-  //   if (selectedTime && !selectedField && availableFields.length > 0) {
-  //     setSelectedField(availableFields[0].id);
-  //   }
-  // }, [selectedTime, selectedField, availableFields]);
-
-  // Auto-scroll to step 3 when modal opens with preSelectedTimeSlot
+  // Auto-select first available field when times are selected
   useEffect(() => {
-    if (isOpen && preSelectedTimeSlot && selectedTime && selectedField) {
-      // Small delay to ensure DOM is rendered
+    if (selectedTimes.length > 0 && availableFields.length > 0 && !selectedField) {
+      setSelectedField(availableFields[0].id);
+    }
+  }, [selectedTimes, availableFields, selectedField]);
+
+  // Get consecutive time slots for extended booking
+  const getConsecutiveTimeSlots = (startTime, duration) => {
+    const startIndex = availableTimeSlots.findIndex(slot => slot.time === startTime);
+    if (startIndex === -1) return [];
+    
+    const consecutiveSlots = [];
+    for (let i = 0; i < duration; i++) {
+      const slotIndex = startIndex + i;
+      if (slotIndex < availableTimeSlots.length) {
+        consecutiveSlots.push(availableTimeSlots[slotIndex]);
+      }
+    }
+    return consecutiveSlots;
+  };
+
+  // Check if consecutive time slots are available
+  const isConsecutiveTimeAvailable = (startTime, duration) => {
+    const consecutiveSlots = getConsecutiveTimeSlots(startTime, duration);
+    return consecutiveSlots.length === duration;
+  };
+
+  // Helper functions and calculations
+  const calculateTotalPrice = () => {
+    const basePrice = availableTimeSlots.find(slot => slot.time === selectedTimes[0])?.price || venue?.basePrice || 0;
+    return basePrice * selectedTimes.length;
+  };
+
+  const totalPrice = calculateTotalPrice();
+
+  // Handle time change
+  const handleTimeChange = (time) => {
+    setSelectedTimes(prev => {
+      if (prev.includes(time)) {
+        return prev.filter(t => t !== time);
+      } else {
+        return [...prev, time];
+      }
+    });
+    setPaymentMethod('');
+  };
+
+  // Auto-scroll to payment step when modal opens with preSelectedTimeSlot
+  useEffect(() => {
+    if (isOpen && preSelectedTimeSlot && selectedTimes.length > 0) {
       setTimeout(() => {
-        const step3Element = stepRefs.current[3];
-        if (step3Element && modalContentRef.current) {
-          step3Element.scrollIntoView({ 
+        const paymentStepElement = stepRefs.current[3];
+        if (paymentStepElement && modalContentRef.current) {
+          paymentStepElement.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'start' 
           });
         }
       }, 300);
     }
-  }, [isOpen, preSelectedTimeSlot, selectedTime, selectedField]);
+  }, [isOpen, preSelectedTimeSlot, selectedTimes]);
 
   // Auto-scroll to next step when current step is completed
   useEffect(() => {
@@ -130,107 +264,94 @@ const BookingSummaryModal = ({
             inline: 'nearest'
           });
         }
-      }, 500); // Delay to allow user to see completion
+      }, 500);
     };
 
-    // Scroll to step 2 when date is selected
-    if (selectedDate && !selectedTime) {
+    if (selectedDate && selectedTimes.length === 0) {
       scrollToNextStep(2);
     }
-    // Scroll to step 3 when time is selected
-    else if (selectedTime && !selectedField) {
+    else if (selectedTimes.length > 0 && !paymentMethod) {
       scrollToNextStep(3);
     }
-    // Scroll to step 4 when field is selected
-    else if (selectedField && !paymentMethod) {
+    else if (paymentMethod && showBookingSummary) {
       scrollToNextStep(4);
     }
-    // Scroll to summary when payment method is selected
-    else if (paymentMethod && showBookingSummary) {
-      scrollToNextStep(5);
-    }
-  }, [isOpen, selectedDate, selectedTime, selectedField, paymentMethod, showBookingSummary]);
+  }, [isOpen, selectedDate, selectedTimes, paymentMethod, showBookingSummary]);
 
-  // Calculate current step for progress indicator
-  const getCurrentStep = () => {
+  // Steps definition
+  const steps = [
+    { 
+      id: 1, 
+      title: 'Chọn ngày', 
+      icon: Calendar, 
+      completed: !!selectedDate 
+    },
+    { 
+      id: 2, 
+      title: 'Chọn giờ', 
+      icon: Clock, 
+      completed: selectedTimes.length > 0 
+    },
+    { 
+      id: 3, 
+      title: 'Thanh toán', 
+      icon: CreditCard, 
+      completed: !!paymentMethod 
+    }
+  ];
+
+  // Payment methods
+  const paymentMethods = [
+    { id: 'cash', name: 'Tiền mặt', icon: '💵', description: 'Thanh toán tại sân' },
+    { id: 'card', name: 'Thẻ tín dụng', icon: '💳', description: 'Visa, MasterCard' },
+    { id: 'momo', name: 'MoMo', icon: '🟣', description: 'Ví điện tử MoMo' },
+    { id: 'banking', name: 'Chuyển khoản', icon: '🏦', description: 'Internet Banking' }
+  ];
+
+  // Calculate current step based on completed information
+  const currentStep = useMemo(() => {
     if (!selectedDate) return 1;
-    if (!selectedTime) return 2;
-    if (!selectedField) return 3;
-    if (!paymentMethod) return 4;
-    return 5; // Confirmation step
+    if (selectedTimes.length === 0) return 2;
+    if (!paymentMethod) return 3;
+    return 4;
+  }, [selectedDate, selectedTimes, paymentMethod]);
+
+  // Generate booking ID
+  const generateBookingId = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
   };
 
-  const currentStep = getCurrentStep();
-
-  const steps = [
-    { id: 1, title: 'Chọn ngày', icon: Calendar, completed: !!selectedDate },
-    { id: 2, title: 'Chọn giờ', icon: Clock, completed: !!selectedTime },
-    { id: 3, title: 'Chọn sân', icon: Users, completed: !!selectedField },
-    { id: 4, title: 'Thanh toán', icon: CreditCard, completed: !!paymentMethod },
-    { id: 5, title: 'Xác nhận', icon: Check, completed: showBookingSummary }
-  ];
-
-  const paymentMethods = [
-    { id: 'momo', name: 'Ví MoMo', icon: '�', description: 'Thanh toán qua ví điện tử MoMo' },
-    { id: 'zalopay', name: 'ZaloPay', icon: '💳', description: 'Thanh toán qua ví ZaloPay' },
-    { id: 'banking', name: 'Chuyển khoản', icon: '🏦', description: 'Chuyển khoản ngân hàng' },
-    { id: 'cash', name: 'Tiền mặt', icon: '💵', description: 'Thanh toán tại sân' }
-  ];
-
+  // Handle booking confirmation
   const handleConfirmBooking = () => {
-    // Generate booking ID
-    const newBookingId = `BK${Date.now().toString().slice(-8)}`;
+    const newBookingId = generateBookingId();
     setBookingId(newBookingId);
-
-    console.log('Booking confirmed:', {
-      bookingId: newBookingId,
-      venue: venue?.id,
-      date: selectedDate,
-      time: selectedTime,
-      field: selectedField,
-      paymentMethod,
-      totalPrice
-    });
-
-    // Show success popup
     setShowSuccessPopup(true);
   };
 
   const handleCloseSuccessPopup = () => {
     setShowSuccessPopup(false);
-    onClose(); // Close main modal after success popup
+    onClose();
   };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    setSelectedTime(''); // Reset time when date changes
-    setSelectedField(''); // Reset field when date changes
-    setPaymentMethod(''); // Reset payment method
-  };
-
-  const handleTimeChange = (time) => {
-    setSelectedTime(time);
-    setSelectedField(''); // Reset field when time changes
-    setPaymentMethod(''); // Reset payment method
-  };
-
-  const handleFieldChange = (fieldId) => {
-    setSelectedField(fieldId);
-    setPaymentMethod(''); // Reset payment method when field changes
+    setSelectedTimes([]);
+    setPaymentMethod('');
   };
 
   // Handle step navigation
   const handleStepClick = (stepId) => {
-    // Determine max allowed step based on completed data
     let maxAllowedStep = 1;
-    if (selectedDate) maxAllowedStep = 2;
-    if (selectedTime) maxAllowedStep = 3;
-    if (selectedField) maxAllowedStep = 4;
-    if (paymentMethod) maxAllowedStep = 5;
+    if (selectedDate) maxAllowedStep = 1.5;
+    if (selectedTimes.length > 0) maxAllowedStep = 2;
+    if (paymentMethod) maxAllowedStep = 3;
 
-    // Allow navigation to completed steps or current step
     if (stepId <= maxAllowedStep) {
-      // Scroll to the selected step
       setTimeout(() => {
         const targetStepElement = stepRefs.current[stepId];
         if (targetStepElement && modalContentRef.current) {
@@ -241,37 +362,63 @@ const BookingSummaryModal = ({
         }
       }, 100);
     } else {
-      // Show warning for inaccessible steps
       const stepNames = {
         2: 'chọn khung giờ',
-        3: 'chọn sân', 
-        4: 'chọn phương thức thanh toán',
-        5: 'xác nhận đặt sân'
+        3: 'chọn phương thức thanh toán',
+        4: 'xác nhận đặt sân'
       };
       
       const requiredSteps = {
         2: 'chọn ngày',
         3: 'chọn ngày và khung giờ',
-        4: 'chọn ngày, khung giờ và sân',
-        5: 'hoàn thành tất cả các bước trước'
+        4: 'hoàn thành tất cả các bước trước'
       };
 
       setWarningMessage(`Bạn cần ${requiredSteps[stepId]} trước khi ${stepNames[stepId]}!`);
       setShowWarning(true);
       
-      // Auto hide warning after 3 seconds
       setTimeout(() => {
         setShowWarning(false);
       }, 3000);
     }
   };
 
+  // Reset modal state when it closes
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedDate('');
+      setSelectedTimes([]);
+      setSelectedField('');
+      setPaymentMethod('');
+      setShowBookingSummary(false);
+      setShowWarning(false);
+      setWarningMessage('');
+      setShowSuccessPopup(false);
+      setBookingId('');
+      setError(null);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div className="booking-summary-modal">
       <div className="booking-summary-modal__content" ref={modalContentRef}>
-        {/* Warning Toast */}
+        {loading && (
+          <div className="booking-summary-modal__loading">
+            <div className="booking-summary-modal__loading-spinner">⏳</div>
+            <p>Đang tải thông tin sân...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="booking-summary-modal__error">
+            <div className="booking-summary-modal__error-icon">❌</div>
+            <p>Lỗi: {error}</p>
+            <button onClick={() => setError(null)}>Thử lại</button>
+          </div>
+        )}
+
         {showWarning && (
           <div className="booking-summary-modal__warning-toast">
             <div className="booking-summary-modal__warning-content">
@@ -281,7 +428,6 @@ const BookingSummaryModal = ({
           </div>
         )}
 
-        {/* Header */}
         <div className="booking-summary-modal__header">
           <h2 className="booking-summary-modal__title">Đặt sân - {venue?.name}</h2>
           <button onClick={onClose} className="booking-summary-modal__close">
@@ -289,7 +435,6 @@ const BookingSummaryModal = ({
           </button>
         </div>
 
-        {/* Venue Quick Info */}
         <div className="booking-summary-modal__venue-quick-info">
           <div className="booking-summary-modal__venue-icon">
             <span>🏟️</span>
@@ -303,11 +448,8 @@ const BookingSummaryModal = ({
           </div>
         </div>
 
-        {/* Main Content Area */}
         <div className="booking-summary-modal__main">
-          {/* Left Side - Steps Content */}
           <div className="booking-summary-modal__steps">
-            {/* Step 1: Date Selection */}
             <div 
               className={`booking-summary-modal__step ${currentStep >= 1 ? 'active' : 'inactive'}`}
               ref={el => stepRefs.current[1] = el}
@@ -343,124 +485,67 @@ const BookingSummaryModal = ({
               </div>
             </div>
 
-            {/* Step 2: Time Selection */}
             {selectedDate && (
               <div 
                 className={`booking-summary-modal__step ${currentStep >= 2 ? 'active' : 'inactive'}`}
                 ref={el => stepRefs.current[2] = el}
               >
                 <div className={`booking-summary-modal__step-content ${
-                  currentStep === 2 ? 'current' : selectedTime ? 'completed' : 'pending'
+                  currentStep === 2 ? 'current' : selectedTimes.length > 0 ? 'completed' : 'pending'
                 }`}>
                   <div className="booking-summary-modal__step-header">
-                    <div className={`booking-summary-modal__step-number ${selectedTime ? 'completed' : 'current'}`}>
-                      {selectedTime ? '✓' : '2'}
+                    <div className={`booking-summary-modal__step-number ${selectedTimes.length > 0 ? 'completed' : 'current'}`}>
+                      {selectedTimes.length > 0 ? '✓' : '2'}
                     </div>
                     <div className="booking-summary-modal__step-info">
-                      <h3 className="booking-summary-modal__step-title">Chọn khung giờ</h3>
+                      <h3 className="booking-summary-modal__step-title">Chọn khung giờ (có thể chọn nhiều)</h3>
                       <p className="booking-summary-modal__step-subtitle">{availableTimeSlots.length} khung giờ có sẵn</p>
-                      {selectedTime && (
-                        <p className="booking-summary-modal__step-selected">Đã chọn: {selectedTime}</p>
+                      {selectedTimes.length > 0 && (
+                        <p className="booking-summary-modal__step-selected">
+                          Đã chọn: {selectedTimes.map(t => formatTimeRange(t)).join(', ')}
+                        </p>
                       )}
                     </div>
                   </div>
                   <div className="booking-summary-modal__time-grid">
-                    {availableTimeSlots.map((slot) => (
-                      <button
-                        key={slot.time}
-                        onClick={() => handleTimeChange(slot.time)}
-                        className={`booking-summary-modal__time-slot ${
-                          selectedTime === slot.time ? 'selected' : ''
-                        }`}
-                      >
-                        <div className="booking-summary-modal__time-slot-time">{slot.time}</div>
-                        <div className="booking-summary-modal__time-slot-price">
-                          {((slot.price || venue?.basePrice || 0) / 1000).toFixed(0)}K
-                        </div>
-                      </button>
-                    ))}
+                    {availableTimeSlots.map((slot, index) => {
+                      const uniqueKey = `${selectedDate}-${slot.time}-${venue?.id || 'default'}`;
+                      return (
+                        <button
+                          key={uniqueKey}
+                          onClick={() => handleTimeChange(slot.time)}
+                          className={`booking-summary-modal__time-slot ${selectedTimes.includes(slot.time) ? 'selected' : ''}`}
+                        >
+                          <div className="booking-summary-modal__time-slot-time">
+                            {slot.displayTime}
+                          </div>
+                          <div className="booking-summary-modal__time-slot-price">
+                            {(slot.price / 1000).toFixed(0)}K
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                   {currentStep === 2 && (
                     <div className="booking-summary-modal__step-tip">
-                      <p>💡 Chọn khung giờ phù hợp với lịch trình của bạn. Giá có thể thay đổi theo khung giờ!</p>
+                      <p>💡 Chọn một hoặc nhiều khung giờ phù hợp với lịch trình của bạn.</p>
                     </div>
                   )}
                 </div>
               </div>
             )}
 
-            {/* Step 3: Field Selection */}
-            {selectedTime && (
+            {selectedTimes.length > 0 && (
               <div 
-                className={`booking-summary-modal__step ${currentStep >= 3 ? 'active' : 'inactive'}`} 
+                className={`booking-summary-modal__step ${currentStep >= 3 ? 'active' : 'inactive'}`}
                 ref={el => stepRefs.current[3] = el}
               >
                 <div className={`booking-summary-modal__step-content ${
-                  currentStep === 3 ? 'current' : selectedField ? 'completed' : 'pending'
-                }`}>
-                  <div className="booking-summary-modal__step-header">
-                    <div className={`booking-summary-modal__step-number ${selectedField ? 'completed' : 'current'}`}>
-                      {selectedField ? '✓' : '3'}
-                    </div>
-                    <div className="booking-summary-modal__step-info">
-                      <h3 className="booking-summary-modal__step-title">Chọn sân</h3>
-                      <p className="booking-summary-modal__step-subtitle">{availableFields.length} sân có sẵn</p>
-                      {selectedField ? (
-                        <p className="booking-summary-modal__step-selected">
-                          Đã chọn: {availableFields.find(f => f.id === selectedField)?.name}
-                        </p>
-                      ) : (
-                        <p className="booking-summary-modal__step-prompt">
-                          👆 Vui lòng chọn sân để tiếp tục
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="booking-summary-modal__field-grid">
-                    {availableFields.map((field) => (
-                      <button
-                        key={field.id}
-                        onClick={() => handleFieldChange(field.id)}
-                        className={`booking-summary-modal__field-option ${
-                          selectedField === field.id ? 'selected' : ''
-                        }`}
-                      >
-                        <div className="booking-summary-modal__field-info">
-                          <div className="booking-summary-modal__field-name">{field.name}</div>
-                          <div className="booking-summary-modal__field-type">{field.type}</div>
-                        </div>
-                        <div className="booking-summary-modal__field-price">
-                          {(totalPrice / 1000).toFixed(0)}K
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                  {currentStep === 3 && (
-                    <div className="booking-summary-modal__step-tip">
-                      <p>💡 Chọn sân phù hợp với nhu cầu của bạn. Sân Premium có chất lượng cao hơn! Hãy xem xét kỹ trước khi quyết định.</p>
-                    </div>
-                  )}
-                  {!selectedField && currentStep === 3 && (
-                    <div className="booking-summary-modal__step-suggestion">
-                      <p>🎯 <strong>Gợi ý:</strong> Nếu đây là lần đầu chơi, hãy chọn sân Standard để trải nghiệm. Sân Premium phù hợp cho người chơi có kinh nghiệm.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Step 4: Payment Method Selection */}
-            {selectedField && (
-              <div 
-                className={`booking-summary-modal__step ${currentStep >= 4 ? 'active' : 'inactive'}`}
-                ref={el => stepRefs.current[4] = el}
-              >
-                <div className={`booking-summary-modal__step-content ${
-                  currentStep === 4 ? 'current' : paymentMethod ? 'completed' : 'pending'
+                  currentStep === 3 ? 'current' : paymentMethod ? 'completed' : 'pending'
                 }`}>
                   <div className="booking-summary-modal__step-header">
                     <div className={`booking-summary-modal__step-number ${paymentMethod ? 'completed' : 'current'}`}>
-                      {paymentMethod ? '✓' : '4'}
+                      {paymentMethod ? '✓' : '3'}
                     </div>
                     <div className="booking-summary-modal__step-info">
                       <h3 className="booking-summary-modal__step-title">Chọn phương thức thanh toán</h3>
@@ -482,7 +567,7 @@ const BookingSummaryModal = ({
                       >
                         <div className="booking-summary-modal__payment-info">
                           <span className="booking-summary-modal__payment-icon">{method.icon}</span>
-                          <div className="booking-summary-modal__payment-details">
+                          <div className="booking-summary_modal__payment-details">
                             <div className="booking-summary-modal__payment-name">{method.name}</div>
                             <div className="booking-summary-modal__payment-description">{method.description}</div>
                           </div>
@@ -490,7 +575,7 @@ const BookingSummaryModal = ({
                       </button>
                     ))}
                   </div>
-                  {currentStep === 4 && (
+                  {currentStep === 3 && (
                     <div className="booking-summary-modal__step-tip">
                       <p>💡 Chọn cách thức thanh toán thuận tiện nhất. Tất cả đều an toàn và bảo mật!</p>
                     </div>
@@ -500,39 +585,36 @@ const BookingSummaryModal = ({
             )}
           </div>
 
-          {/* Right Side - Progress & Summary */}
           <div className="booking-summary-modal__sidebar">
-            {/* Steps Progress Indicator - Hidden when showing booking summary */}
             {!showBookingSummary && (
               <div className="booking-summary-modal__progress">
                 <div className="booking-summary-modal__progress-header">
                   <span className="booking-summary-modal__progress-title">Tiến trình đặt sân</span>
-                  <span className="booking-summary-modal__progress-step">Bước {currentStep}/5</span>
+                  <span className="booking-summary-modal__progress-step">Bước {currentStep}/4</span>
                 </div>
                 
                 <div className="booking-summary-modal__progress-tip">
                   <p>💡 Bạn có thể quay lại chỉnh sửa bất kỳ bước nào đã hoàn thành</p>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="booking-summary-modal__progress-bar">
                   <div 
                     className="booking-summary-modal__progress-fill" 
                     style={{ 
                       width: `${
-                        selectedDate ? (selectedTime ? (selectedField ? (paymentMethod ? 100 : 75) : 50) : 25) : 0
+                        selectedDate ? 
+                          (selectedTimes.length > 0 ? 
+                            (paymentMethod ? 100 : 66) : 33) : 0
                       }%` 
                     }}
                   />
                 </div>
 
-                {/* Footer Text - More Prominent */}
                 <div className="booking-summary-modal__progress-guidance">
                   <p className="booking-summary-modal__progress-guidance-text">
                     {!selectedDate && "👆 Bắt đầu bằng cách chọn ngày"}
-                    {selectedDate && !selectedTime && "👆 Tiếp theo, chọn giờ chơi"}
-                    {selectedTime && !selectedField && "👆 Chọn sân bạn muốn"}
-                    {selectedField && !paymentMethod && "👆 Chọn cách thức thanh toán"}
+                    {selectedDate && selectedTimes.length === 0 && "👆 Chọn khung giờ"}
+                    {selectedTimes.length > 0 && !paymentMethod && "👆 Chọn cách thức thanh toán"}
                   </p>
                 </div>
                 
@@ -542,19 +624,17 @@ const BookingSummaryModal = ({
                     const isActive = step.id === currentStep;
                     const isCompleted = step.completed;
                     
-                    // Determine if step is clickable
                     let maxAllowedStep = 1;
-                    if (selectedDate) maxAllowedStep = 2;
-                    if (selectedTime) maxAllowedStep = 3;
-                    if (selectedField) maxAllowedStep = 4;
-                    if (paymentMethod) maxAllowedStep = 5;
+                    if (selectedDate) maxAllowedStep = 1.5;
+                    if (selectedTimes.length > 0) maxAllowedStep = 2;
+                    if (paymentMethod) maxAllowedStep = 3;
                     
                     const isClickable = step.id <= maxAllowedStep;
                     
                     return (
                       <div 
                         key={step.id} 
-                        className={`booking-summary-modal__progress-step-item ${
+                        className={`booking-summary-modal__progress-step ${
                           isClickable ? 'clickable' : 'disabled'
                         }`}
                         onClick={() => handleStepClick(step.id)}
@@ -575,9 +655,8 @@ const BookingSummaryModal = ({
                             <div className="booking-summary-modal__progress-step-subtitle">
                               {currentStep === 1 && "Chọn ngày chơi"}
                               {currentStep === 2 && "Chọn khung giờ"}
-                              {currentStep === 3 && "Chọn sân"}
-                              {currentStep === 4 && "Chọn thanh toán"}
-                              {currentStep === 5 && "Xác nhận đặt sân"}
+                              {currentStep === 3 && "Chọn thanh toán"}
+                              {currentStep === 4 && "Xác nhận đặt sân"}
                             </div>
                           )}
                         </div>
@@ -588,7 +667,6 @@ const BookingSummaryModal = ({
               </div>
             )}
 
-            {/* Booking Summary - Show when ready */}
             {showBookingSummary && (
               <div 
                 className="booking-summary-modal__summary"
@@ -602,27 +680,29 @@ const BookingSummaryModal = ({
                 <div className="booking-summary-modal__summary-details">
                   <div className="booking-summary-modal__summary-item">
                     <span className="booking-summary-modal__summary-label">Sân:</span>
-                    <span className="booking-summary-modal__summary-value">{venue?.name}</span>
+                    <span className="booking-summary_modal__summary-value">{venue?.name}</span>
                   </div>
                   <div className="booking-summary-modal__summary-item">
                     <span className="booking-summary-modal__summary-label">Ngày:</span>
-                    <span className="booking-summary-modal__summary-value">
+                    <span className="booking-summary_modal__summary-value">
                       {new Date(selectedDate).toLocaleDateString('vi-VN', { weekday: 'short', day: 'numeric', month: 'short' })}
                     </span>
                   </div>
                   <div className="booking-summary-modal__summary-item">
                     <span className="booking-summary-modal__summary-label">Giờ:</span>
-                    <span className="booking-summary-modal__summary-value">{selectedTime}</span>
+                    <span className="booking-summary_modal__summary-value">
+                      {selectedTimes.map(time => formatTimeRange(time)).join(', ')}
+                    </span>
                   </div>
                   <div className="booking-summary-modal__summary-item">
-                    <span className="booking-summary-modal__summary-label">Sân:</span>
-                    <span className="booking-summary-modal__summary-value">
-                      {availableFields.find(f => f.id === selectedField)?.name}
+                    <span className="booking-summary-modal__summary-label">Sân được chọn:</span>
+                    <span className="booking-summary_modal__summary-value">
+                      {availableFields.find(f => f.id === selectedField)?.name || 'Sân tự động'}
                     </span>
                   </div>
                   <div className="booking-summary-modal__summary-item">
                     <span className="booking-summary-modal__summary-label">Thanh toán:</span>
-                    <span className="booking-summary-modal__summary-value">
+                    <span className="booking-summary_modal__summary-value">
                       {paymentMethods.find(p => p.id === paymentMethod)?.name}
                     </span>
                   </div>
@@ -634,7 +714,6 @@ const BookingSummaryModal = ({
                   </div>
                 </div>
                 
-                {/* Confirm Button in Summary */}
                 <div className="booking-summary-modal__summary-actions">
                   <button
                     onClick={handleConfirmBooking}
@@ -650,7 +729,6 @@ const BookingSummaryModal = ({
           </div>
         </div>
 
-        {/* Action Buttons - Only show progress when not at final step */}
         {!showBookingSummary && (
           <div className="booking-summary-modal__footer">
             <div className="booking-summary-modal__footer-note">
@@ -659,50 +737,42 @@ const BookingSummaryModal = ({
           </div>
         )}
 
-        {/* Warning Message - Show when user tries to skip steps */}
-        {showWarning && (
-          <div className="booking-summary-modal__warning" id="booking-summary-modal__warning">
-            <p className="booking-summary-modal__warning-message">{warningMessage}</p>
+        {showSuccessPopup && (
+          <div className="booking-success-popup">
+            <div className="booking-success-popup__backdrop" onClick={handleCloseSuccessPopup} />
+            <div className="booking-success-popup__content">
+              <div className="booking-success-popup__header">
+                <div className="booking-success-popup__check-circle">
+                  <div className="booking-success-popup__check-icon">✓</div>
+                </div>
+                <h2 className="booking-success-popup__title">Đặt sân thành công!</h2>
+              </div>
+
+              <div className="booking-success-popup__details">
+                <div className="booking-success-popup__booking-id">
+                  <span className="booking-success-popup__id-label">Mã đặt sân</span>
+                  <span className="booking-success-popup__id-value">{bookingId}</span>
+                </div>
+
+                <div className="booking-success-popup__summary">
+                  <p>{venue?.name}</p>
+                  <p>{selectedTimes.join(', ')} • {new Date(selectedDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric' })}</p>
+                  <p className="booking-success-popup__price">{(totalPrice / 1000).toFixed(0)}K VNĐ</p>
+                </div>
+              </div>
+
+              <div className="booking-success-popup__actions">
+                <button 
+                  className="booking-success-popup__button"
+                  onClick={handleCloseSuccessPopup}
+                >
+                  Xong
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
-
-      {/* Success Popup */}
-      {showSuccessPopup && (
-        <div className="booking-success-popup">
-          <div className="booking-success-popup__backdrop" onClick={handleCloseSuccessPopup} />
-          <div className="booking-success-popup__content">
-            <div className="booking-success-popup__header">
-              <div className="booking-success-popup__check-circle">
-                <div className="booking-success-popup__check-icon">✓</div>
-              </div>
-              <h2 className="booking-success-popup__title">Đặt sân thành công!</h2>
-            </div>
-
-            <div className="booking-success-popup__details">
-              <div className="booking-success-popup__booking-id">
-                <span className="booking-success-popup__id-label">Mã đặt sân</span>
-                <span className="booking-success-popup__id-value">{bookingId}</span>
-              </div>
-
-              <div className="booking-success-popup__summary">
-                <p>{venue?.name}</p>
-                <p>{selectedTime} • {new Date(selectedDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric' })}</p>
-                <p className="booking-success-popup__price">{(totalPrice / 1000).toFixed(0)}K VNĐ</p>
-              </div>
-            </div>
-
-            <div className="booking-success-popup__actions">
-              <button 
-                className="booking-success-popup__button"
-                onClick={handleCloseSuccessPopup}
-              >
-                Xong
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

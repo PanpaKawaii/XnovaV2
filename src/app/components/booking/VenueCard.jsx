@@ -4,6 +4,30 @@ import './VenueCard.css';
 
 const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
 
+  // Helper function to format time from 00:00:00 to 00:00
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+    // If time is in format "00:00:00", extract only "00:00"
+    if (timeString.includes(':')) {
+      const parts = timeString.split(':');
+      if (parts.length >= 2) {
+        return `${parts[0]}:${parts[1]}`;
+      }
+    }
+    return timeString;
+  };
+
+  // Helper function to format time range
+  const formatTimeRange = (timeRange) => {
+    if (!timeRange || !timeRange.includes('-')) return timeRange;
+    
+    const [startTime, endTime] = timeRange.split('-');
+    const formattedStart = formatTime(startTime);
+    const formattedEnd = formatTime(endTime);
+    
+    return `${formattedStart}-${formattedEnd}`;
+  };
+
   const getAmenityIcon = (amenity) => {
     switch (amenity) {
       case 'wifi':
@@ -42,24 +66,47 @@ const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
   let availableSlots = [];
   let dayAvailability = null;
   
-  if (selectedDate) {
+  if (selectedDate && venue.availability && venue.availability.length > 0) {
     dayAvailability = venue.availability.find(avail => avail.date === selectedDate);
-    if (dayAvailability) {
+    if (dayAvailability && dayAvailability.timeSlots) {
       availableSlots = dayAvailability.timeSlots
         .filter(slot => slot.isAvailable)
-        .map(slot => slot.time);
+        .map(slot => ({
+          time: slot.time, // Keep original format for filtering
+          displayTime: formatTimeRange(slot.time), // Format for display
+          price: slot.price || venue.basePrice || 0
+        }));
     }
   }
 
   // Filter by selectedTimeSlot if provided
-  if (selectedTimeSlot && selectedTimeSlot !== 'Mọi khung giờ') {
+  if (selectedTimeSlot && selectedTimeSlot !== 'Mọi khung giờ' && availableSlots.length > 0) {
     if (selectedTimeSlot.includes('-')) {
       // Handle time range (e.g., "06:00-09:00")
-      const [startTime, endTime] = selectedTimeSlot.split('-');
-      availableSlots = availableSlots.filter(slot => slot >= startTime && slot < endTime);
+      const [rangeStart, rangeEnd] = selectedTimeSlot.split('-');
+      const formattedRangeStart = formatTime(rangeStart);
+      const formattedRangeEnd = formatTime(rangeEnd);
+      
+      availableSlots = availableSlots.filter(slot => {
+        if (slot.time && slot.time.includes('-')) {
+          const [slotStart] = slot.time.split('-');
+          const formattedSlotStart = formatTime(slotStart);
+          return formattedSlotStart >= formattedRangeStart && formattedSlotStart < formattedRangeEnd;
+        }
+        return false;
+      });
     } else {
-      // Handle specific time
-      availableSlots = availableSlots.filter(slot => slot === selectedTimeSlot);
+      // Handle specific time - match by start time
+      const formattedSelectedTime = formatTime(selectedTimeSlot);
+      availableSlots = availableSlots.filter(slot => {
+        if (slot.time && slot.time.includes('-')) {
+          const [slotStart] = slot.time.split('-');
+          const formattedSlotStart = formatTime(slotStart);
+          return formattedSlotStart === formattedSelectedTime;
+        }
+        const formattedSlotTime = formatTime(slot.time);
+        return formattedSlotTime === formattedSelectedTime;
+      });
     }
   }
 
@@ -69,16 +116,17 @@ const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
   }
 
   // Use basePrice as the current price
-  const currentPrice = venue.basePrice;
+  const currentPrice = venue.basePrice || 0;
 
-  // Get price range if there are different prices for different time slots
-  const priceRange = dayAvailability ? 
-    dayAvailability.timeSlots
-      .filter(slot => slot.isAvailable && (!selectedTimeSlot || selectedTimeSlot === 'Mọi khung giờ' || availableSlots.includes(slot.time)))
-      .map(slot => slot.price || venue.basePrice) : [venue.basePrice];
+  // Get price range from available slots
+  const priceRange = availableSlots.length > 0 ? 
+    availableSlots.map(slot => slot.price).filter(price => price > 0) : [currentPrice];
   
-  const minPrice = Math.min(...priceRange);
-  const maxPrice = Math.max(...priceRange);
+  // Fallback to currentPrice if no valid prices found
+  const validPrices = priceRange.length > 0 ? priceRange : [currentPrice];
+  
+  const minPrice = Math.min(...validPrices);
+  const maxPrice = Math.max(...validPrices);
   const showPriceRange = minPrice !== maxPrice;
 
   return (
@@ -142,18 +190,15 @@ const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
               <div className="venue-card__slots">
                 <div className="venue-card__slots-container">
                   {availableSlots.slice(0, 3).map((slot, index) => {
-                    const timeSlot = dayAvailability?.timeSlots.find(ts => ts.time === slot);
-                    const slotPrice = timeSlot?.price || venue.basePrice;
-                    
                     return (
                       <button
                         key={index}
-                        onClick={() => onBook?.(venue.id, selectedDate, slot)}
+                        onClick={() => onBook?.(venue.id, selectedDate, slot.time)}
                         className="venue-card__slot-button"
                       >
-                        <div className="venue-card__slot-time">{slot}</div>
+                        <div className="venue-card__slot-time">{slot.displayTime}</div>
                         <div className="venue-card__slot-price">
-                          {(slotPrice / 1000).toFixed(0)},000đ
+                          {(slot.price / 1000).toFixed(0)},000đ
                         </div>
                       </button>
                     );

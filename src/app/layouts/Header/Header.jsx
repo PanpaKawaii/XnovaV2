@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Zap, User, Calendar, Users } from 'lucide-react';
+import { Menu, X, Zap, User, Calendar, Users, LogOut, Settings, ChevronDown, Heart, History, UserPlus } from 'lucide-react';
 import ThemeToggle from '../../components/ui/ThemeToggle';
 import LOGO from '../../assets/LOGO.png';
 import VNFlag from '../../assets/vn.jpg';
 import UKFlag from '../../assets/uk.png';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../hooks/AuthContext/AuthContext';
+import { fetchData } from '../../../mocks/CallingAPI.js';
 import './Header.css';
 
 const LANGUAGES = [
@@ -17,9 +19,15 @@ const Header = ({ onLoginClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [langDropdown, setLangDropdown] = useState(false);
+  const [userDropdown, setUserDropdown] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const langBtnRef = useRef(null);
+  const userBtnRef = useRef(null);
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +48,43 @@ const Header = ({ onLoginClick }) => {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [langDropdown]);
 
+  useEffect(() => {
+    if (!userDropdown) return;
+    const handleClick = (e) => {
+      if (userBtnRef.current && !userBtnRef.current.contains(e.target)) {
+        setUserDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [userDropdown]);
+
+  useEffect(() => {
+    const token = user?.token;
+    if (!user || !token) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchUserInfo = async () => {
+      try {
+        const userData = await fetchData(`User/${user.id}`, token);
+        setUserInfo(userData);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+    
+    fetchUserInfo();
+  }, [user]);
+
+  const handleLogout = () => {
+    logout();
+    setUserDropdown(false);
+  };
+
   const navLinks = [
     { to: '/', icon: Zap, label: t('Home') },
     { to: '/booking', icon: Calendar, label: t('Book Field') },
@@ -52,7 +97,6 @@ const Header = ({ onLoginClick }) => {
     <header className={`header ${isScrolled ? 'header--scrolled' : ''}`}>
       <div className="header__container">
         <div className="header__wrapper">
-          {/* Logo */}
           <Link to="/" className="header__logo">
             <img
               src={LOGO}
@@ -61,7 +105,6 @@ const Header = ({ onLoginClick }) => {
             />
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="header__nav">
             {navLinks.map(({ to, icon: Icon, label }) => (
               <Link
@@ -75,17 +118,80 @@ const Header = ({ onLoginClick }) => {
             ))}
           </nav>
 
-          {/* Login Button & Language Switcher */}
           <div className="header__actions">
             <ThemeToggle />
-            <button
-              onClick={onLoginClick}
-              className="header__login-btn"
-            >
-              <User className="header__login-icon" />
-              <span>{t('Login')}</span>
-            </button>
-            {/* Language Dropdown */}
+            
+            {user ? (
+              <div className="header__user-dropdown" ref={userBtnRef}>
+                <button
+                  className={`header__user-btn ${userDropdown ? 'header__user-btn--active' : ''}`}
+                  onClick={() => setUserDropdown((v) => !v)}
+                  aria-label="User menu"
+                >
+                  <div className="header__user-avatar">
+                    {userInfo?.image ? (
+                      <img src={userInfo.image} alt={userInfo.name} className="header__user-avatar-img" />
+                    ) : (
+                      <User className="header__user-avatar-icon" />
+                    )}
+                  </div>
+                  <span className="header__user-name">{userInfo?.name || user.email.split('@')[0]}</span>
+                  <ChevronDown className="header__user-chevron" />
+                </button>
+                
+                {userDropdown && (
+                  <div className="header__user-menu">
+                    <div className="header__user-info">
+                      <div className="header__user-info-avatar">
+                        {userInfo?.image ? (
+                          <img src={userInfo.image} alt={userInfo.name} className="header__user-info-avatar-img" />
+                        ) : (
+                          <User className="header__user-info-avatar-icon" />
+                        )}
+                      </div>
+                      <div className="header__user-info-details">
+                        <p className="header__user-info-name">{userInfo?.name || 'User'}</p>
+                        <p className="header__user-info-email">{user.email}</p>
+                      </div>
+                    </div>
+                    <div className="header__user-menu-divider"></div>
+                    <button className="header__user-menu-item">
+                      <UserPlus className="header__user-menu-icon" />
+                      <span>{t('My Team')}</span>
+                    </button>
+                    <button className="header__user-menu-item">
+                      <History className="header__user-menu-icon" />
+                      <span>{t('Booking History')}</span>
+                    </button>
+                    <button className="header__user-menu-item">
+                      <Heart className="header__user-menu-icon" />
+                      <span>{t('Favorite Fields')}</span>
+                    </button>
+                    <div className="header__user-menu-divider"></div>
+                    <button className="header__user-menu-item">
+                      <Settings className="header__user-menu-icon" />
+                      <span>{t('Profile Settings')}</span>
+                    </button>
+                    <button 
+                      className="header__user-menu-item header__user-menu-item--logout"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="header__user-menu-icon" />
+                      <span>{t('Logout')}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={onLoginClick}
+                className="header__login-btn"
+              >
+                <User className="header__login-icon" />
+                <span>{t('Login')}</span>
+              </button>
+            )}
+            
             <div className="header__lang-dropdown" ref={langBtnRef}>
               <button
                 className={`header__lang-btn ${langDropdown ? 'header__lang-btn--active' : ''}`}
@@ -123,7 +229,6 @@ const Header = ({ onLoginClick }) => {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="header__mobile-btn"
@@ -133,7 +238,6 @@ const Header = ({ onLoginClick }) => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="header__mobile-menu">
           <div className="header__mobile-content">
@@ -148,19 +252,65 @@ const Header = ({ onLoginClick }) => {
                 <span>{label}</span>
               </Link>
             ))}
-            <button
-              onClick={() => {
-                onLoginClick();
-                setIsMenuOpen(false);
-              }}
-              className="header__mobile-login"
-            >
-              <User className="header__mobile-login-icon" />
-              <span>{t('Login')}</span>
-            </button>
+            
+            {user ? (
+              <div className="header__mobile-user">
+                <div className="header__mobile-user-info">
+                  <div className="header__mobile-user-avatar">
+                    {userInfo?.image ? (
+                      <img src={userInfo.image} alt={userInfo.name} className="header__mobile-user-avatar-img" />
+                    ) : (
+                      <User className="header__mobile-user-avatar-icon" />
+                    )}
+                  </div>
+                  <div className="header__mobile-user-details">
+                    <p className="header__mobile-user-name">{userInfo?.name || 'User'}</p>
+                    <p className="header__mobile-user-email">{user.email}</p>
+                  </div>
+                </div>
+                <button className="header__mobile-user-menu-item">
+                  <UserPlus className="header__mobile-user-menu-icon" />
+                  <span>{t('My Team')}</span>
+                </button>
+                <button className="header__mobile-user-menu-item">
+                  <History className="header__mobile-user-menu-icon" />
+                  <span>{t('Booking History')}</span>
+                </button>
+                <button className="header__mobile-user-menu-item">
+                  <Heart className="header__mobile-user-menu-icon" />
+                  <span>{t('Favorite Fields')}</span>
+                </button>
+                <div className="header__mobile-user-menu-divider"></div>
+                <button className="header__mobile-user-menu-item">
+                  <Settings className="header__mobile-user-menu-icon" />
+                  <span>{t('Profile Settings')}</span>
+                </button>
+                <button 
+                  className="header__mobile-user-menu-item header__mobile-user-menu-item--logout"
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="header__mobile-user-menu-icon" />
+                  <span>{t('Logout')}</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  onLoginClick();
+                  setIsMenuOpen(false);
+                }}
+                className="header__mobile-login"
+              >
+                <User className="header__mobile-login-icon" />
+                <span>{t('Login')}</span>
+              </button>
+            )}
+            
             <div className="header__mobile-actions">
               <ThemeToggle />
-              {/* Language Dropdown Mobile */}
               <div className="header__mobile-lang" ref={langBtnRef}>
                 <button
                   className={`header__mobile-lang-btn ${langDropdown ? 'header__mobile-lang-btn--active' : ''}`}
