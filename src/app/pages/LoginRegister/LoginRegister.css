@@ -1,0 +1,270 @@
+@keyframes LoginRegisterUpdown {
+    0% {
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        transform: translate(-50%, -20px);
+    }
+
+    100% {
+        transform: translate(-50%, 0);
+    }
+}
+
+.loginregister-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    font-family: Inter, system-ui, sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+
+    .close-button {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+        color: #A8FF00;
+        background-color: transparent;
+        border: none;
+        height: fit-content;
+    }
+
+    a {
+        outline: none;
+        text-decoration: none;
+    }
+
+    .btn {
+        height: fit-content;
+        cursor: pointer;
+        user-select: none;
+        padding: 11px;
+        font-weight: 600;
+        color: #fff;
+        border: none;
+        box-sizing: border-box;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.15s ease;
+        font-family: Inter, system-ui, sans-serif;
+
+        &.btn-submit {
+            flex: 3;
+            background-color: #0db04b;
+
+            &:hover {
+                background-color: #0a8439;
+            }
+
+            &:active {
+                background-color: #075826;
+            }
+        }
+
+        &.btn-reset {
+            flex: 1;
+            background-color: #6af49f;
+
+            &:hover {
+                background-color: #1fee6e;
+            }
+
+            &:active {
+                background-color: #0db04b;
+            }
+        }
+    }
+
+    .card-box {
+        width: 400px;
+        height: auto;
+        max-height: 90vh;
+        margin: auto;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+        border-radius: 20px;
+        border: 1px solid var(--border-primary);
+        background: var(--bg-secondary);
+        animation: slideUp 0.3s ease-out;
+        z-index: 1;
+
+        .bg-pattern-1 {
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(168, 255, 0, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+
+        .bg-pattern-2 {
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(162, 89, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+
+        .dark .card-body {
+            background: linear-gradient(135deg, #1a1d29 0%, #252b3a 100%);
+            border-color: var(--border-secondary);
+        }
+
+        .light .card-body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            border-color: var(--border-primary);
+            box-shadow: 0 20px 40px var(--shadow-tertiary);
+        }
+
+        .card-body {
+            flex: 1;
+            height: auto;
+            padding: 32px 40px;
+            position: relative;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background-color: transparent;
+            box-shadow: 0 20px 40px var(--shadow-tertiary);
+
+            .header {
+                margin: 0 0 40px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: relative;
+
+                img {
+                    width: 80px;
+                    height: auto;
+                    max-height: 80px;
+                    object-fit: contain;
+                }
+
+                .title {
+                    font-size: 32px;
+                    font-weight: 700;
+                    color: var(--text-primary);
+                    margin: 0 0 8px;
+                }
+
+                .subtitle {
+                    color: var(--text-secondary);
+                }
+            }
+
+            form {
+                position: relative;
+
+                .form-group {
+                    margin: 0 0 12px;
+                    position: relative;
+
+                    i {
+                        position: absolute;
+                        left: 16px;
+                        margin: 16px 0;
+                        color: #555;
+                        font-size: 18px;
+
+                        &.invalid-icon {
+                            color: #dc3545;
+                        }
+                    }
+
+                    input {
+                        /* color: #a3e635; */
+                        width: 100%;
+                        outline: none;
+                        padding: 12px 12px 12px 48px;
+                        box-sizing: border-box;
+                        font-size: 14px;
+                        font-family: Inter, system-ui, sans-serif;
+
+                        background-color: var(--bg-primary);
+                        border: 1px solid var(--border-secondary);
+                        border-radius: 12px;
+                        color: var(--text-primary);
+
+                        &:focus {
+                            box-shadow: 0 0 0 4px #0db04b40;
+                            border-color: #0db04b;
+                        }
+                    }
+                }
+
+                .form-check {
+                    color: #fff;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    label {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        cursor: pointer;
+
+                        input {
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                .message {
+                    margin: 8px 0;
+                    height: 20px;
+                    font-weight: bold;
+
+                    &.error-message {
+                        color: #dc3545;
+                    }
+
+                    &.success-message {
+                        color: #28a745;
+                    }
+                }
+
+                .btn-box {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 12px;
+                }
+            }
+
+            .link-box {
+                margin: 20px 0 0;
+                color: #fff;
+                font-weight: 200;
+                display: flex;
+                justify-content: center;
+                gap: 4px;
+
+                .link {
+                    color: #a259ff;
+                    font-weight: bold;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: #9147E6;
+                    }
+                }
+            }
+        }
+    }
+}
