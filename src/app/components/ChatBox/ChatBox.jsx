@@ -10,27 +10,18 @@ export default function ChatBox() {
     const [WidthFull, setWidthFull] = useState(false);
     const [HeightFull, setHeightFull] = useState(false);
     const [DisplayChat, setDisplayChat] = useState(false);
-    // const handleSetHeight = (status) => {
-    //     setHeightFull(p => status);
-    // }
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const addMessage = async (newMessage) => {
-
         console.log('newMessage: ', newMessage);
-
-        const SendMessage = {
-            message: newMessage,
-        };
-
+        const SendMessage = { message: newMessage };
         setLoading(true);
         const token = user?.token;
         try {
             const result = await postData('Chat/ask', SendMessage, token);
             console.log('result', result);
-
             setMessages((prev) => [...prev, result.reply]);
         } catch (error) {
             setMessages((prev) => [...prev, 'Kết nối không ổn định, bạn hãy thử lại sau nhé!']);
@@ -61,51 +52,53 @@ export default function ChatBox() {
     }
 
     const StyleNormal = {
-        width: '380px',
-        height: '520px',
+        width: '320px',
+        height: '420px',
     }
     const StyleHeight = {
-        width: '380px',
-        height: '85vh',
+        width: '320px',
+        height: '80vh',
     }
     const StyleFull = {
         width: 'calc(100vw - 40px)',
-        height: '85vh',
-        maxWidth: '1200px',
+        height: '80vh',
+        maxWidth: '1000px',
+    }
+
+    let chatStyle = StyleNormal;
+    if (WidthFull) {
+        chatStyle = StyleFull;
+    } else if (HeightFull) {
+        chatStyle = StyleHeight;
     }
 
     return (
         <div className='chat-box-container'>
-
             {!DisplayChat &&
                 <div className='open-icon' onClick={() => setDisplayChat(true)}>
                     Xnova
                 </div>
             }
-
             {DisplayChat &&
-                <div className='chat-box' style={WidthFull ? StyleFull : (HeightFull ? StyleHeight : StyleNormal)}>
-
+                <div className='chat-box' style={chatStyle}>
                     <div className='heading'>
                         <div className='name'>
-                            <i className='fa-solid fa-robot'></i>
                             <span>Xnova AI</span>
                         </div>
                         <div>
                             {WidthFull ?
-                                <i className='fa-solid fa-compress' onClick={() => setWidthFull(false)} title='Thu nhỏ'></i>
+                                <i className='fa-solid fa-compress-arrows-alt' onClick={() => setWidthFull(false)} title='Thu nhỏ'></i>
                                 :
-                                <i className='fa-solid fa-expand' onClick={() => setWidthFull(true)} title='Mở rộng'></i>
+                                <i className='fa-solid fa-arrows-alt' onClick={() => setWidthFull(true)} title='Mở rộng'></i>
                             }
                             {HeightFull ?
-                                <i className='fa-solid fa-down-left-and-up-right-to-center' onClick={() => setHeightFull(false)} title='Thu nhỏ chiều cao'></i>
+                                <i className='fa-solid fa-arrows-alt-v fa-rotate-90' onClick={() => setHeightFull(false)} title='Thu nhỏ chiều cao'></i>
                                 :
-                                <i className='fa-solid fa-up-right-and-down-left-from-center' onClick={() => setHeightFull(true)} title='Mở rộng chiều cao'></i>
+                                <i className='fa-solid fa-arrows-alt-v' onClick={() => setHeightFull(true)} title='Mở rộng chiều cao'></i>
                             }
-                            <i className='fa-solid fa-xmark' onClick={() => setDisplayChat(false)} title='Đóng'></i>
+                            <i className='fa-solid fa-times' onClick={() => setDisplayChat(false)} title='Đóng'></i>
                         </div>
                     </div>
-
                     <div ref={chatContainerRef} className='chat-content'>
                         {Messages.length === 0 && !loading && (
                             <div className='welcome-message'>
@@ -132,9 +125,8 @@ export default function ChatBox() {
                             </div>
                         )}
                     </div>
-
                     <form onSubmit={handleSend}>
-                        <div className='form-name form-group'>
+                        <div className='form-group'>
                             <i className='fa-solid fa-comment-dots input-icon'></i>
                             <input 
                                 type='text' 

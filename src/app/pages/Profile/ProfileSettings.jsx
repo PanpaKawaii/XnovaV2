@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Camera, Edit3, Check, X, User, MapPin, Award, Eye, EyeOff, Lock, Trash2, AlertTriangle, Bell, Calendar, Users, Gift } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
 import './ProfileSettings.css';
+import './BookingHistory.css';
 import SubUserHeader from '../../layouts/SubUserHeader/SubUserHeader';
+import BookingHistory from './BookingHistory';
 
 const initialUser = {
   id: '1',
@@ -21,6 +23,45 @@ const initialPreferences = {
   matchInvites: false,
   promotions: true,
 };
+
+const sampleBookings = [
+  {
+    id: '1',
+    fieldName: 'Central Park Field',
+    date: '2025-07-10',
+    time: '14:00',
+    duration: '2h',
+    price: 80,
+    status: 'completed'
+  },
+  {
+    id: '2',
+    fieldName: 'Riverside Stadium',
+    date: '2025-07-15',
+    time: '18:00',
+    duration: '1.5h',
+    price: 60,
+    status: 'upcoming'
+  },
+  {
+    id: '3',
+    fieldName: 'City Arena',
+    date: '2025-06-20',
+    time: '10:00',
+    duration: '1h',
+    price: 40,
+    status: 'cancelled'
+  },
+  {
+    id: '4',
+    fieldName: 'Downtown Pitch',
+    date: '2025-07-05',
+    time: '16:00',
+    duration: '2h',
+    price: 75,
+    status: 'completed'
+  }
+];
 
 const ProfileSettings = () => {
   const { theme } = useTheme();
@@ -272,6 +313,9 @@ const ProfileSettings = () => {
                 )}
               </button>
             </div>
+          </div>
+          <div className="booking-history-section">
+            <BookingHistory bookings={sampleBookings} />
           </div>
           <div className="delete-account">
             <div className="section-header">
