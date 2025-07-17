@@ -1,0 +1,92 @@
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    gap: 0;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .pulse-bar {
+      width: 0.5rem;
+      height: 2rem;
+      background: linear-gradient(to bottom, #A8FF00, #A259FF);
+      border-radius: 9999px;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .title {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .tab-nav {
+      display: flex;
+      border-radius: 0.75rem;
+      padding: 0.25rem;
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--border-secondary);
+      background-color: var(--bg-tertiary);
+      box-shadow: var(--shadow-primary);
+    }
+
+    .tab-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--text-primary);
+        background-color: var(--bg-quaternary);
+      }
+
+      &.active {
+        background: linear-gradient(to right, #A8FF00, #A259FF);
+        color: #000000;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+      }
+
+      .icon-small {
+        width: 1rem;
+        height: 1rem;
+      }
+
+      .tab-label {
+        font-weight: 500;
+      }
+    }
+  }
+}   

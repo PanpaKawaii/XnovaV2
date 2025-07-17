@@ -1,8 +1,9 @@
 // TeamManagement.jsx
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Users, Edit3, Check, X, Shield, Settings, Image, Crown, UserMinus, UserPlus, Search, Mail, LogOut, Trash2, AlertTriangle } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
+import SubUserHeader from '../../layouts/SubUserHeader/SubUserHeader';
 import './TeamManagement.css';
 
 const initialTeam = {
@@ -39,8 +40,23 @@ const initialTeam = {
 const TeamManagement = () => {
   const { isDarkMode } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
   const passedUser = location.state?.user || {};
   const passedUserInfo = location.state?.userInfo || {};
+
+  const [activeTab, setActiveTab] = useState('team');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'profile') {
+      navigate('/profile', { 
+        state: { 
+          user: passedUser, 
+          userInfo: passedUserInfo 
+        } 
+      });
+    }
+  };
 
   const updatedInitialTeam = {
     ...initialTeam,
@@ -177,6 +193,10 @@ const TeamManagement = () => {
 
   return (
     <div className={`team-management ${isDarkMode ? 'dark' : ''}`}>
+      <SubUserHeader 
+        activeTab={activeTab} 
+        onTabChange={handleTabChange} 
+      />
       <div className="team-overview">
         <div className="overview-container">
           <div className="logo-group group">

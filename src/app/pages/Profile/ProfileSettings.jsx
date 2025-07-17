@@ -1,9 +1,9 @@
-// ProfileSettings.jsx
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Camera, Edit3, Check, X, User, MapPin, Award, Instagram, Twitter, Facebook, Eye, EyeOff, Lock, Trash2, AlertTriangle, Bell, Calendar, Users, Gift } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Camera, Edit3, Check, X, User, MapPin, Award, Eye, EyeOff, Lock, Trash2, AlertTriangle, Bell, Calendar, Users, Gift } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
 import './ProfileSettings.css';
+import SubUserHeader from '../../layouts/SubUserHeader/SubUserHeader';
 
 const initialUser = {
   id: '1',
@@ -15,11 +15,6 @@ const initialUser = {
   level: 'Pro',
   location: 'Hanoi',
   joinedDate: new Date().toISOString(),
-  socialLinks: {
-    instagram: 'https://instagram.com/',
-    twitter: 'https://twitter.com/',
-    facebook: 'https://facebook.com/',
-  },
 };
 const initialPreferences = {
   bookingReminders: true,
@@ -30,8 +25,23 @@ const initialPreferences = {
 const ProfileSettings = () => {
   const { theme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
   const passedUser = location.state?.user || {};
   const passedUserInfo = location.state?.userInfo || {};
+
+  const [activeTab, setActiveTab] = useState('profile');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'team') {
+      navigate('/team', { 
+        state: { 
+          user: passedUser, 
+          userInfo: passedUserInfo 
+        } 
+      });
+    }
+  };
 
   const [user, setUser] = useState({
     ...initialUser,
@@ -105,7 +115,7 @@ const ProfileSettings = () => {
   };
 
   const ToggleSwitch = ({ enabled, onChange, label, description, icon }) => (
-    <div className="toggle-switch">
+    <div className={`toggle-switch`}>
       <div className="toggle-content">
         <div className={`toggle-icon ${enabled ? 'enabled' : ''}`}>
           {icon}
@@ -126,182 +136,179 @@ const ProfileSettings = () => {
 
   return (
     <div className={`profile-settings ${theme}`}>
-      <div className="profile-overview">
-        <div className="profile-container">
-          <div className="profile-image-group group">
-            <div className="profile-image-border">
-              <div className="profile-image-inner">
-                {user.profileImage ? (
-                  <img src={user.profileImage} alt="Profile" className="profile-image" />
-                ) : (
-                  <User className="profile-user-icon" />
+      <SubUserHeader activeTab={activeTab} onTabChange={handleTabChange} />
+      {activeTab === 'profile' ? (
+        <>
+          <div className="profile-overview">
+            <div className="profile-container">
+              <div className="profile-image-group">
+                <div className="profile-image-border">
+                  <div className="profile-image-inner">
+                    {user.profileImage ? (
+                      <img src={user.profileImage} alt="Profile" className="profile-image" />
+                    ) : (
+                      <User className="profile-user-icon" />
+                    )}
+                  </div>
+                </div>
+                <button className="profile-camera-button">
+                  <Camera className="camera-icon" />
+                </button>
+                {user.position && user.level && (
+                  <div className="player-badge">
+                    {user.position} - {user.level}
+                  </div>
                 )}
               </div>
-            </div>
-            <button className="profile-camera-button group">
-              <Camera className="camera-icon" />
-            </button>
-            {user.position && user.level && (
-              <div className="player-badge">
-                {user.position} - {user.level}
-              </div>
-            )}
-          </div>
-          <div className="profile-info">
-            {isEditing ? (
-              <div className="editing-form">
-                <div className="editing-grid1">
-                  <input type="text" value={editedUser.name} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} className="input-name" placeholder="Full Name" />
-                  <input type="tel" value={editedUser.phone} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} className="input-phone" placeholder="Phone Number" />
-                </div>
-                <div className="editing-grid2">
-                  <input type="text" value={editedUser.location || ''} onChange={(e) => setEditedUser({ ...editedUser, location: e.target.value })} className="input-location" placeholder="Location" />
-                  <input type="text" value={editedUser.position || ''} onChange={(e) => setEditedUser({ ...editedUser, position: e.target.value })} className="input-position" placeholder="Position" />
-                </div>
-                <div className="editing-buttons">
-                  <button onClick={handleSaveProfile} className="save-button"><Check className="icon" /><span>Save Changes</span></button>
-                  <button onClick={handleCancelProfile} className="cancel-button"><X className="icon" /><span>Cancel</span></button>
-                </div>
-              </div>
-            ) : (
-              <div className="profile-details">
-                <h2 className="user-name">{user.name}</h2>
-                <div className="user-details">
-                  <div className="detail-item">
-                    <div className="detail-dot green-dot"></div>
-                    <p className="detail-text">{user.email}</p>
-                  </div>
-                  <div className="detail-item">
-                    <div className="detail-dot purple-dot"></div>
-                    <p className="detail-text">{user.phone}</p>
-                  </div>
-                  {user.location && (
-                    <div className="detail-item">
-                      <MapPin className="detail-icon purple-icon" />
-                      <p className="detail-text">{user.location}</p>
+              <div className="profile-info">
+                {isEditing ? (
+                  <div className="editing-form">
+                    <div className="editing-grid1">
+                      <input type="text" value={editedUser.name} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} className="input-name" placeholder="Full Name" />
+                      <input type="tel" value={editedUser.phone} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} className="input-phone" placeholder="Phone Number" />
                     </div>
-                  )}
-                  <div className="detail-item">
-                    <Award className="detail-icon purple-icon" />
-                    <p className="detail-member">Member since {new Date(user.joinedDate).toLocaleDateString()}</p>
+                    <div className="editing-grid2">
+                      <input type="text" value={editedUser.location || ''} onChange={(e) => setEditedUser({ ...editedUser, location: e.target.value })} className="input-location" placeholder="Location" />
+                      <input type="text" value={editedUser.position || ''} onChange={(e) => setEditedUser({ ...editedUser, position: e.target.value })} className="input-position" placeholder="Position" />
+                    </div>
+                    <div className="editing-buttons">
+                      <button onClick={handleSaveProfile} className="save-button"><Check className="icon" /><span>Save Changes</span></button>
+                      <button onClick={handleCancelProfile} className="cancel-button"><X className="icon" /><span>Cancel</span></button>
+                    </div>
                   </div>
-                </div>
-                {user.socialLinks && (
-                  <div className="social-links">
-                    {user.socialLinks.instagram && (
-                      <a href="#" className="social-button"><Instagram className="social-icon instagram-icon" /></a>
-                    )}
-                    {user.socialLinks.twitter && (
-                      <a href="#" className="social-button"><Twitter className="social-icon twitter-icon" /></a>
-                    )}
-                    {user.socialLinks.facebook && (
-                      <a href="#" className="social-button"><Facebook className="social-icon facebook-icon" /></a>
-                    )}
+                ) : (
+                  <div className="profile-details">
+                    <h2 className="user-name">{user.name}</h2>
+                    <div className="user-details">
+                      <div className="detail-item">
+                        <div className="green-dot"></div>
+                        <p className="detail-text">{user.email}</p>
+                      </div>
+                      <div className="detail-item">
+                        <div className="purple-dot"></div>
+                        <p className="detail-text">{user.phone}</p>
+                      </div>
+                      {user.location && (
+                        <div className="detail-item">
+                          <MapPin className="detail-icon" />
+                          <p className="detail-text">{user.location}</p>
+                        </div>
+                      )}
+                      <div className="detail-item">
+                        <Award className="detail-icon" />
+                        <p className="detail-member">Member since {new Date(user.joinedDate).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <button onClick={() => setIsEditing(true)} className="save-button"><Edit3 className="icon" /><span>Edit Profile</span></button>
                   </div>
                 )}
-                <button onClick={() => setIsEditing(true)} className="edit-button"><Edit3 className="icon" /><span>Edit Profile</span></button>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="grid-sections">
-        <div className="change-password">
-          <div className="section-header">
-            <Lock className="section-icon purple-icon" />
-            <h3 className="section-title">Change Password</h3>
-          </div>
-          <form onSubmit={handleSubmitPassword} className="password-form">
-            <div className="input-group">
-              <label className="input-label">Current Password</label>
-              <div className="input-wrapper">
-                <input type={showPasswords.old ? 'text' : 'password'} value={formData.oldPassword} onChange={(e) => setFormData({ ...formData, oldPassword: e.target.value })} className="password-input" placeholder="Enter current password" required />
-                <button type="button" onClick={() => togglePasswordVisibility('old')} className="visibility-toggle">
-                  {showPasswords.old ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
+          <div className="grid-sections">
+            <div className="change-password">
+              <div className="section-header">
+                <Lock className="section-icon" />
+                <h3 className="section-title">Change Password</h3>
+              </div>
+              <form onSubmit={handleSubmitPassword} className="password-form">
+                <div>
+                  <label className="input-label">Current Password</label>
+                  <div className="input-wrapper">
+                    <input type={showPasswords.old ? 'text' : 'password'} value={formData.oldPassword} onChange={(e) => setFormData({ ...formData, oldPassword: e.target.value })} className="password-input" placeholder="Enter current password" required />
+                    <button type="button" onClick={() => togglePasswordVisibility('old')} className="visibility-toggle">
+                      {showPasswords.old ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="input-label">New Password</label>
+                  <div className="input-wrapper">
+                    <input type={showPasswords.new ? 'text' : 'password'} value={formData.newPassword} onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })} className="password-input" placeholder="Enter new password" required />
+                    <button type="button" onClick={() => togglePasswordVisibility('new')} className="visibility-toggle">
+                      {showPasswords.new ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="input-label">Confirm New Password</label>
+                  <div className="input-wrapper">
+                    <input type={showPasswords.confirm ? 'text' : 'password'} value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} className="password-input" placeholder="Confirm new password" required />
+                    <button type="button" onClick={() => togglePasswordVisibility('confirm')} className="visibility-toggle">
+                      {showPasswords.confirm ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
+                    </button>
+                  </div>
+                </div>
+                <button type="submit" disabled={isLoadingPassword || successPassword} className={`submit-button ${successPassword ? 'success' : ''} ${isLoadingPassword ? 'loading-disabled' : ''}`}>
+                  {successPassword ? (
+                    <div className="success-message"><Check className="icon" /><span>Password Changed!</span></div>
+                  ) : isLoadingPassword ? (
+                    'Changing Password...'
+                  ) : (
+                    'Change Password'
+                  )}
                 </button>
+              </form>
+            </div>
+            <div className="notification-preferences">
+              <div className="section-header">
+                <div className="header-icon-border">
+                  <Bell className="bell-icon" />
+                </div>
+                <h3 className="section-title">Notification Preferences</h3>
               </div>
-            </div>
-            <div className="input-group">
-              <label className="input-label">New Password</label>
-              <div className="input-wrapper">
-                <input type={showPasswords.new ? 'text' : 'password'} value={formData.newPassword} onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })} className="password-input" placeholder="Enter new password" required />
-                <button type="button" onClick={() => togglePasswordVisibility('new')} className="visibility-toggle">
-                  {showPasswords.new ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
-                </button>
+              <div className="preferences-list">
+                <ToggleSwitch enabled={localPreferences.bookingReminders} onChange={() => handleTogglePref('bookingReminders')} label="Booking Reminders" description="Get notified before your scheduled bookings" icon={<Calendar className="toggle-icon-inner" />} />
+                <ToggleSwitch enabled={localPreferences.matchInvites} onChange={() => handleTogglePref('matchInvites')} label="Match Invites" description="Receive invitations to team matches and events" icon={<Users className="toggle-icon-inner" />} />
+                <ToggleSwitch enabled={localPreferences.promotions} onChange={() => handleTogglePref('promotions')} label="Promotions & Events" description="Stay updated on special offers and events" icon={<Gift className="toggle-icon-inner" />} />
               </div>
-            </div>
-            <div className="input-group">
-              <label className="input-label">Confirm New Password</label>
-              <div className="input-wrapper">
-                <input type={showPasswords.confirm ? 'text' : 'password'} value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} className="password-input" placeholder="Confirm new password" required />
-                <button type="button" onClick={() => togglePasswordVisibility('confirm')} className="visibility-toggle">
-                  {showPasswords.confirm ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
-                </button>
-              </div>
-            </div>
-            <button type="submit" disabled={isLoadingPassword || successPassword} className={`submit-button ${successPassword ? 'success' : ''}`}>
-              {successPassword ? (
-                <div className="success-message"><Check className="icon" /><span>Password Changed!</span></div>
-              ) : isLoadingPassword ? (
-                'Changing Password...'
-              ) : (
-                'Change Password'
-              )}
-            </button>
-          </form>
-        </div>
-        <div className="notification-preferences">
-          <div className="section-header">
-            <div className="header-icon-border">
-              <Bell className="bell-icon" />
-            </div>
-            <h3 className="section-title">Notification Preferences</h3>
-          </div>
-          <div className="preferences-list">
-            <ToggleSwitch enabled={localPreferences.bookingReminders} onChange={() => handleTogglePref('bookingReminders')} label="Booking Reminders" description="Get notified before your scheduled bookings" icon={<Calendar className="toggle-icon-inner" />} />
-            <ToggleSwitch enabled={localPreferences.matchInvites} onChange={() => handleTogglePref('matchInvites')} label="Match Invites" description="Receive invitations to team matches and events" icon={<Users className="toggle-icon-inner" />} />
-            <ToggleSwitch enabled={localPreferences.promotions} onChange={() => handleTogglePref('promotions')} label="Promotions & Events" description="Stay updated on special offers and events" icon={<Gift className="toggle-icon-inner" />} />
-          </div>
-          <button onClick={handleSavePref} disabled={isLoadingPref || successPref} className={`save-pref-button ${successPref ? 'success' : ''}`}>
-            {successPref ? (
-              <div className="success-message"><Check className="icon" /><span>Preferences Saved!</span></div>
-            ) : isLoadingPref ? (
-              'Saving Preferences...'
-            ) : (
-              'Save Preferences'
-            )}
-          </button>
-        </div>
-      </div>
-      <div className="delete-account">
-        <div className="section-header">
-          <AlertTriangle className="alert-icon" />
-          <h3 className="section-title">Danger Zone</h3>
-        </div>
-        <p className="warning-text">Once you delete your account, there is no going back. Please be certain.</p>
-        <button onClick={() => setShowModal(true)} className="delete-button"><Trash2 className="icon" /><span>Delete Account</span></button>
-      </div>
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3 className="modal-title">Delete Account</h3>
-              <button onClick={() => setShowModal(false)} className="close-button"><X className="close-icon" /></button>
-            </div>
-            <div className="modal-body">
-              <p className="modal-description">This action cannot be undone. This will permanently delete your account and remove all your data from our servers.</p>
-              <div className="confirm-group">
-                <label className="confirm-label">Please type <span className="delete-word">DELETE</span> to confirm:</label>
-                <input type="text" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} className="confirm-input" placeholder="Type DELETE here" />
-              </div>
-            </div>
-            <div className="modal-actions">
-              <button onClick={handleDelete} disabled={confirmText !== 'DELETE' || isLoadingDelete} className={`confirm-delete ${confirmText === 'DELETE' && !isLoadingDelete ? 'enabled' : ''}`}>
-                {isLoadingDelete ? 'Deleting...' : 'Delete Account'}
+              <button onClick={handleSavePref} disabled={isLoadingPref || successPref} className={`save-pref-button ${successPref ? 'success' : ''} ${isLoadingPref ? 'loading-disabled' : ''}`}>
+                {successPref ? (
+                  <div className="success-message"><Check className="icon" /><span>Preferences Saved!</span></div>
+                ) : isLoadingPref ? (
+                  'Saving Preferences...'
+                ) : (
+                  'Save Preferences'
+                )}
               </button>
-              <button onClick={() => setShowModal(false)} className="cancel-button">Cancel</button>
             </div>
           </div>
+          <div className="delete-account">
+            <div className="section-header">
+              <AlertTriangle className="alert-icon" />
+              <h3 className="section-title">Danger Zone</h3>
+            </div>
+            <p className="warning-text">Once you delete your account, there is no going back. Please be certain.</p>
+            <button onClick={() => setShowModal(true)} className="delete-button"><Trash2 className="icon" /><span>Delete Account</span></button>
+          </div>
+          {showModal && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h3 className="modal-title">Delete Account</h3>
+                  <button onClick={() => setShowModal(false)} className="close-button"><X className="close-icon" /></button>
+                </div>
+                <div className="modal-body">
+                  <p className="modal-description">This action cannot be undone. This will permanently delete your account and remove all your data from our servers.</p>
+                  <div>
+                    <label className="input-label">Please type <span className="delete-word">DELETE</span> to confirm:</label>
+                    <input type="text" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} className="confirm-input" placeholder="Type DELETE here" />
+                  </div>
+                </div>
+                <div className="modal-actions">
+                  <button onClick={handleDelete} disabled={confirmText !== 'DELETE' || isLoadingDelete} className={`confirm-delete ${confirmText === 'DELETE' && !isLoadingDelete ? 'enabled' : ''}`}>
+                    {isLoadingDelete ? 'Deleting...' : 'Delete Account'}
+                  </button>
+                  <button onClick={() => setShowModal(false)} className="cancel-button">Cancel</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="team-placeholder">
+          <h2>Team Content</h2>
+          <p>Team section coming soon...</p>
         </div>
       )}
     </div>
