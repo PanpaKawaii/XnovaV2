@@ -6,7 +6,8 @@ import ChatBox from './components/ChatBox/ChatBox';
 import Homepage from './pages/Home/Homepage';
 import BookingPage from './pages/Booking/BookingPageV2';
 import FindTeammatePage from './pages/FindTeammate/FindTeammatePage';
-// import ProfileSettings from './pages/Profile/ProfileSettings';
+import ProfileSettings from './pages/Profile/ProfileSettings';
+import TeamManagement from './pages/MyTeam/TeamManagement';
 import LoginModal from './components/Login/Register/LoginModal';
 import LoginRegister from './pages/LoginRegister/LoginRegister';
 import { ThemeProvider } from './hooks/ThemeContext';
@@ -21,10 +22,11 @@ function App() {
       <Router>
         <Layout onLoginClick={() => setIsLoginModalOpen(true)}>
           <Routes>
-            <Route path='/' element={<Homepage />} />
-            <Route path='/booking' element={<BookingPage />} />
-            <Route path='/find-teammates' element={<FindTeammatePage />} />
-            <Route path='/oldlogin' element={<LoginModal />} />
+            <Route path="/" element={<Homepage />} />
+            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/profile-settings" element={<ProfileSettings />} />
+            <Route path="/team-management" element={<TeamManagement />} />
+            <Route path="/find-teammates" element={<FindTeammatePage />} />
           </Routes>
         </Layout>
         {isLoginModalOpen && <LoginRegister setIsLoginModalOpen={setIsLoginModalOpen} />}
