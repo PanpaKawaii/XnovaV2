@@ -6,6 +6,7 @@ import ChatBox from './components/ChatBox/ChatBox';
 import Homepage from './pages/Home/Homepage';
 import BookingPage from './pages/Booking/BookingPageV2';
 import FindTeammatePage from './pages/FindTeammate/FindTeammatePage';
+import ProfileSettings from './pages/Profile/ProfileSettings';
 import LoginModal from './components/Login/Register/LoginModal';
 import { ThemeProvider } from './hooks/ThemeContext';
 import './App.css';
