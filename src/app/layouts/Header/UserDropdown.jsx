@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, ChevronDown, UserPlus, History, Heart, Settings, LogOut } from 'lucide-react';
 import './UserDropdown.css';
 
 const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
   const [userDropdown, setUserDropdown] = useState(false);
   const userBtnRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleMyTeam = () => {
+    navigate('/team-management', { state: { user, userInfo } });
+    if (!isMobile) setUserDropdown(false);
+  };
+
+  const handleProfileSettings = () => {
+    navigate('/profile-settings', { state: { user, userInfo } });
+    if (!isMobile) setUserDropdown(false);
+  };
 
   useEffect(() => {
     if (!userDropdown || isMobile) return;
@@ -34,7 +46,7 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
             <p className="header__mobile-user-email">{user.email}</p>
           </div>
         </div>
-        <button className="header__mobile-user-menu-item">
+        <button className="header__mobile-user-menu-item" onClick={handleMyTeam}>
           <UserPlus className="header__mobile-user-menu-icon" />
           <span>{t('My Team')}</span>
         </button>
@@ -47,7 +59,7 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
           <span>{t('Favorite Fields')}</span>
         </button>
         <div className="header__mobile-user-menu-divider"></div>
-        <button className="header__mobile-user-menu-item">
+        <button className="header__mobile-user-menu-item" onClick={handleProfileSettings}>
           <Settings className="header__mobile-user-menu-icon" />
           <span>{t('Profile Settings')}</span>
         </button>
@@ -97,7 +109,7 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
             </div>
           </div>
           <div className="header__user-menu-divider"></div>
-          <button className="header__user-menu-item">
+          <button className="header__user-menu-item" onClick={handleMyTeam}>
             <UserPlus className="header__user-menu-icon" />
             <span>{t('My Team')}</span>
           </button>
@@ -110,7 +122,7 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
             <span>{t('Favorite Fields')}</span>
           </button>
           <div className="header__user-menu-divider"></div>
-          <button className="header__user-menu-item">
+          <button className="header__user-menu-item" onClick={handleProfileSettings}>
             <Settings className="header__user-menu-icon" />
             <span>{t('Profile Settings')}</span>
           </button>
