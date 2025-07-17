@@ -7,7 +7,7 @@ import Homepage from './pages/Home/Homepage';
 import BookingPage from './pages/Booking/BookingPageV2';
 import FindTeammatePage from './pages/FindTeammate/FindTeammatePage';
 import ProfileSettings from './pages/Profile/ProfileSettings';
-import TeamManagement from './pages/MyTeam/TeamManagement';
+import TeamManagement from './pages/TeamManagement/TeamManagement';
 import LoginModal from './components/Login/Register/LoginModal';
 import { ThemeProvider } from './hooks/ThemeContext';
 import './App.css';
@@ -23,7 +23,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/booking" element={<BookingPage />} />
+            <Route path="/profile" element={<ProfileSettings />} />
             <Route path="/profile-settings" element={<ProfileSettings />} />
+            <Route path="/team" element={<TeamManagement />} />
             <Route path="/team-management" element={<TeamManagement />} />
             <Route path="/find-teammates" element={<FindTeammatePage />} />
           </Routes>

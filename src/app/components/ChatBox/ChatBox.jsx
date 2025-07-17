@@ -61,16 +61,17 @@ export default function ChatBox() {
     }
 
     const StyleNormal = {
-        width: '360px',
-        height: '440px',
+        width: '380px',
+        height: '520px',
     }
     const StyleHeight = {
-        width: '360px',
-        height: '90vh',
+        width: '380px',
+        height: '85vh',
     }
     const StyleFull = {
-        width: 'calc(100% - 16px)',
-        height: '90vh',
+        width: 'calc(100vw - 40px)',
+        height: '85vh',
+        maxWidth: '1200px',
     }
 
     return (
@@ -86,44 +87,70 @@ export default function ChatBox() {
                 <div className='chat-box' style={WidthFull ? StyleFull : (HeightFull ? StyleHeight : StyleNormal)}>
 
                     <div className='heading'>
-                        <div className='name'>Xnova {Messages.length}</div>
+                        <div className='name'>
+                            <i className='fa-solid fa-robot'></i>
+                            <span>Xnova AI</span>
+                        </div>
                         <div>
                             {WidthFull ?
-                                <i className='fa-solid fa-minimize' onClick={() => setWidthFull(false)}></i>
+                                <i className='fa-solid fa-compress' onClick={() => setWidthFull(false)} title='Thu nhỏ'></i>
                                 :
-                                <i className='fa-solid fa-maximize' onClick={() => setWidthFull(true)}></i>
+                                <i className='fa-solid fa-expand' onClick={() => setWidthFull(true)} title='Mở rộng'></i>
                             }
                             {HeightFull ?
-                                <i className='fa-solid fa-arrow-down' onClick={() => setHeightFull(false)}></i>
+                                <i className='fa-solid fa-down-left-and-up-right-to-center' onClick={() => setHeightFull(false)} title='Thu nhỏ chiều cao'></i>
                                 :
-                                <i className='fa-solid fa-arrows-up-down' onClick={() => setHeightFull(true)}></i>
+                                <i className='fa-solid fa-up-right-and-down-left-from-center' onClick={() => setHeightFull(true)} title='Mở rộng chiều cao'></i>
                             }
-                            <i className='fa-solid fa-xmark' onClick={() => setDisplayChat(false)}></i>
+                            <i className='fa-solid fa-xmark' onClick={() => setDisplayChat(false)} title='Đóng'></i>
                         </div>
                     </div>
 
                     <div ref={chatContainerRef} className='chat-content'>
+                        {Messages.length === 0 && !loading && (
+                            <div className='welcome-message'>
+                                <i className='fa-solid fa-comments welcome-icon'></i>
+                                <div className='welcome-text'>
+                                    <h3>Chào mừng bạn đến với Xnova AI!</h3>
+                                    <p>Hãy bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới.</p>
+                                </div>
+                            </div>
+                        )}
                         {Messages.map((msg, idx) => (
-                            <div key={idx} className='message'
-                                style={{
-                                    alignSelf: idx % 2 === 0 ? 'flex-end' : 'flex-start',
-                                }}
+                            <div 
+                                key={idx} 
+                                className={`message ${idx % 2 === 0 ? 'user-message' : 'bot-message'}`}
                             >
                                 {msg}
                             </div>
                         ))}
-                        {loading &&
-                            <div className='message' style={{ alignSelf: 'flex-start' }}>
-                                ...
+                        {loading && (
+                            <div className='typing-indicator'>
+                                <div className='dot'></div>
+                                <div className='dot'></div>
+                                <div className='dot'></div>
                             </div>
-                        }
+                        )}
                     </div>
 
                     <form onSubmit={handleSend}>
                         <div className='form-name form-group'>
-                            <input type='text' id='chat' name='chat' placeholder='Câu hỏi của bạn' />
+                            <i className='fa-solid fa-comment-dots input-icon'></i>
+                            <input 
+                                type='text' 
+                                id='chat' 
+                                name='chat' 
+                                placeholder='Nhập tin nhắn của bạn...' 
+                                disabled={loading}
+                            />
                         </div>
-                        <button className='btn'>GỬI</button>
+                        <button className='btn' type='submit' disabled={loading} title='Gửi tin nhắn'>
+                            {loading ? (
+                                <i className='fa-solid fa-spinner fa-spin'></i>
+                            ) : (
+                                <i className='fa-solid fa-paper-plane'></i>
+                            )}
+                        </button>
                     </form>
                 </div>
             }
