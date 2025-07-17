@@ -6,19 +6,19 @@
                     i {
                         &.dobble-icon {
                             left: 10px;
-                            color: #444;
+                            color: var(--text-tertiary);
+                            opacity: 0.5;
                         }
                     }
                 }
 
                 .form-check-register {
-
                     .provision {
                         padding: 4px 6px;
                         border-radius: 6px;
-                        color: #fff;
-                        background-color: #374151;
-                        border: 1px solid #ccc;
+                        color: var(--text-primary);
+                        background-color: #37415120;
+                        border: 1px solid var(--border-secondary);
                         box-sizing: border-box;
                         text-decoration: none;
                         cursor: pointer;
@@ -34,21 +34,6 @@
                     display: flex;
                     gap: 12px;
                     margin: 12px 0 0;
-
-                    .btn {
-                        min-width: 128px;
-                        border: none;
-                        color: #888;
-
-                        &:hover {
-                        }
-
-                        &:active {
-                        }
-
-                        &:disabled {
-                        }
-                    }
 
                     .form-input-register {
                         flex: 1;

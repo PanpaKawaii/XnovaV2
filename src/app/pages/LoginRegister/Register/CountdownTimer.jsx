@@ -57,7 +57,7 @@ export default function CountdownTimer({ DoAction, EmailRef, NameRef, PhoneRef, 
     return (
         <button
             type='submit'
-            className='btn'
+            className='btn btn-otp'
             onClick={toggleTimer}
             disabled={isActive}
         >

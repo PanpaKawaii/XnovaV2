@@ -32,15 +32,10 @@
         top: 12px;
         right: 12px;
         cursor: pointer;
-        color: #A8FF00;
+        color: var(--text-primary);
         background-color: transparent;
         border: none;
         height: fit-content;
-    }
-
-    a {
-        outline: none;
-        text-decoration: none;
     }
 
     .btn {
@@ -49,38 +44,36 @@
         user-select: none;
         padding: 11px;
         font-weight: 600;
-        color: #fff;
+        color: #000;
         border: none;
         box-sizing: border-box;
         border-radius: 10px;
         font-size: 16px;
         transition: all 0.15s ease;
         font-family: Inter, system-ui, sans-serif;
+        background: linear-gradient(45deg, #A8FF00, #96E600);
 
         &.btn-submit {
             flex: 3;
-            background-color: #0db04b;
-
-            &:hover {
-                background-color: #0a8439;
-            }
-
-            &:active {
-                background-color: #075826;
-            }
         }
 
         &.btn-reset {
             flex: 1;
-            background-color: #6af49f;
+            opacity: 0.8;
+        }
 
-            &:hover {
-                background-color: #1fee6e;
-            }
+        &.btn-otp {
+            min-width: 128px;
+            opacity: 0.9;
+        }
 
-            &:active {
-                background-color: #0db04b;
-            }
+        &:hover {
+            background-color: linear-gradient(45deg, #96E600, #A8FF00);
+            box-shadow: 0 0 24px rgba(168, 255, 0, 0.3);
+        }
+
+        &:active {
+            background-color: #075826;
         }
     }
 
@@ -178,7 +171,7 @@
                         position: absolute;
                         left: 16px;
                         margin: 16px 0;
-                        color: #555;
+                        color: var(--text-tertiary);
                         font-size: 18px;
 
                         &.invalid-icon {
@@ -200,15 +193,51 @@
                         border-radius: 12px;
                         color: var(--text-primary);
 
+                        &::placeholder {
+                            color: var(--text-tertiary);
+                        }
+
                         &:focus {
-                            box-shadow: 0 0 0 4px #0db04b40;
-                            border-color: #0db04b;
+                            outline: none;
+                            border-color: #A8FF00;
+                            background-color: var(--bg-secondary);
+                            box-shadow: 0 0 0 4px rgba(168, 255, 0, 0.1);
+                        }
+                    }
+
+                    .dark input {
+                        background-color: #374151;
+                        border-color: #4b5563;
+
+                        &:focus {
+                            background-color: #4b5563;
+                        }
+                    }
+
+                    .light input:focus {
+                        background-color: var(--bg-secondary);
+                        border-color: #A8FF00;
+                    }
+
+                    .btn-password {
+                        position: absolute;
+                        right: 4px;
+                        width: 40px;
+                        text-align: center;
+                        height: fit-content;
+                        background-color: transparent;
+                        border: none;
+
+                        i {
+                            position: relative;
+                            top: 0;
+                            left: 0;
                         }
                     }
                 }
 
                 .form-check {
-                    color: #fff;
+                    color: var(--text-primary);
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
@@ -249,7 +278,7 @@
 
             .link-box {
                 margin: 20px 0 0;
-                color: #fff;
+                color: var(--text-primary);
                 font-weight: 200;
                 display: flex;
                 justify-content: center;

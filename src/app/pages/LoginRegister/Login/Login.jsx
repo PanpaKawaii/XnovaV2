@@ -18,6 +18,7 @@ export default function Login({ setIsLogin, setIsLoginModalOpen }) {
         setLoginError({ value: '', name: '' });
     };
 
+    const [showPassword, setShowPassword] = useState(false);
     const [Remember, setRemember] = useState(false);
     const [loading, setLoading] = useState(false);
     const [LoginError, setLoginError] = useState({ value: '', name: '' });
@@ -90,7 +91,10 @@ export default function Login({ setIsLogin, setIsLoginModalOpen }) {
                 </div>
                 <div className='form-group form-input-login'>
                     <i className={`fa-solid fa-key ${LoginError.name.includes('Password') && 'invalid-icon'}`}></i>
-                    <input type='password' name='password' placeholder='Mật khẩu đăng nhập' style={{ border: LoginError.name.includes('Password') && '1px solid #dc3545', }} />
+                    <input type={showPassword ? 'text' : 'password'} name='password' placeholder='Mật khẩu đăng nhập' style={{ border: LoginError.name.includes('Password') && '1px solid #dc3545', }} />
+                    <button type='button' className='btn-password' onClick={() => setShowPassword(p => !p)}>
+                        {showPassword ? <i className='fa-solid fa-eye'></i> : <i className='fa-solid fa-eye-slash'></i>}
+                    </button>
                 </div>
                 <div className='form-check form-check-login'>
                     <div className='form-remember'>

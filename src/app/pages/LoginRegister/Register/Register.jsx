@@ -17,6 +17,7 @@ export default function Register({ setIsLogin }) {
         setRegisterSuccess('');
     };
 
+    const [showPassword, setShowPassword] = useState(false);
     const [Accept, setAccept] = useState(false);
     const [loading, setLoading] = useState(false);
     const [RegisterError, setRegisterError] = useState({ value: '', name: '' });
@@ -224,7 +225,10 @@ export default function Register({ setIsLogin }) {
                 </div>
                 <div className='form-group form-input-register'>
                     <i className={`fa-solid fa-key ${RegisterError.name.includes('Password') && 'invalid-icon'}`}></i>
-                    <input type='password' name='password' placeholder='Mật khẩu đăng kí' ref={PasswordRef} style={{ border: RegisterError.name.includes('Password') && '1px solid #dc3545', }} />
+                    <input type={showPassword ? 'text' : 'password'} name='password' placeholder='Mật khẩu đăng kí' ref={PasswordRef} style={{ border: RegisterError.name.includes('Password') && '1px solid #dc3545', }} />
+                    <button type='button' className='btn-password' onClick={() => setShowPassword(p => !p)}>
+                        {showPassword ? <i className='fa-solid fa-eye'></i> : <i className='fa-solid fa-eye-slash'></i>}
+                    </button>
                 </div>
                 <div className='form-group form-input-register'>
                     <i className='fa-solid fa-key dobble-icon'></i>
