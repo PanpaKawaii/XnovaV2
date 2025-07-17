@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Zap, Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import './Footer.css';
 
 const Footer = () => {
@@ -13,11 +13,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="footer__brand">
             <Link to="/" className="footer__logo">
-              <div className="footer__logo-wrapper">
-                <Zap className="footer__logo-icon" />
-                <div className="footer__logo-glow"></div>
-              </div>
-              <span className="footer__logo-text">Xnova</span>
+              <img src="src/app/assets/LOGO.png" alt="Xnova" className="footer__logo-img" />
             </Link>
             <p className="footer__description">
               Điểm đến hàng đầu cho đặt sân bóng đá và kết nối đội nhóm.
@@ -28,7 +24,7 @@ const Footer = () => {
                 <Facebook className="footer__social-icon" />
               </a>
               <a href="#" className="footer__social-link">
-                <Twitter className="footer__social-icon" />
+                <Youtube className="footer__social-icon" />
               </a>
               <a href="#" className="footer__social-link">
                 <Instagram className="footer__social-icon" />
@@ -37,7 +33,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="footer__section">
+          <div className="footer__sectionlinks">
             <h3 className="footer__title">Liên kết nhanh</h3>
             <ul className="footer__links">
               <li>
@@ -69,6 +65,19 @@ const Footer = () => {
                 <span>Thành phố Hồ Chí Minh, Việt Nam</span>
               </li>
             </ul>
+          </div>
+        </div>
+
+        {/* Download Section */}
+        <div className="footer__download">
+          <p className="footer__download-text">Tải ứng dụng Xnova</p>
+          <div className="footer__download-buttons">
+            <a href="#" className="footer__download-link">
+              <img src="https://play.google.com/intl/en_us/badges/static/images/badges/vi_badge_web_generic.png" alt="Get it on Google Play" className="footer__download-badge" />
+            </a>
+            <a href="#" className="footer__download-link">
+              <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" className="footer__download-badge" />
+            </a>
           </div>
         </div>
 
