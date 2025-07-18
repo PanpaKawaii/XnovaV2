@@ -105,6 +105,26 @@
     border-color: var(--border-primary);
   }
 
+  & .booking-list-container {
+    max-height: calc(4 * 6rem + 3 * 1rem); /* 4 items * height per item + gaps */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-secondary) var(--bg-primary);
+  }
+
+  & .booking-list-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  & .booking-list-container::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  & .booking-list-container::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 4px;
+  }
+
   & .booking-list {
     display: flex;
     flex-direction: column;
@@ -120,6 +140,7 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    min-height: 6rem;
   }
 
   & .booking-card::before {

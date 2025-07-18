@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Camera, Edit3, Check, X, User, MapPin, Award, Eye, EyeOff, Lock, Trash2, AlertTriangle, Bell, Calendar, Users, Gift } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
 import './ProfileSettings.css';
-import './BookingHistory.css';
 import SubUserHeader from '../../layouts/SubUserHeader/SubUserHeader';
 import BookingHistory from './BookingHistory';
 import FavoriteFields from './FavoriteFields';
+import Voucher from './Voucher';
 
 const initialUser = {
   id: '1',
@@ -25,51 +25,14 @@ const initialPreferences = {
   promotions: true,
 };
 
-const sampleBookings = [
-  {
-    id: '1',
-    fieldName: 'Central Park Field',
-    date: '2025-07-10',
-    time: '14:00',
-    duration: '2h',
-    price: 80,
-    status: 'completed'
-  },
-  {
-    id: '2',
-    fieldName: 'Riverside Stadium',
-    date: '2025-07-15',
-    time: '18:00',
-    duration: '1.5h',
-    price: 60,
-    status: 'upcoming'
-  },
-  {
-    id: '3',
-    fieldName: 'City Arena',
-    date: '2025-06-20',
-    time: '10:00',
-    duration: '1h',
-    price: 40,
-    status: 'cancelled'
-  },
-  {
-    id: '4',
-    fieldName: 'Downtown Pitch',
-    date: '2025-07-05',
-    time: '16:00',
-    duration: '2h',
-    price: 75,
-    status: 'completed'
-  }
-];
 
 const ProfileSettings = () => {
   const { theme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const bookingRef = useRef(null);
-  const favoriteFieldsRef = useRef(null);
+  const favoriteRef = useRef(null);
+  const voucherRef = useRef(null);
   const passedUser = location.state?.user || {};
   const passedUserInfo = location.state?.userInfo || {};
 
@@ -159,15 +122,17 @@ const ProfileSettings = () => {
   };
   useEffect(() => {
     const section = location.state?.section;
-    let ref = null;
-    if (section === 'bookingHistory' && bookingRef.current) {
-      ref = bookingRef.current;
-    } else if (section === 'favoriteFields' && favoriteFieldsRef.current) {
-      ref = favoriteFieldsRef.current;
+    let targetRef;
+    if (section === 'bookingHistory') {
+      targetRef = bookingRef;
+    } else if (section === 'favoriteFields') {
+      targetRef = favoriteRef;
+    } else if (section === 'vouchers') {
+      targetRef = voucherRef;
     }
-    if (ref) {
+    if (targetRef && targetRef.current) {
       const offset = 100; // Khoảng cách (px)
-      const rect = ref.getBoundingClientRect();
+      const rect = targetRef.current.getBoundingClientRect();
       window.scrollTo({
         top: rect.top + window.scrollY - offset,
         behavior: 'smooth'
@@ -335,10 +300,13 @@ const ProfileSettings = () => {
             </div>
           </div>
           <div className="booking-history-section" ref={bookingRef}>
-            <BookingHistory bookings={sampleBookings} />
+            <BookingHistory />
           </div>
-          <div className="favorite-fields-section" ref={favoriteFieldsRef}>
+          <div className="favorite-fields-section" ref={favoriteRef}>
             <FavoriteFields />
+          </div>
+          <div className="vouchers-section" ref={voucherRef}>
+            <Voucher />
           </div>
           <div className="delete-account">
             <div className="section-header">

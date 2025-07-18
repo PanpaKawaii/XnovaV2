@@ -1,7 +1,7 @@
 // FavoriteFields.jsx
 import React, { useState } from 'react';
+import { Heart, MapPin, Star, Search, Clock, Trash2 } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
-import { Heart, MapPin, Star, Grid, ChevronLeft, ChevronRight, List, Search, Clock, Trash2 } from 'lucide-react';
 import './FavoriteFields.css';
 
 const sampleFavorites = [
@@ -44,11 +44,10 @@ const sampleFavorites = [
 ];
 
 const FavoriteFields = () => {
-  const { theme } = useTheme();
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'carousel'
+  const { isDarkMode } = useTheme();
+  const [viewMode, setViewMode] = useState('list');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState('desc'); // 'asc' or 'desc' by addedDate
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [sortOrder, setSortOrder] = useState('desc');
 
   const filteredFavorites = sampleFavorites
     .filter(field => 
@@ -56,63 +55,47 @@ const FavoriteFields = () => {
       field.location.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a.addedDate - b.addedDate;
-      } else {
-        return b.addedDate - a.addedDate;
-      }
+      return sortOrder === 'asc' ? a.addedDate - b.addedDate : b.addedDate - a.addedDate;
     });
 
-  const handlePrev = () => {
-    setCurrentIndex(prev => Math.max(prev - 1, 0));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex(prev => Math.min(prev + 1, filteredFavorites.length - 1));
-  };
-
   return (
-    <div className={`favorite-fields ${theme}`}>
-      <div className="section-header">
-        <Heart className="section-icon" />
-        <h3 className="section-title">Favorite Fields</h3>
+    <div className={`favorite-fields${isDarkMode ? ' dark' : ''}`}>
+      <div className="header">
+        <Heart className="header-icon" />
+        <h3 className="title">Favorite Fields</h3>
       </div>
-      <div className="controls">
-        <div className="search-bar">
-          <Search className="search-icon" />
-          <input 
-            type="text" 
-            placeholder="Search by name or location" 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-          />
+
+      <div className="filters">
+        <div className="filter-group search-group">
+          <label className="label">Search</label>
+          <div className="search-bar">
+            <Search className="search-icon" />
+            <input 
+              type="text" 
+              placeholder="Search by name or location" 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+            />
+          </div>
         </div>
-        <div className="view-toggle">
-          <button 
-            className={`view-button ${viewMode === 'list' ? 'active' : ''}`} 
-            onClick={() => setViewMode('list')}
-          >
-            <List className="view-icon" />
-            List
-          </button>
-          <button 
-            className={`view-button ${viewMode === 'carousel' ? 'active' : ''}`} 
-            onClick={() => setViewMode('carousel')}
-          >
-            <Grid className="view-icon" />
-            Carousel
-          </button>
+        <div className="filter-group">
+          <label className="label">View Mode</label>
+          <select value={viewMode} onChange={(e) => setViewMode(e.target.value)} className="select">
+            <option value="list">List</option>
+            <option value="grid">Grid</option>
+          </select>
         </div>
-        <div className="sort-filter">
-          <Clock className="sort-icon" />
-          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+        <div className="filter-group">
+          <label className="label">Sort by Added Date</label>
+          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="select">
             <option value="desc">Newest First</option>
             <option value="asc">Oldest First</option>
           </select>
         </div>
       </div>
-      {viewMode === 'list' ? (
-        <div className="fields-table-container">
+
+      <div className="favorite-list-container">
+        {viewMode === 'list' ? (
           <table className="fields-table">
             <thead>
               <tr>
@@ -139,40 +122,36 @@ const FavoriteFields = () => {
               ))}
             </tbody>
           </table>
-        </div>
-      ) : (
-        <div className="carousel">
-          <button className="nav-button prev" onClick={handlePrev} disabled={currentIndex === 0}>
-            <ChevronLeft />
-          </button>
-          <div className="carousel-inner" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+        ) : (
+          <div className="grid-view">
             {filteredFavorites.map(field => (
-              <div key={field.id} className="carousel-item">
-                <img src={field.image} alt={field.name} className="field-image" />
-                <div className="field-info">
-                  <h3 className="field-name">{field.name}</h3>
-                  <div className="field-details">
+              <div key={field.id} className="grid-card">
+                <img src={field.image} alt={field.name} className="grid-image" />
+                <div className="grid-info">
+                  <h4 className="grid-name">{field.name}</h4>
+                  <div className="grid-details">
                     <MapPin className="detail-icon" />
                     <span>{field.location}</span>
                   </div>
-                  <div className="field-details">
+                  <div className="grid-details">
                     <Star className="detail-icon" />
                     <span>{field.rating} / 5</span>
                   </div>
-                  <p className="field-price">${field.pricePerHour}/hour</p>
-                  <p className="added-date">Added: {field.addedDate.toLocaleDateString()}</p>
+                  <p className="grid-price">${field.pricePerHour}/hour</p>
+                  <p className="grid-added">Added: {field.addedDate.toLocaleDateString()}</p>
                 </div>
-                <button className="remove-button">Remove</button>
+                <button className="remove-button"><Trash2 className="remove-icon" /></button>
               </div>
             ))}
           </div>
-          <button className="nav-button next" onClick={handleNext} disabled={currentIndex === filteredFavorites.length - 1}>
-            <ChevronRight />
-          </button>
-        </div>
-      )}
+        )}
+      </div>
+
       {filteredFavorites.length === 0 && (
-        <p className="empty-message">No favorite fields match your search.</p>
+        <div className="no-favorites">
+          <Heart className="no-favorites-icon" />
+          <p>No favorite fields found for the selected filter.</p>
+        </div>
       )}
     </div>
   );
