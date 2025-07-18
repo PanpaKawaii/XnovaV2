@@ -17,6 +17,10 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
     navigate('/profile-settings', { state: { user, userInfo } });
     if (!isMobile) setUserDropdown(false);
   };
+  const handleBookingHistory = () => {
+  navigate('/profile-settings', { state: { user, userInfo, section: 'bookingHistory' } });
+  if (!isMobile) setUserDropdown(false);
+};
 
   useEffect(() => {
     if (!userDropdown || isMobile) return;
@@ -50,8 +54,8 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
           <UserPlus className="header__mobile-user-menu-icon" />
           <span>{t('My Team')}</span>
         </button>
-        <button className="header__mobile-user-menu-item">
-          <History className="header__mobile-user-menu-icon" />
+        <button className="header__user-menu-item" onClick={handleBookingHistory}>
+          <History className="header__user-menu-icon" />
           <span>{t('Booking History')}</span>
         </button>
         <button className="header__mobile-user-menu-item">
@@ -113,9 +117,9 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
             <UserPlus className="header__user-menu-icon" />
             <span>{t('My Team')}</span>
           </button>
-          <button className="header__user-menu-item">
-            <History className="header__user-menu-icon" />
-            <span>{t('Booking History')}</span>
+          <button className="header__user-menu-item" onClick={handleBookingHistory}>
+              <History className="header__user-menu-icon" />
+              <span>{t('Booking History')}</span>
           </button>
           <button className="header__user-menu-item">
             <Heart className="header__user-menu-icon" />
