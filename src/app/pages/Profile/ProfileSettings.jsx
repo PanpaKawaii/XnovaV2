@@ -6,6 +6,7 @@ import './ProfileSettings.css';
 import './BookingHistory.css';
 import SubUserHeader from '../../layouts/SubUserHeader/SubUserHeader';
 import BookingHistory from './BookingHistory';
+import FavoriteFields from './FavoriteFields';
 
 const initialUser = {
   id: '1',
@@ -68,6 +69,7 @@ const ProfileSettings = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const bookingRef = useRef(null);
+  const favoriteFieldsRef = useRef(null);
   const passedUser = location.state?.user || {};
   const passedUserInfo = location.state?.userInfo || {};
 
@@ -156,9 +158,16 @@ const ProfileSettings = () => {
     }, 2000);
   };
   useEffect(() => {
-    if (location.state?.section === 'bookingHistory' && bookingRef.current) {
+    const section = location.state?.section;
+    let ref = null;
+    if (section === 'bookingHistory' && bookingRef.current) {
+      ref = bookingRef.current;
+    } else if (section === 'favoriteFields' && favoriteFieldsRef.current) {
+      ref = favoriteFieldsRef.current;
+    }
+    if (ref) {
       const offset = 100; // Khoảng cách (px)
-      const rect = bookingRef.current.getBoundingClientRect();
+      const rect = ref.getBoundingClientRect();
       window.scrollTo({
         top: rect.top + window.scrollY - offset,
         behavior: 'smooth'
@@ -327,6 +336,9 @@ const ProfileSettings = () => {
           </div>
           <div className="booking-history-section" ref={bookingRef}>
             <BookingHistory bookings={sampleBookings} />
+          </div>
+          <div className="favorite-fields-section" ref={favoriteFieldsRef}>
+            <FavoriteFields />
           </div>
           <div className="delete-account">
             <div className="section-header">
