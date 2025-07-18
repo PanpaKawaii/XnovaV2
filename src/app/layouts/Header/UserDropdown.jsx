@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, ChevronDown, UserPlus, History, Heart, Settings, LogOut } from 'lucide-react';
+import { User, ChevronDown, UserPlus, History, Heart, Settings, LogOut, Gift } from 'lucide-react';
 import './UserDropdown.css';
 
 const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
@@ -13,18 +13,22 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
     if (!isMobile) setUserDropdown(false);
   };
 
-  const handleProfileSettings = () => {
-    navigate('/profile-settings', { state: { user, userInfo } });
+  const handleBookingHistory = () => {
+    navigate('/profile-settings', { state: { user, userInfo, section: 'bookingHistory' } });
     if (!isMobile) setUserDropdown(false);
   };
-
-  const handleFavoriteFields = () => {
+    const handleFavoriteFields = () => {
     navigate('/profile-settings', { state: { user, userInfo, section: 'favoriteFields' } });
     if (!isMobile) setUserDropdown(false);
   };
 
-  const handleBookingHistory = () => {
-    navigate('/profile-settings', { state: { user, userInfo, section: 'bookingHistory' } });
+  const handleVouchers = () => {
+    navigate('/profile-settings', { state: { user, userInfo, section: 'vouchers' } });
+    if (!isMobile) setUserDropdown(false);
+  };
+
+  const handleProfileSettings = () => {
+    navigate('/profile-settings', { state: { user, userInfo } });
     if (!isMobile) setUserDropdown(false);
   };
 
@@ -64,9 +68,13 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
           <History className="header__mobile-user-menu-icon" />
           <span>{t('Booking History')}</span>
         </button>
-        <button className="header__mobile-user-menu-item" onClick={handleFavoriteFields}>
-          <Heart className="header__mobile-user-menu-icon" />
-          <span>{t('Favorite Fields')}</span>
+        <button className="header__user-menu-item" onClick={handleFavoriteFields}>
+            <Heart className="header__user-menu-icon" />
+            <span>{t('Favorite Fields')}</span>
+        </button>
+        <button className="header__mobile-user-menu-item" onClick={handleVouchers}>
+          <Gift className="header__mobile-user-menu-icon" />
+          <span>{t('Vouchers')}</span>
         </button>
         <div className="header__mobile-user-menu-divider"></div>
         <button className="header__mobile-user-menu-item" onClick={handleProfileSettings}>
@@ -130,6 +138,10 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
           <button className="header__user-menu-item" onClick={handleFavoriteFields}>
             <Heart className="header__user-menu-icon" />
             <span>{t('Favorite Fields')}</span>
+          </button>
+          <button className="header__user-menu-item" onClick={handleVouchers}>
+            <Gift className="header__user-menu-icon" />
+            <span>{t('Vouchers')}</span>
           </button>
           <div className="header__user-menu-divider"></div>
           <button className="header__user-menu-item" onClick={handleProfileSettings}>
