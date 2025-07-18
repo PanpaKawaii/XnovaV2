@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Camera, Edit3, Check, X, User, MapPin, Award, Eye, EyeOff, Lock, Trash2, AlertTriangle, Bell, Calendar, Users, Gift } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
@@ -67,6 +67,7 @@ const ProfileSettings = () => {
   const { theme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const bookingRef = useRef(null);
   const passedUser = location.state?.user || {};
   const passedUserInfo = location.state?.userInfo || {};
 
@@ -154,6 +155,16 @@ const ProfileSettings = () => {
       setConfirmText('');
     }, 2000);
   };
+  useEffect(() => {
+    if (location.state?.section === 'bookingHistory' && bookingRef.current) {
+      const offset = 100; // Khoảng cách (px)
+      const rect = bookingRef.current.getBoundingClientRect();
+      window.scrollTo({
+        top: rect.top + window.scrollY - offset,
+        behavior: 'smooth'
+      });
+    }
+  }, [location.state]);
 
   const ToggleSwitch = ({ enabled, onChange, label, description, icon }) => (
     <div className={`toggle-switch`}>
@@ -314,7 +325,7 @@ const ProfileSettings = () => {
               </button>
             </div>
           </div>
-          <div className="booking-history-section">
+          <div className="booking-history-section" ref={bookingRef}>
             <BookingHistory bookings={sampleBookings} />
           </div>
           <div className="delete-account">
