@@ -41,14 +41,35 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 1.5rem 1rem 2rem 1rem;
+
+  @media (min-width: 480px) {
+    padding: 1.5rem 1.5rem 2rem 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    padding: 2rem 3rem 2.5rem 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 2.5rem 4rem 3rem 4rem;
+  }
+
+  @media (min-width: 1280px) {
+    padding: 3rem 5rem 3.5rem 5rem;
+  }
+
+  @media (min-width: 1536px) {
+    padding: 3rem 6rem 3.5rem 6rem;
+  }
 
   .profile-overview {
     border-radius: 1rem;
     padding: 1.5rem;
-    background: rgba(255,255,255,0.5);
+    background: var(--bg-secondary);
     backdrop-filter: blur(5px);
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-primary);
+    border: 1px solid var(--border-secondary);
     transition: all 0.5s ease;
 
     &:hover {
@@ -89,7 +110,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: white;
+      background: var(--gray-800);
       overflow: hidden;
       transition: all 0.3s ease;
 
@@ -145,8 +166,8 @@
       border-radius: 9999px;
       font-size: 0.75rem;
       font-weight: bold;
-      background: var(--purple);
-      color: white;
+      background: var(--green);
+      color: black;
       box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
       animation: pulse 2s infinite;
     }
@@ -179,10 +200,10 @@
     .input-name, .input-phone, .input-location, .input-position {
       padding: 0.75rem 1rem;
       border-radius: 0.5rem;
-      border: 1px solid var(--gray-300);
-      color: var(--gray-900);
+      border: 1px solid var(--gray-600);
+      color: white;
       transition: all 0.3s ease;
-      background: white;
+      background: var(--gray-700);
 
       &:focus {
         outline: none;
@@ -223,14 +244,14 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1.5rem;
-      background: var(--gray-200);
-      color: var(--gray-700);
+      background: var(--gray-700);
+      color: white;
       border-radius: 0.5rem;
       font-weight: 600;
       transition: all 0.3s ease;
 
       &:hover {
-        background: var(--gray-300);
+        background: var(--gray-600);
         transform: scale(1.05);
       }
 
@@ -249,7 +270,7 @@
     .user-name {
       font-size: 1.875rem;
       font-weight: bold;
-      color: var(--gray-900);
+      color: white;
     }
 
     .user-details {
@@ -286,7 +307,7 @@
 
     .detail-text {
       font-weight: 500;
-      color: var(--gray-600);
+      color: var(--gray-300);
     }
 
     .detail-icon {
@@ -294,54 +315,13 @@
       height: 1rem;
 
       &.purple-icon {
-        color: var(--purple);
+        color: var(--green);
       }
     }
 
     .detail-member {
       font-size: 0.875rem;
-      color: var(--gray-500);
-    }
-
-    .social-links {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding-top: 0.5rem;
-      justify-content: center;
-
-      @media (min-width: 1024px) {
-        justify-content: flex-start;
-      }
-    }
-
-    .social-button {
-      padding: 0.5rem;
-      border-radius: 50%;
-      background: var(--gray-100);
-      transition: all 0.3s ease;
-
-      &:hover {
-        background: var(--gray-200);
-        transform: scale(1.1);
-      }
-    }
-
-    .social-icon {
-      width: 1rem;
-      height: 1rem;
-
-      &.instagram-icon {
-        color: var(--pink-500);
-      }
-
-      &.twitter-icon {
-        color: var(--blue-500);
-      }
-
-      &.facebook-icon {
-        color: var(--blue-600);
-      }
+      color: var(--gray-400);
     }
 
     .edit-button {
@@ -381,10 +361,10 @@
   .change-password {
     border-radius: 1rem;
     padding: 1.5rem;
-    background: rgba(255,255,255,0.5);
+    background: rgba(31,41,55,0.5);
     backdrop-filter: blur(5px);
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--gray-700);
     transition: all 0.3s ease;
   }
 
@@ -400,14 +380,14 @@
     height: 1.25rem;
 
     &.purple-icon {
-      color: var(--purple);
+      color: var(--green);
     }
   }
 
   .section-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--gray-900);
+    color: white;
   }
 
   .password-form {
@@ -424,65 +404,136 @@
   .input-label {
     display: block;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--gray-700);
+    color: var(--gray-300);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 2rem;
+      height: 2px;
+      background: linear-gradient(to right, var(--green), var(--purple));
+      border-radius: 1px;
+    }
   }
 
   .input-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
+
+    .password-input {
+      width: 100%;
+      padding: 0.875rem 3rem 0.875rem 1rem;
+      border-radius: 0.5rem;
+      border: 2px solid var(--gray-600);
+      background: var(--gray-700);
+      color: white;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
+        background: var(--gray-600);
+      }
+
+      &::placeholder {
+        color: var(--gray-400);
+      }
+    }
   }
 
   .password-input {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.875rem 3rem 0.875rem 1rem;
     border-radius: 0.5rem;
-    border: 1px solid var(--gray-300);
-    color: var(--gray-900);
-    background: white;
+    border: 2px solid var(--gray-600);
+    background: var(--gray-700);
+    color: white;
+    font-size: 0.875rem;
     transition: all 0.3s ease;
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px var(--green);
-      border-color: transparent;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
+      background: var(--gray-600);
+    }
+
+    &::placeholder {
+      color: var(--gray-400);
     }
   }
 
   .visibility-toggle {
     position: absolute;
     right: 0.75rem;
-    top: 0.75rem;
-    color: var(--gray-500);
-    transition: color 0.2s ease;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    background: transparent;
+    border: none;
+    color: var(--gray-400);
+    transition: all 0.2s ease;
+    cursor: pointer;
 
     &:hover {
-      color: var(--gray-700);
+      color: var(--green);
+      background: rgba(168, 255, 0, 0.1);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
     }
 
     .eye-icon {
       width: 1.25rem;
       height: 1.25rem;
+      transition: transform 0.2s ease;
     }
   }
 
   .submit-button {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.875rem 1.5rem;
     border-radius: 0.5rem;
     font-weight: 600;
-    background: linear-gradient(to right, var(--green), var(--purple));
+    font-size: 0.875rem;
+    background: linear-gradient(135deg, var(--green), var(--purple));
     color: black;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(168, 255, 0, 0.3);
 
     &:hover {
-      box-shadow: 0 10px 15px -3px rgba(168,255,0,0.2);
-      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(168, 255, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
+      transform: none;
+    }
+
+    &.loading-disabled {
+      opacity: 0.7;
+      cursor: wait;
     }
 
     &.success {
@@ -506,10 +557,10 @@
   .notification-preferences {
     border-radius: 1rem;
     padding: 1.5rem;
-    background: rgba(255,255,255,0.5);
+    background: rgba(31,41,55,0.5);
     backdrop-filter: blur(5px);
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--gray-700);
     transition: all 0.5s ease;
 
     &:hover {
@@ -541,15 +592,23 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem;
+    padding: 1.25rem;
     border-radius: 0.75rem;
-    background: rgba(243,244,246,0.5);
-    border: 1px solid var(--gray-200);
+    background: rgba(55, 65, 81, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--gray-600);
     transition: all 0.3s ease;
+    cursor: pointer;
 
     &:hover {
-      background: rgba(243,244,246,0.7);
-      transform: scale(1.02);
+      background: rgba(55, 65, 81, 0.8);
+      border-color: var(--gray-500);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 
@@ -561,20 +620,38 @@
   }
 
   .toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
     padding: 0.5rem;
     border-radius: 0.5rem;
-    background: var(--gray-300);
     transition: all 0.3s ease;
+    border: 1px solid var(--gray-600);
 
     &.enabled {
-      background: linear-gradient(to right, var(--green), var(--purple));
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      border-color: var(--green);
+      box-shadow: 0 4px 15px rgba(168, 255, 0, 0.3);
+    }
+    
+    &:not(.enabled) {
+      background: var(--gray-700);
+      border-color: var(--gray-600);
     }
   }
 
   .toggle-icon-inner {
     width: 1rem;
     height: 1rem;
+    color: var(--gray-300);
+    transition: all 0.3s ease;
+  }
+
+  .toggle-icon.enabled .toggle-icon-inner {
     color: black;
+    transform: scale(1.1);
   }
 
   .toggle-text {
@@ -583,12 +660,12 @@
 
   .toggle-label {
     font-weight: 600;
-    color: var(--gray-900);
+    color: white;
   }
 
   .toggle-description {
     font-size: 0.875rem;
-    color: var(--gray-500);
+    color: var(--gray-400);
   }
 
   .toggle-button {
@@ -596,63 +673,100 @@
     width: 4rem;
     height: 2rem;
     border-radius: 9999px;
-    background: var(--gray-300);
     transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid var(--gray-600);
+    background: var(--gray-700);
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px var(--green);
+      box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.3);
     }
 
     &:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
+      border-color: var(--gray-500);
     }
 
     &.enabled {
-      background: linear-gradient(to right, var(--green), var(--purple));
-      box-shadow: 0 10px 15px -3px rgba(168,255,0,0.3);
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      border-color: var(--green);
+      box-shadow: 0 4px 15px rgba(168, 255, 0, 0.4);
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(168, 255, 0, 0.5);
+      }
+    }
+
+    &:not(.enabled) {
+      background: var(--gray-600);
+      border-color: var(--gray-600);
+
+      &:hover {
+        background: var(--gray-500);
+        border-color: var(--gray-500);
+      }
     }
 
     .toggle-knob {
       position: absolute;
-      left: 0.25rem;
-      top: 0.25rem;
+      top: 0.125rem;
       width: 1.5rem;
       height: 1.5rem;
       background: white;
       border-radius: 50%;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
 
       &.enabled {
-        transform: translateX(2rem);
+        left: calc(4rem - 1.75rem);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+      
+      &:not(.enabled) {
+        left: 0.125rem;
       }
     }
   }
 
   .save-pref-button {
     width: 100%;
-    padding: 0.75rem;
-    border-radius: 1.25rem;
-    font-weight: bold;
-    background: linear-gradient(to right, var(--green), var(--purple));
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    background: linear-gradient(135deg, var(--green), var(--purple));
     color: black;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(168, 255, 0, 0.3);
 
     &:hover {
-      box-shadow: 0 10px 15px -3px rgba(168,255,0,0.3);
-      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(168, 255, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
+      transform: none;
+    }
+
+    &.loading-disabled {
+      opacity: 0.7;
+      cursor: wait;
     }
 
     &.success {
       background: var(--green-500);
       color: white;
-      box-shadow: 0 10px 15px -3px rgba(34,197,94,0.3);
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
     }
 
     .success-message {
@@ -671,10 +785,10 @@
   .delete-account {
     border-radius: 1rem;
     padding: 1.5rem;
-    background: rgba(254,242,242,0.5);
+    background: rgba(127,29,29,0.2);
     backdrop-filter: blur(5px);
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    border: 1px solid var(--red-200);
+    border: 1px solid var(--red-800);
     transition: all 0.3s ease;
   }
 
@@ -687,7 +801,7 @@
   .warning-text {
     font-size: 0.875rem;
     margin-bottom: 1rem;
-    color: var(--gray-600);
+    color: var(--gray-300);
   }
 
   .delete-button {
@@ -727,7 +841,7 @@
     width: 100%;
     border-radius: 1rem;
     padding: 1.5rem;
-    background: white;
+    background: var(--gray-800);
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
   }
 
@@ -750,7 +864,7 @@
     transition: background 0.2s ease;
 
     &:hover {
-      background: var(--gray-100);
+      background: var(--gray-700);
     }
 
     .close-icon {
@@ -766,7 +880,7 @@
   }
 
   .modal-description {
-    color: var(--gray-600);
+    color: var(--gray-300);
   }
 
   .confirm-group {
@@ -779,7 +893,7 @@
     font-size: 0.875rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: var(--gray-700);
+    color: var(--gray-300);
 
     .delete-word {
       font-weight: bold;
@@ -791,9 +905,9 @@
     width: 100%;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    border: 1px solid var(--gray-300);
-    color: var(--gray-900);
-    background: white;
+    border: 1px solid var(--gray-600);
+    color: white;
+    background: var(--gray-700);
     transition: all 0.3s ease;
 
     &:focus {
@@ -813,9 +927,9 @@
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     font-weight: 600;
+    transition: all 0.3s ease;
     background: var(--gray-300);
     color: var(--gray-500);
-    transition: all 0.3s ease;
     cursor: not-allowed;
 
     &.enabled {
@@ -829,164 +943,131 @@
     }
   }
 
-  &.dark {
-    .profile-overview {
-      background: rgba(31,41,55,0.5);
-      border-color: var(--gray-700);
-    }
+  .cancel-button {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    background: var(--gray-700);
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
 
-    .profile-image-inner {
-      background: var(--gray-800);
-    }
-
-    .player-badge {
-      background: var(--green);
-      color: black;
-    }
-
-    .input-name, .input-phone, .input-location, .input-position {
-      background: var(--gray-700);
-      border-color: var(--gray-600);
-      color: white;
-    }
-
-    .cancel-button {
-      background: var(--gray-700);
-      color: white;
-
-      &:hover {
-        background: var(--gray-600);
-      }
-    }
-
-    .user-name {
-      color: white;
-    }
-
-    .detail-text {
-      color: var(--gray-300);
-    }
-
-    .detail-member {
-      color: var(--gray-400);
-    }
-
-    .detail-icon {
-      &.purple-icon {
-        color: var(--green);
-      }
-    }
-
-    .social-button {
-      background: var(--gray-700);
-
-      &:hover {
-        background: var(--gray-600);
-      }
-    }
-
-    .section-title {
-      color: white;
-    }
-
-    .section-icon {
-      &.purple-icon {
-        color: var(--green);
-      }
-    }
-
-    .input-label {
-      color: var(--gray-300);
-    }
-
-    .password-input {
-      background: var(--gray-700);
-      border-color: var(--gray-600);
-      color: white;
-    }
-
-    .visibility-toggle {
-      color: var(--gray-400);
-
-      &:hover {
-        color: var(--gray-300);
-      }
-    }
-
-    .change-password {
-      background: rgba(31,41,55,0.5);
-      border-color: var(--gray-700);
-    }
-
-    .notification-preferences {
-      background: rgba(31,41,55,0.5);
-      border-color: var(--gray-700);
-    }
-
-    .toggle-switch {
-      background: rgba(55,65,81,0.5);
-      border-color: var(--gray-600);
-
-      &:hover {
-        background: rgba(55,65,81,0.7);
-      }
-    }
-
-    .toggle-icon {
+    &:hover {
       background: var(--gray-600);
+    }
+  }
+}
 
-      &.enabled {
-        background: linear-gradient(to right, var(--green), var(--purple));
-      }
+/* Light theme overrides */
+.profile-settings.light {
+  .profile-overview {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--gray-200);
+    color: var(--gray-900);
+    backdrop-filter: blur(10px);
+  }
+
+  .change-password,
+  .notification-preferences {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--gray-200);
+    color: var(--gray-900);
+    backdrop-filter: blur(10px);
+  }
+
+  .password-input,
+  .input-name,
+  .input-phone,
+  .input-location,
+  .input-position {
+    background: white;
+    border: 2px solid var(--gray-300);
+    color: var(--gray-900);
+
+    &:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
+      background: var(--gray-50);
     }
 
-    .toggle-label {
-      color: white;
+    &::placeholder {
+      color: var(--gray-500);
     }
+  }
 
-    .toggle-description {
-      color: var(--gray-400);
+  .input-label {
+    color: var(--gray-700);
+  }
+
+  .visibility-toggle {
+    color: var(--gray-500);
+
+    &:hover {
+      color: var(--green);
+      background: rgba(168, 255, 0, 0.1);
     }
+  }
 
-    .toggle-button {
-      background: var(--gray-600);
+  .toggle-switch {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--gray-200);
 
-      &.enabled {
-        background: linear-gradient(to right, var(--green), var(--purple));
-      }
+    &:hover {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: var(--gray-300);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
+  }
 
-    .delete-account {
-      background: rgba(127,29,29,0.2);
-      border-color: var(--red-800);
+  .toggle-icon:not(.enabled) {
+    background: var(--gray-200);
+    border-color: var(--gray-300);
+  }
+
+  .toggle-button:not(.enabled) {
+    background: var(--gray-200);
+    border-color: var(--gray-300);
+  }
+
+  .toggle-label {
+    color: var(--gray-900);
+  }
+
+  .toggle-description {
+    color: var(--gray-600);
+  }
+
+  .delete-account {
+    background: rgba(254, 242, 242, 0.8);
+    border: 1px solid var(--red-200);
+    color: var(--gray-900);
+    backdrop-filter: blur(10px);
+  }
+
+  .modal-content {
+    background: white;
+    color: var(--gray-900);
+    border: 1px solid var(--gray-200);
+  }
+
+  .confirm-input {
+    background: white;
+    border: 2px solid var(--gray-300);
+    color: var(--gray-900);
+
+    &:focus {
+      border-color: var(--red-500);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
+  }
 
-    .warning-text {
-      color: var(--gray-300);
-    }
+  .cancel-button {
+    background: var(--gray-200);
+    color: var(--gray-900);
 
-    .modal-content {
-      background: var(--gray-800);
-    }
-
-    .close-button {
-      &:hover {
-        background: var(--gray-700);
-      }
-    }
-
-    .modal-description {
-      color: var(--gray-300);
-    }
-
-    .confirm-label {
-      color: var(--gray-300);
-    }
-
-    .confirm-input {
-      background: var(--gray-700);
-      border-color: var(--gray-600);
-      color: white;
+    &:hover {
+      background: var(--gray-300);
+      transform: translateY(-1px);
     }
   }
 }
