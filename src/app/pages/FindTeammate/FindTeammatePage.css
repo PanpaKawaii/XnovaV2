@@ -74,7 +74,7 @@
 
 .find-teammate-page__hero-title-highlight {
   display: block;
-  color: #a8ff00;
+  color: var(--accent-primary);
   animation: pulse 2s infinite;
 }
 
@@ -93,22 +93,22 @@
 }
 
 .find-teammate-page__hero-button-primary {
-  background: #a8ff00;
-  color: #000000;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
 }
 
 .find-teammate-page__hero-button-primary:hover {
-  background: #96e600;
+  background: var(--accent-hover);
 }
 
 .find-teammate-page__hero-button-secondary {
-  border-color: #ffffff;
-  color: #ffffff;
+  border-color: var(--text-primary);
+  color: var(--text-primary);
 }
 
 .find-teammate-page__hero-button-secondary:hover {
-  background: #ffffff;
-  color: #7c3aed;
+  background: var(--bg-primary);
+  color: var(--accent-primary);
 }
 
 .find-teammate-page__hero-button-icon {
@@ -137,13 +137,13 @@
 }
 
 .find-teammate-page__filters-icon-wrapper {
-  background: #a8ff00;
+  background: var(--accent-primary);
   padding: 0.5rem;
   border-radius: 0.5rem;
 }
 
 .find-teammate-page__filters-icon {
-  color: #000000;
+  color: var(--bg-primary);
 }
 
 .find-teammate-page__filters-title {
@@ -247,15 +247,15 @@
 }
 
 .find-teammate-page__section-title-icon {
-  background: #a259ff;
+  background: var(--accent-secondary);
   padding: 0.5rem;
   border-radius: 0.5rem;
-  color: #ffffff;
+  color: var(--bg-primary);
 }
 
 .find-teammate-page__players-section .find-teammate-page__section-title-icon {
-  background: #a8ff00;
-  color: #000000;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
 }
 
 .find-teammate-page__section-subtitle {
@@ -347,12 +347,13 @@
   font-size: 0.75rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
+  background: var(--accent-secondary);
 }
 
 .find-teammate-page__match-price {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #a8ff00;
+  color: var(--accent-primary);
 }
 
 .find-teammate-page__match-card-footer {
@@ -414,34 +415,34 @@
 }
 
 .find-teammate-page__match-status--available {
-  background: rgba(34, 197, 94, 0.1);
-  color: #16a34a;
+  background: rgba(var(--accent-primary-rgb), 0.1);
+  color: var(--accent-hover);
 }
 
 [data-theme="dark"] .find-teammate-page__match-status--available {
-  background: rgba(34, 197, 94, 0.2);
-  color: #4ade80;
+  background: rgba(var(--accent-primary-rgb), 0.2);
+  color: var(--accent-primary);
 }
 
 .find-teammate-page__match-status--full {
-  background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
+  background: rgba(var(--error), 0.1);
+  color: var(--error);
 }
 
 [data-theme="dark"] .find-teammate-page__match-status--full {
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
+  background: rgba(var(--error), 0.2);
+  color: var(--error);
 }
 
 .find-teammate-page__match-join-btn {
-  background: #a8ff00;
-  color: #000000;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
   font-size: 0.875rem;
   padding: 0.5rem 1rem;
 }
 
 .find-teammate-page__match-join-btn:hover {
-  background: #96e600;
+  background: var(--accent-hover);
 }
 
 .find-teammate-page__match-join-btn:disabled {
@@ -525,6 +526,7 @@
   border-radius: 50%;
   color: #ffffff;
   margin-bottom: 0.25rem;
+  background: var(--accent-secondary);
 }
 
 .find-teammate-page__player-rating {
@@ -536,14 +538,14 @@
 }
 
 .find-teammate-page__player-rating-star {
-  color: #fbbf24;
+  color: var(--warning);
   fill: currentColor;
 }
 
 /* Community Section */
 .find-teammate-page__community {
-  background: linear-gradient(135deg, #a8ff00 0%, #84cc16 100%);
-  color: #000000;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: var(--bg-primary);
   padding: 3rem;
   border-radius: 1rem;
   text-align: center;
@@ -581,6 +583,7 @@
   background: rgba(0, 0, 0, 0.1);
   padding: 1rem;
   border-radius: 50%;
+  color: var(--accent-primary);
 }
 
 .find-teammate-page__community-title {
@@ -645,6 +648,7 @@
   border-radius: 9999px;
   color: #ffffff;
   font-weight: 500;
+  background: var(--accent-secondary);
 }
 
 .find-teammate-page__modal-details-grid {
@@ -764,7 +768,7 @@
 .find-teammate-page__modal-price-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #a8ff00;
+  color: var(--accent-primary);
 }
 
 .find-teammate-page__modal-actions {
@@ -809,6 +813,7 @@
   border-radius: 9999px;
   color: #ffffff;
   font-weight: 500;
+  background: var(--accent-secondary);
 }
 
 .find-teammate-page__modal-player-stats {

@@ -5,7 +5,7 @@ import { useTheme } from '../../hooks/ThemeContext';
 import './BookingHistory.css';
 
 const BookingHistory = () => {
-  const { isDarkMode } = useTheme();
+  const { theme } = useTheme();
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('date');
   const bookings = [
@@ -86,7 +86,7 @@ const BookingHistory = () => {
   });
 
   return (
-    <div className={`booking-history${isDarkMode ? ' dark' : ''}`}>
+    <div className={`booking-history ${theme}`}>
       <div className="header">
         <Calendar className="header-icon" />
         <h3 className="title">

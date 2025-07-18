@@ -5,6 +5,7 @@ import { Users, Edit3, Check, X, Shield, Settings, Image, Crown, UserMinus, User
 import { useTheme } from '../../hooks/ThemeContext';
 import SubUserHeader from '../../layouts/SubUserHeader/SubUserHeader';
 import './TeamManagement.css';
+import { useTranslation } from 'react-i18next';
 
 const initialTeam = {
   id: '1',
@@ -38,7 +39,8 @@ const initialTeam = {
 };
 
 const TeamManagement = () => {
-  const { isDarkMode } = useTheme();
+  const { theme } = useTheme();
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const passedUser = location.state?.user || {};
@@ -192,7 +194,7 @@ const TeamManagement = () => {
   );
 
   return (
-    <div className={`team-management ${isDarkMode ? 'dark' : ''}`}>
+    <div className={`team-management ${theme}`}>
       <SubUserHeader 
         activeTab={activeTab} 
         onTabChange={handleTabChange} 
@@ -203,7 +205,7 @@ const TeamManagement = () => {
             <div className="logo-border">
               <div className="logo-inner">
                 {team.logo ? (
-                  <img src={team.logo} alt="Team Logo" className="logo-image" />
+                  <img src={team.logo} alt={t('Team Logo')} className="logo-image" />
                 ) : (
                   <Users className="logo-icon" />
                 )}
@@ -217,7 +219,7 @@ const TeamManagement = () => {
             {isUserCaptain && (
               <div className="captain-badge">
                 <Shield className="shield-icon" />
-                <span>Captain</span>
+                <span>{t('Captain')}</span>
               </div>
             )}
           </div>
@@ -229,13 +231,13 @@ const TeamManagement = () => {
                   value={editedTeam.name}
                   onChange={(e) => setEditedTeam({ ...editedTeam, name: e.target.value })}
                   className="team-name-input"
-                  placeholder="Team Name"
+                  placeholder={t('Team Name')}
                 />
                 <textarea
                   value={editedTeam.description}
                   onChange={(e) => setEditedTeam({ ...editedTeam, description: e.target.value })}
                   className="team-desc-input"
-                  placeholder="Team Description"
+                  placeholder={t('Team Description')}
                   rows={3}
                 />
                 <div className="editing-buttons">
@@ -244,14 +246,14 @@ const TeamManagement = () => {
                     className="save-button"
                   >
                     <Check className="icon" />
-                    <span>Save Changes</span>
+                    <span>{t('Save Changes')}</span>
                   </button>
                   <button
                     onClick={handleCancelTeam}
                     className="cancel-button"
                   >
                     <X className="icon" />
-                    <span>Cancel</span>
+                    <span>{t('Cancel')}</span>
                   </button>
                 </div>
               </div>
@@ -262,14 +264,14 @@ const TeamManagement = () => {
                 <div className="team-stats">
                   <div className="stat-item">
                     <div className="stat-value">{team.members.length}</div>
-                    <div className="stat-label">Members</div>
+                    <div className="stat-label">{t('Members')}</div>
                   </div>
                   <div className="stat-item">
                     <div className="stat-value">{team.members.filter(m => m.isOnline).length}</div>
-                    <div className="stat-label">Online</div>
+                    <div className="stat-label">{t('Online')}</div>
                   </div>
                   <div className="stat-item">
-                    <div className="stat-label">Created</div>
+                    <div className="stat-label">{t('Created')}</div>
                     <div className="stat-value">{new Date(team.createdDate).toLocaleDateString()}</div>
                   </div>
                 </div>
@@ -279,7 +281,7 @@ const TeamManagement = () => {
                     className="edit-button"
                   >
                     <Edit3 className="icon" />
-                    <span>Edit Team Info</span>
+                    <span>{t('Edit Team Info')}</span>
                   </button>
                 )}
               </div>
@@ -293,7 +295,7 @@ const TeamManagement = () => {
             <div className="header-icon">
               <Users className="users-icon" />
             </div>
-            <h3 className="members-title">Team Members ({team.members.length})</h3>
+            <h3 className="members-title">{t('Team Members')} ({team.members.length})</h3>
           </div>
           {isUserCaptain && (
             <button
@@ -301,7 +303,7 @@ const TeamManagement = () => {
               className="add-button"
             >
               <UserPlus className="add-icon" />
-              <span>Add Member</span>
+              <span>{t('Add Member')}</span>
             </button>
           )}
         </div>
@@ -311,7 +313,7 @@ const TeamManagement = () => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search members..."
+            placeholder={t('Search members...')}
             className="search-input"
           />
         </div>
@@ -323,7 +325,7 @@ const TeamManagement = () => {
         {filteredMembers.length === 0 && (
           <div className="no-members">
             <Users className="no-members-icon" />
-            <p>No members found matching your search.</p>
+            <p>{t('No members found matching your search.')}</p>
           </div>
         )}
       </div>
@@ -332,14 +334,14 @@ const TeamManagement = () => {
           <div className="header-icon">
             <Settings className="settings-icon" />
           </div>
-          <h3 className="settings-title">Team Settings</h3>
+          <h3 className="settings-title">{t('Team Settings')}</h3>
         </div>
         <div className="settings-content">
           {isUserCaptain && (
             <div className="toggle-section">
               <div className="toggle-info">
-                <h4 className="toggle-label">Accept New Members</h4>
-                <p className="toggle-desc">Allow new players to request to join your team</p>
+                <h4 className="toggle-label">{t('Accept New Members')}</h4>
+                <p className="toggle-desc">{t('Allow new players to request to join your team')}</p>
               </div>
               <button
                 onClick={handleToggleAcceptMembers}
@@ -355,7 +357,7 @@ const TeamManagement = () => {
               className="leave-button"
             >
               <LogOut className="icon" />
-              <span>Leave Team</span>
+              <span>{t('Leave Team')}</span>
             </button>
             {isUserCaptain && (
               <button
@@ -363,7 +365,7 @@ const TeamManagement = () => {
                 className="delete-button"
               >
                 <Trash2 className="icon" />
-                <span>Delete Team</span>
+                <span>{t('Delete Team')}</span>
               </button>
             )}
           </div>
@@ -373,18 +375,18 @@ const TeamManagement = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h3 className="modal-title">Leave Team</h3>
+              <h3 className="modal-title">{t('Leave Team')}</h3>
               <button onClick={() => setShowLeaveModal(false)} className="close-button"><X className="close-icon" /></button>
             </div>
             <div className="modal-body">
               <div className="warning-box">
                 <AlertTriangle className="alert-icon" />
-                <p>Are you sure you want to leave "{team.name}"? You'll need to be invited again to rejoin.</p>
+                <p>{t('Are you sure you want to leave "{{teamName}}"? You\'ll need to be invited again to rejoin.', { teamName: team.name })}</p>
               </div>
             </div>
             <div className="modal-actions">
-              <button onClick={handleLeaveTeam} className="confirm-button">Leave Team</button>
-              <button onClick={() => setShowLeaveModal(false)} className="cancel-button">Cancel</button>
+              <button onClick={handleLeaveTeam} className="confirm-button">{t('Leave Team')}</button>
+              <button onClick={() => setShowLeaveModal(false)} className="cancel-button">{t('Cancel')}</button>
             </div>
           </div>
         </div>
@@ -393,22 +395,22 @@ const TeamManagement = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h3 className="modal-title">Delete Team</h3>
+              <h3 className="modal-title">{t('Delete Team')}</h3>
               <button onClick={() => setShowDeleteModal(false)} className="close-button"><X className="close-icon" /></button>
             </div>
             <div className="modal-body">
               <div className="warning-box">
                 <AlertTriangle className="alert-icon" />
-                <p>This action cannot be undone. This will permanently delete "{team.name}" and remove all team data.</p>
+                <p>{t('This action cannot be undone. This will permanently delete "{{teamName}}" and remove all team data.', { teamName: team.name })}</p>
               </div>
               <div className="confirm-group">
-                <label className="confirm-label">Please type <span className="delete-word">DELETE</span> to confirm:</label>
-                <input type="text" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} className="confirm-input" placeholder="Type DELETE here" />
+                <label className="confirm-label">{t('Please type DELETE to confirm:')}<span className="delete-word">DELETE</span></label>
+                <input type="text" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} className="confirm-input" placeholder={t('Type DELETE here')} />
               </div>
             </div>
             <div className="modal-actions">
-              <button onClick={handleDeleteTeam} disabled={confirmText !== 'DELETE'} className={`confirm-delete ${confirmText === 'DELETE' ? 'enabled' : ''}`}>Delete Team</button>
-              <button onClick={() => setShowDeleteModal(false)} className="cancel-button">Cancel</button>
+              <button onClick={handleDeleteTeam} disabled={confirmText !== 'DELETE'} className={`confirm-delete ${confirmText === 'DELETE' ? 'enabled' : ''}`}>{t('Delete Team')}</button>
+              <button onClick={() => setShowDeleteModal(false)} className="cancel-button">{t('Cancel')}</button>
             </div>
           </div>
         </div>
@@ -417,22 +419,22 @@ const TeamManagement = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h3 className="modal-title">Add Member</h3>
+              <h3 className="modal-title">{t('Add Member')}</h3>
               <button onClick={() => setShowAddModal(false)} className="close-button"><X className="close-icon" /></button>
             </div>
             <div className="modal-body">
-              <label className="input-label">Member Email</label>
+              <label className="input-label">{t('Member Email')}</label>
               <input
                 type="email"
                 value={newMemberEmail}
                 onChange={(e) => setNewMemberEmail(e.target.value)}
                 className="email-input"
-                placeholder="Enter email to invite"
+                placeholder={t('Enter email to invite')}
               />
             </div>
             <div className="modal-actions">
-              <button onClick={() => handleAddMember(newMemberEmail)} className="add-confirm-button">Send Invitation</button>
-              <button onClick={() => setShowAddModal(false)} className="cancel-button">Cancel</button>
+              <button onClick={() => handleAddMember(newMemberEmail)} className="add-confirm-button">{t('Send Invitation')}</button>
+              <button onClick={() => setShowAddModal(false)} className="cancel-button">{t('Cancel')}</button>
             </div>
           </div>
         </div>

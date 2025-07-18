@@ -15,7 +15,7 @@
   --shadow-primary: rgba(0, 0, 0, 0.1);
   --shadow-secondary: rgba(0, 0, 0, 0.05);
   --shadow-tertiary: rgba(0, 0, 0, 0.15);
-  --accent-primary: #22c55e;
+  --accent-primary: #A8FF00;
   --accent-primary-light: #86efac;
   --accent-primary-dark: #15803d;
   --accent-secondary: #10b981;
@@ -51,14 +51,14 @@
   --shadow-primary: rgba(0, 0, 0, 0.3);
   --shadow-secondary: rgba(0, 0, 0, 0.2);
   --shadow-tertiary: rgba(0, 0, 0, 0.4);
-  --accent-primary: #22c55e;
+  --accent-primary: #A8FF00;
   --accent-primary-light: #86efac;
   --accent-primary-dark: #15803d;
   --accent-secondary: #10b981;
   --accent-hover: #16a34a;
-  --warning: #f59e0b;
+  --warning: #b40404;
   --warning-light: #fef3c7;
-  --warning-dark: #92400e;
+  --warning-dark: #9f281862;
   --error: #ef4444;
   --success: #22c55e;
   --success-dark: #15803d;
@@ -87,7 +87,7 @@
   --shadow-primary: rgba(0, 0, 0, 0.1);
   --shadow-secondary: rgba(0, 0, 0, 0.05);
   --shadow-tertiary: rgba(0, 0, 0, 0.15);
-  --accent-primary: #22c55e;
+  --accent-primary: #A8FF00;
   --accent-primary-light: #86efac;
   --accent-primary-dark: #15803d;
   --accent-secondary: #10b981;
