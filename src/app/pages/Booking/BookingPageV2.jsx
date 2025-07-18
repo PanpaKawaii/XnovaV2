@@ -248,7 +248,6 @@ const BookingPage = () => {
           <div className="booking-page__loading-container">
             <div className="booking-page__loading-spinner">
               <div className="booking-page__loading-badminton">
-                <div className="booking-page__loading-shuttlecock">🏸</div>
                 <div className="booking-page__loading-racket">🏸</div>
               </div>
             </div>

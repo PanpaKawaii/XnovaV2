@@ -33,6 +33,24 @@ const sampleFavorites = [
     addedDate: new Date('2025-07-10')
   },
   {
+    id: '3',
+    name: 'City Arena',
+    location: 'Chicago, IL',
+    rating: 4.7,
+    pricePerHour: 55,
+    image: 'https://tse4.mm.bing.net/th/id/OIP.bsikEwakEnMDuwRLgUBUXwHaEJ?pid=ImgDet&w=184&h=103&c=7&dpr=1.4&o=7&rm=3',
+    addedDate: new Date('2025-07-10')
+  },
+  {
+    id: '3',
+    name: 'City Arena',
+    location: 'Chicago, IL',
+    rating: 4.7,
+    pricePerHour: 55,
+    image: 'https://tse4.mm.bing.net/th/id/OIP.bsikEwakEnMDuwRLgUBUXwHaEJ?pid=ImgDet&w=184&h=103&c=7&dpr=1.4&o=7&rm=3',
+    addedDate: new Date('2025-07-10')
+  },
+  {
     id: '4',
     name: 'Downtown Pitch',
     location: 'Miami, FL',
@@ -44,7 +62,7 @@ const sampleFavorites = [
 ];
 
 const FavoriteFields = () => {
-  const { isDarkMode } = useTheme();
+  const { theme } = useTheme();
   const [viewMode, setViewMode] = useState('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('desc');
@@ -59,7 +77,7 @@ const FavoriteFields = () => {
     });
 
   return (
-    <div className={`favorite-fields${isDarkMode ? ' dark' : ''}`}>
+    <div className={`favorite-fields ${theme}`}>
       <div className="header">
         <Heart className="header-icon" />
         <h3 className="title">Favorite Fields</h3>
