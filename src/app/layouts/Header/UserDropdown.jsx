@@ -17,10 +17,16 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
     navigate('/profile-settings', { state: { user, userInfo } });
     if (!isMobile) setUserDropdown(false);
   };
+
+  const handleFavoriteFields = () => {
+    navigate('/profile-settings', { state: { user, userInfo, section: 'favoriteFields' } });
+    if (!isMobile) setUserDropdown(false);
+  };
+
   const handleBookingHistory = () => {
-  navigate('/profile-settings', { state: { user, userInfo, section: 'bookingHistory' } });
-  if (!isMobile) setUserDropdown(false);
-};
+    navigate('/profile-settings', { state: { user, userInfo, section: 'bookingHistory' } });
+    if (!isMobile) setUserDropdown(false);
+  };
 
   useEffect(() => {
     if (!userDropdown || isMobile) return;
@@ -54,11 +60,11 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
           <UserPlus className="header__mobile-user-menu-icon" />
           <span>{t('My Team')}</span>
         </button>
-        <button className="header__user-menu-item" onClick={handleBookingHistory}>
-          <History className="header__user-menu-icon" />
+        <button className="header__mobile-user-menu-item" onClick={handleBookingHistory}>
+          <History className="header__mobile-user-menu-icon" />
           <span>{t('Booking History')}</span>
         </button>
-        <button className="header__mobile-user-menu-item">
+        <button className="header__mobile-user-menu-item" onClick={handleFavoriteFields}>
           <Heart className="header__mobile-user-menu-icon" />
           <span>{t('Favorite Fields')}</span>
         </button>
@@ -118,10 +124,10 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
             <span>{t('My Team')}</span>
           </button>
           <button className="header__user-menu-item" onClick={handleBookingHistory}>
-              <History className="header__user-menu-icon" />
-              <span>{t('Booking History')}</span>
+            <History className="header__user-menu-icon" />
+            <span>{t('Booking History')}</span>
           </button>
-          <button className="header__user-menu-item">
+          <button className="header__user-menu-item" onClick={handleFavoriteFields}>
             <Heart className="header__user-menu-icon" />
             <span>{t('Favorite Fields')}</span>
           </button>
