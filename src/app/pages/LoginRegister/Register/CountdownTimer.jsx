@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import CheckValidation from './CheckValidation';
 
 const THOI_GIAN_BAT_DAU = 5;

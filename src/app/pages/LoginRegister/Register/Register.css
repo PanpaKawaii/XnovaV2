@@ -1,6 +1,11 @@
 .loginregister-container {
     .card-box {
         .card-body {
+            .hidden-form {
+                opacity: 0;
+                position: absolute;
+            }
+
             form {
                 .form-input-register {
                     i {
@@ -37,6 +42,7 @@
 
                     .form-input-register {
                         flex: 1;
+                        margin: 0;
 
                         input[type='number']::-webkit-outer-spin-button,
                         input[type='number']::-webkit-inner-spin-button {
@@ -44,6 +50,11 @@
                             margin: 0;
                         }
                     }
+                }
+
+                .otp-btn-box {
+                    display: flex;
+                    gap: 12px;
                 }
             }
         }
