@@ -30,16 +30,16 @@ const LoginModal = ({ isOpen, onClose }) => {
     otp: '',
   });
 
-  useEffect(() => {
-    if (!isOpen) return;
-    let timer;
-    if (countdown > 0) {
-      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-    }
-    return () => clearTimeout(timer);
-  }, [countdown, isOpen]);
+  // useEffect(() => {
+  //   if (!isOpen) return;
+  //   let timer;
+  //   if (countdown > 0) {
+  //     timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+  //   }
+  //   return () => clearTimeout(timer);
+  // }, [countdown, isOpen]);
 
-  if (!isOpen) return null;
+  // if (!isOpen) return null;
 
   const sendOtp = async () => {
     const { email, name, phone, password, confirmPassword } = formData;
@@ -82,7 +82,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       await postData('User/register-confirm', checkOtp, '');
       setSuccess('Đăng ký thành công!');
       setError({ value: '', name: '' });
-      onClose();
+      // onClose();
     } catch (error) {
       setError({ value: 'Đăng ký thất bại', name: 'Email or OTP' });
       setSuccess('');
@@ -116,10 +116,10 @@ const LoginModal = ({ isOpen, onClose }) => {
       setError({ value: '', name: '' });
       // Role-based navigation
       if (result.role === 'Customer') {
-        onClose(); // Không chuyển hướng, đóng modal
+        // onClose(); // Không chuyển hướng, đóng modal
       } else if (result.role === 'Owner' || result.role === 'Admin') {
         navigate('/'); // Chuyển hướng đến trang chính
-        onClose();
+        // onClose();
       }
     } catch (error) {
       setError({ value: 'Đăng nhập thất bại', name: 'Email or Password' });

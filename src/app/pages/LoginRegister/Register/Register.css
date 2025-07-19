@@ -1,0 +1,51 @@
+.loginregister-container {
+    .card-box {
+        .card-body {
+            form {
+                .form-input-register {
+                    i {
+                        &.dobble-icon {
+                            left: 10px;
+                            color: var(--text-tertiary);
+                            opacity: 0.5;
+                        }
+                    }
+                }
+
+                .form-check-register {
+                    .provision {
+                        padding: 4px 6px;
+                        border-radius: 6px;
+                        color: var(--text-primary);
+                        background-color: #37415120;
+                        border: 1px solid var(--border-secondary);
+                        box-sizing: border-box;
+                        text-decoration: none;
+                        cursor: pointer;
+                    }
+
+                    .label-accept {
+                        border-bottom: 2px solid transparent;
+                        box-sizing: border-box;
+                    }
+                }
+
+                .form-otp {
+                    display: flex;
+                    gap: 12px;
+                    margin: 12px 0 0;
+
+                    .form-input-register {
+                        flex: 1;
+
+                        input[type='number']::-webkit-outer-spin-button,
+                        input[type='number']::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

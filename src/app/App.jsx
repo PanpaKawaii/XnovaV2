@@ -9,6 +9,7 @@ import FindTeammatePage from './pages/FindTeammate/FindTeammatePage';
 import ProfileSettings from './pages/Profile/ProfileSettings';
 import TeamManagement from './pages/TeamManagement/TeamManagement';
 import LoginModal from './components/Login/Register/LoginModal';
+import LoginRegister from './pages/LoginRegister/LoginRegister';
 import ManageFields from './ownerPage/ManageFields/ManageFields';
 import AddEditField from './ownerPage/AddEditField/AddEditField';
 import Reports from './ownerPage/Reports/Reports';
@@ -53,7 +54,7 @@ function App() {
             <Route path="/owner/settings" element={<SettingsPage />} />
           </Routes>
         </Layout>
-        <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+        {isLoginModalOpen && <LoginRegister setIsLoginModalOpen={setIsLoginModalOpen} />}
       </Router>
       <ChatBox />
     </ThemeProvider>
