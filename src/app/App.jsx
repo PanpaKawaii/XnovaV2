@@ -38,6 +38,7 @@ function App() {
             <Route path="/team" element={<TeamManagement />} />
             <Route path="/team-management" element={<TeamManagement />} />
             <Route path="/find-teammates" element={<FindTeammatePage />} />
+            <Route path="/oldlogin" element={<LoginModal />} />
           </Routes>
         </Layout>
         {isLoginModalOpen && <LoginRegister setIsLoginModalOpen={setIsLoginModalOpen} />}
