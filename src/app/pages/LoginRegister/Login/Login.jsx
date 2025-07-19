@@ -79,6 +79,9 @@ export default function Login({ setIsLogin, setIsLoginModalOpen }) {
 
     return (
         <div className='card-body' id='card-login'>
+            <button className='close-button' onClick={() => setIsLoginModalOpen(false)}>
+                <i className='fa-solid fa-xmark'></i>
+            </button>
             <div className='header'>
                 <img src={LogoImage} alt='XNOVA Logo' />
                 <div className='title'>Chào mừng trở lại</div>
