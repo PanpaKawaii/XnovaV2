@@ -10,7 +10,7 @@ export default function LoginRegister({ isOpen, setIsLoginModalOpen }) {
 
     return (
         <div className='loginregister-container'>
-            <div className='card-box'>
+            {/* <div className='card-box'> */}
                 <div className='bg-pattern-1'></div>
                 <div className='bg-pattern-2'></div>
                 {isLogin ?
@@ -18,10 +18,7 @@ export default function LoginRegister({ isOpen, setIsLoginModalOpen }) {
                     :
                     <Register setIsLogin={setIsLogin} setIsLoginModalOpen={setIsLoginModalOpen} />
                 }
-                <button className='close-button' onClick={() => setIsLoginModalOpen(false)}>
-                    <i className='fa-solid fa-xmark'></i>
-                </button>
-            </div>
+            {/* </div> */}
         </div>
     )
 }
