@@ -1,41 +1,5 @@
-/* ProfileSettings.css */
-:root {
-  --green: #A8FF00;
-  --purple: #A259FF;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-  --red-50: #fef2f2;
-  --red-200: #fecaca;
-  --red-500: #ef4444;
-  --red-600: #dc2626;
-  --red-700: #b91c1c;
-  --red-800: #991b1b;
-  --red-900: #7f1d1d;
-  --blue-500: #3b82f6;
-  --blue-600: #2563eb;
-  --pink-500: #ec4899;
-  --green-500: #22c55e;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
+/* ProfileSettings.css - THEME SYNC */
+/* Xóa các biến màu custom, chỉ dùng biến theme hệ thống */
 
 .profile-settings {
   display: flex;
@@ -63,7 +27,9 @@
     padding: 3rem 6rem 3.5rem 6rem;
   }
 
-  .profile-overview {
+  .profile-overview,
+  .change-password,
+  .notification-preferences {
     border-radius: 1rem;
     padding: 1.5rem;
     background: var(--bg-secondary);
@@ -71,7 +37,27 @@
     box-shadow: var(--shadow-primary);
     border: 1px solid var(--border-secondary);
     transition: all 0.5s ease;
+  }
 
+  .profile-settings.light .profile-overview,
+  .profile-settings.light .change-password,
+  .profile-settings.light .notification-preferences {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-primary);
+  }
+
+  .profile-settings.dark .profile-overview,
+  .profile-settings.dark .change-password,
+  .profile-settings.dark .notification-preferences {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-primary);
+  }
+
+  .profile-overview {
     &:hover {
       box-shadow: 0 25px 50px -12px rgba(168,255,0,0.1);
       transform: scale(1.02);
@@ -98,9 +84,9 @@
       width: 10rem;
       height: 10rem;
       border-radius: 50%;
-      background: linear-gradient(to bottom right, var(--green), var(--purple));
+      background: linear-gradient(to bottom right, var(--accent-primary), var(--accent-secondary));
       padding: 0.25rem;
-      box-shadow: 0 10px 15px -3px rgba(168,255,0,0.2);
+      box-shadow: 0 10px 15px -3px var(--shadow-primary);
     }
 
     .profile-image-inner {
@@ -110,7 +96,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--gray-800);
+      background: var(--bg-primary);
       overflow: hidden;
       transition: all 0.3s ease;
 
@@ -122,7 +108,7 @@
     .profile-user-icon {
       width: 4rem;
       height: 4rem;
-      color: var(--gray-400);
+      color: var(--text-tertiary);
     }
 
     .profile-image {
@@ -136,7 +122,7 @@
       bottom: 0.5rem;
       right: 0.5rem;
       padding: 0.75rem;
-      background: linear-gradient(to right, var(--green), var(--purple));
+      background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
       border-radius: 50%;
       box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
@@ -166,8 +152,8 @@
       border-radius: 9999px;
       font-size: 0.75rem;
       font-weight: bold;
-      background: var(--green);
-      color: black;
+      background: var(--accent-primary);
+      color: var(--text-primary);
       box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
       animation: pulse 2s infinite;
     }
@@ -200,14 +186,14 @@
     .input-name, .input-phone, .input-location, .input-position {
       padding: 0.75rem 1rem;
       border-radius: 0.5rem;
-      border: 1px solid var(--gray-600);
-      color: white;
+      border: 1px solid var(--border-secondary);
+      color: var(--text-primary);
       transition: all 0.3s ease;
-      background: var(--gray-700);
+      background: var(--bg-tertiary);
 
       &:focus {
         outline: none;
-        box-shadow: 0 0 0 2px var(--green);
+        box-shadow: 0 0 0 2px var(--accent-primary);
         border-color: transparent;
       }
     }
@@ -222,8 +208,8 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1.5rem;
-      background: linear-gradient(to right, var(--green), var(--purple));
-      color: black;
+      background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+      color: var(--bg-primary);
       border-radius: 0.5rem;
       font-weight: 600;
       transition: all 0.3s ease;
@@ -244,14 +230,14 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1.5rem;
-      background: var(--gray-700);
-      color: white;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
       border-radius: 0.5rem;
       font-weight: 600;
       transition: all 0.3s ease;
 
       &:hover {
-        background: var(--gray-600);
+        background: var(--bg-secondary);
         transform: scale(1.05);
       }
 
@@ -270,7 +256,7 @@
     .user-name {
       font-size: 1.875rem;
       font-weight: bold;
-      color: white;
+      color: var(--text-primary);
     }
 
     .user-details {
@@ -297,17 +283,17 @@
       animation: pulse 2s infinite;
 
       &.green-dot {
-        background: var(--green);
+        background: var(--accent-primary);
       }
 
       &.purple-dot {
-        background: var(--purple);
+        background: var(--accent-secondary);
       }
     }
 
     .detail-text {
       font-weight: 500;
-      color: var(--gray-300);
+      color: var(--text-secondary);
     }
 
     .detail-icon {
@@ -315,13 +301,13 @@
       height: 1rem;
 
       &.purple-icon {
-        color: var(--green);
+        color: var(--accent-primary);
       }
     }
 
     .detail-member {
       font-size: 0.875rem;
-      color: var(--gray-400);
+      color: var(--text-tertiary);
     }
 
     .edit-button {
@@ -329,8 +315,8 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1.5rem;
-      background: linear-gradient(to right, var(--green), var(--purple));
-      color: black;
+      background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+      color: var(--bg-primary);
       border-radius: 0.5rem;
       font-weight: 600;
       transition: all 0.3s ease;
@@ -358,16 +344,6 @@
     }
   }
 
-  .change-password {
-    border-radius: 1rem;
-    padding: 1.5rem;
-    background: rgba(31,41,55,0.5);
-    backdrop-filter: blur(5px);
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    border: 1px solid var(--gray-700);
-    transition: all 0.3s ease;
-  }
-
   .section-header {
     display: flex;
     align-items: center;
@@ -380,14 +356,14 @@
     height: 1.25rem;
 
     &.purple-icon {
-      color: var(--green);
+      color: var(--accent-primary);
     }
   }
 
   .section-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: white;
+    color: var(--text-primary);
   }
 
   .password-form {
@@ -406,7 +382,7 @@
     font-size: 0.875rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--gray-300);
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.025em;
     position: relative;
@@ -418,7 +394,7 @@
       left: 0;
       width: 2rem;
       height: 2px;
-      background: linear-gradient(to right, var(--green), var(--purple));
+      background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
       border-radius: 1px;
     }
   }
@@ -432,21 +408,21 @@
       width: 100%;
       padding: 0.875rem 3rem 0.875rem 1rem;
       border-radius: 0.5rem;
-      border: 2px solid var(--gray-600);
-      background: var(--gray-700);
-      color: white;
+      border: 2px solid var(--border-secondary);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
       font-size: 0.875rem;
       transition: all 0.3s ease;
 
       &:focus {
         outline: none;
-        border-color: var(--green);
+        border-color: var(--accent-primary);
         box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
-        background: var(--gray-600);
+        background: var(--bg-secondary);
       }
 
       &::placeholder {
-        color: var(--gray-400);
+        color: var(--text-tertiary);
       }
     }
   }
@@ -455,21 +431,21 @@
     width: 100%;
     padding: 0.875rem 3rem 0.875rem 1rem;
     border-radius: 0.5rem;
-    border: 2px solid var(--gray-600);
-    background: var(--gray-700);
-    color: white;
+    border: 2px solid var(--border-secondary);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
     font-size: 0.875rem;
     transition: all 0.3s ease;
 
     &:focus {
       outline: none;
-      border-color: var(--green);
+      border-color: var(--accent-primary);
       box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
-      background: var(--gray-600);
+      background: var(--bg-secondary);
     }
 
     &::placeholder {
-      color: var(--gray-400);
+      color: var(--text-tertiary);
     }
   }
 
@@ -482,12 +458,12 @@
     border-radius: 0.375rem;
     background: transparent;
     border: none;
-    color: var(--gray-400);
+    color: var(--text-tertiary);
     transition: all 0.2s ease;
     cursor: pointer;
 
     &:hover {
-      color: var(--green);
+      color: var(--accent-primary);
       background: rgba(168, 255, 0, 0.1);
       transform: translateY(-50%) scale(1.1);
     }
@@ -509,8 +485,8 @@
     border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.875rem;
-    background: linear-gradient(135deg, var(--green), var(--purple));
-    color: black;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: var(--bg-primary);
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -537,8 +513,8 @@
     }
 
     &.success {
-      background: var(--green-500);
-      color: white;
+      background: var(--accent-primary);
+      color: var(--bg-primary);
     }
 
     .success-message {
@@ -555,14 +531,6 @@
   }
 
   .notification-preferences {
-    border-radius: 1rem;
-    padding: 1.5rem;
-    background: rgba(31,41,55,0.5);
-    backdrop-filter: blur(5px);
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    border: 1px solid var(--gray-700);
-    transition: all 0.5s ease;
-
     &:hover {
       box-shadow: 0 25px 50px -12px rgba(168,255,0,0.1);
       transform: scale(1.02);
@@ -572,7 +540,7 @@
   .header-icon-border {
     padding: 0.5rem;
     border-radius: 0.5rem;
-    background: linear-gradient(to right, var(--green), var(--purple));
+    background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
   }
 
   .bell-icon {
@@ -594,15 +562,15 @@
     justify-content: space-between;
     padding: 1.25rem;
     border-radius: 0.75rem;
-    background: rgba(55, 65, 81, 0.6);
+    background: var(--bg-tertiary);
     backdrop-filter: blur(10px);
-    border: 1px solid var(--gray-600);
+    border: 1px solid var(--border-secondary);
     transition: all 0.3s ease;
     cursor: pointer;
 
     &:hover {
-      background: rgba(55, 65, 81, 0.8);
-      border-color: var(--gray-500);
+      background: var(--bg-secondary);
+      border-color: var(--border-secondary);
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
@@ -628,29 +596,29 @@
     padding: 0.5rem;
     border-radius: 0.5rem;
     transition: all 0.3s ease;
-    border: 1px solid var(--gray-600);
+    border: 1px solid var(--border-secondary);
 
     &.enabled {
-      background: linear-gradient(135deg, var(--green), var(--purple));
-      border-color: var(--green);
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-color: var(--accent-primary);
       box-shadow: 0 4px 15px rgba(168, 255, 0, 0.3);
     }
     
     &:not(.enabled) {
-      background: var(--gray-700);
-      border-color: var(--gray-600);
+      background: var(--bg-secondary);
+      border-color: var(--border-secondary);
     }
   }
 
   .toggle-icon-inner {
     width: 1rem;
     height: 1rem;
-    color: var(--gray-300);
+    color: var(--text-secondary);
     transition: all 0.3s ease;
   }
 
   .toggle-icon.enabled .toggle-icon-inner {
-    color: black;
+    color: var(--bg-primary);
     transform: scale(1.1);
   }
 
@@ -660,12 +628,12 @@
 
   .toggle-label {
     font-weight: 600;
-    color: white;
+    color: var(--text-primary);
   }
 
   .toggle-description {
     font-size: 0.875rem;
-    color: var(--gray-400);
+    color: var(--text-tertiary);
   }
 
   .toggle-button {
@@ -675,8 +643,8 @@
     border-radius: 9999px;
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 2px solid var(--gray-600);
-    background: var(--gray-700);
+    border: 2px solid var(--border-secondary);
+    background: var(--bg-tertiary);
 
     &:focus {
       outline: none;
@@ -685,12 +653,12 @@
 
     &:hover {
       transform: scale(1.05);
-      border-color: var(--gray-500);
+      border-color: var(--border-secondary);
     }
 
     &.enabled {
-      background: linear-gradient(135deg, var(--green), var(--purple));
-      border-color: var(--green);
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-color: var(--accent-primary);
       box-shadow: 0 4px 15px rgba(168, 255, 0, 0.4);
 
       &:hover {
@@ -700,12 +668,12 @@
     }
 
     &:not(.enabled) {
-      background: var(--gray-600);
-      border-color: var(--gray-600);
+      background: var(--bg-tertiary);
+      border-color: var(--border-secondary);
 
       &:hover {
-        background: var(--gray-500);
-        border-color: var(--gray-500);
+        background: var(--bg-secondary);
+        border-color: var(--border-secondary);
       }
     }
 
@@ -714,7 +682,7 @@
       top: 0.125rem;
       width: 1.5rem;
       height: 1.5rem;
-      background: white;
+      background: var(--bg-primary);
       border-radius: 50%;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
@@ -736,8 +704,8 @@
     border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.875rem;
-    background: linear-gradient(135deg, var(--green), var(--purple));
-    color: black;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: var(--bg-primary);
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -764,8 +732,8 @@
     }
 
     &.success {
-      background: var(--green-500);
-      color: white;
+      background: var(--accent-primary);
+      color: var(--bg-primary);
       box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
     }
 
@@ -782,26 +750,26 @@
     }
   }
 
-  .delete-account {
+  .delete-account { 
     border-radius: 1rem;
     padding: 1.5rem;
-    background: rgba(127,29,29,0.2);
+    background: var(--warning-light);
     backdrop-filter: blur(5px);
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    border: 1px solid var(--red-800);
+    border: 1px solid var(--warning);
     transition: all 0.3s ease;
   }
 
   .alert-icon {
     width: 1.25rem;
     height: 1.25rem;
-    color: var(--red-500);
+    color: var(--error);
   }
 
   .warning-text {
     font-size: 0.875rem;
     margin-bottom: 1rem;
-    color: var(--gray-300);
+    color: var(--text-secondary);
   }
 
   .delete-button {
@@ -809,13 +777,13 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: var(--red-600);
-    color: white;
+    background: var(--error);
+    color: var(--bg-primary);
     border-radius: 0.5rem;
     transition: all 0.3s ease;
 
     &:hover {
-      background: var(--red-700);
+      background: var(--error-dark);
       transform: scale(1.05);
     }
 
@@ -841,8 +809,10 @@
     width: 100%;
     border-radius: 1rem;
     padding: 1.5rem;
-    background: var(--gray-800);
+    background: var(--bg-primary);
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    color: var(--text-primary);
+    border: 1px solid var(--border-secondary);
   }
 
   .modal-header {
@@ -855,7 +825,7 @@
   .modal-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--red-500);
+    color: var(--error);
   }
 
   .close-button {
@@ -864,7 +834,7 @@
     transition: background 0.2s ease;
 
     &:hover {
-      background: var(--gray-700);
+      background: var(--bg-secondary);
     }
 
     .close-icon {
@@ -880,7 +850,7 @@
   }
 
   .modal-description {
-    color: var(--gray-300);
+    color: var(--text-secondary);
   }
 
   .confirm-group {
@@ -893,11 +863,11 @@
     font-size: 0.875rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: var(--gray-300);
+    color: var(--text-secondary);
 
     .delete-word {
       font-weight: bold;
-      color: var(--red-500);
+      color: var(--error);
     }
   }
 
@@ -905,14 +875,14 @@
     width: 100%;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    border: 1px solid var(--gray-600);
-    color: white;
-    background: var(--gray-700);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
     transition: all 0.3s ease;
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px var(--red-500);
+      box-shadow: 0 0 0 2px var(--error);
       border-color: transparent;
     }
   }
@@ -928,17 +898,17 @@
     border-radius: 0.5rem;
     font-weight: 600;
     transition: all 0.3s ease;
-    background: var(--gray-300);
-    color: var(--gray-500);
+    background: var(--bg-tertiary);
+    color: var(--text-tertiary);
     cursor: not-allowed;
 
     &.enabled {
-      background: var(--red-600);
-      color: white;
+      background: var(--error);
+      color: var(--bg-primary);
       cursor: pointer;
 
       &:hover {
-        background: var(--red-700);
+        background: var(--error-dark);
       }
     }
   }
@@ -946,14 +916,14 @@
   .cancel-button {
     flex: 1;
     padding: 0.5rem 1rem;
-    background: var(--gray-700);
-    color: white;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
     border-radius: 0.5rem;
     font-weight: 600;
     transition: all 0.3s ease;
 
     &:hover {
-      background: var(--gray-600);
+      background: var(--bg-secondary);
     }
   }
 }
@@ -962,16 +932,16 @@
 .profile-settings.light {
   .profile-overview {
     background: rgba(255, 255, 255, 0.9);
-    border: 1px solid var(--gray-200);
-    color: var(--gray-900);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
     backdrop-filter: blur(10px);
   }
 
   .change-password,
   .notification-preferences {
     background: rgba(255, 255, 255, 0.9);
-    border: 1px solid var(--gray-200);
-    color: var(--gray-900);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
     backdrop-filter: blur(10px);
   }
 
@@ -981,92 +951,205 @@
   .input-location,
   .input-position {
     background: white;
-    border: 2px solid var(--gray-300);
-    color: var(--gray-900);
+    border: 2px solid var(--border-secondary);
+    color: var(--text-primary);
 
     &:focus {
-      border-color: var(--green);
+      border-color: var(--accent-primary);
       box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
-      background: var(--gray-50);
+      background: var(--bg-secondary);
     }
 
     &::placeholder {
-      color: var(--gray-500);
+      color: var(--text-secondary);
     }
   }
 
   .input-label {
-    color: var(--gray-700);
+    color: var(--text-primary);
   }
 
   .visibility-toggle {
-    color: var(--gray-500);
+    color: var(--text-secondary);
 
     &:hover {
-      color: var(--green);
+      color: var(--accent-primary);
       background: rgba(168, 255, 0, 0.1);
     }
   }
 
   .toggle-switch {
     background: rgba(255, 255, 255, 0.8);
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--border-secondary);
 
     &:hover {
       background: rgba(255, 255, 255, 0.95);
-      border-color: var(--gray-300);
+      border-color: var(--border-secondary);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
   }
 
   .toggle-icon:not(.enabled) {
-    background: var(--gray-200);
-    border-color: var(--gray-300);
+    background: var(--border-secondary);
+    border-color: var(--border-secondary);
   }
 
   .toggle-button:not(.enabled) {
-    background: var(--gray-200);
-    border-color: var(--gray-300);
+    background: var(--border-secondary);
+    border-color: var(--border-secondary);
   }
 
   .toggle-label {
-    color: var(--gray-900);
+    color: var(--text-primary);
   }
 
   .toggle-description {
-    color: var(--gray-600);
+    color: var(--text-secondary);
   }
 
   .delete-account {
-    background: rgba(254, 242, 242, 0.8);
-    border: 1px solid var(--red-200);
-    color: var(--gray-900);
+    background: rgba(122, 22, 22, 0.464);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
     backdrop-filter: blur(10px);
   }
 
   .modal-content {
     background: white;
-    color: var(--gray-900);
-    border: 1px solid var(--gray-200);
+    color: var(--text-primary);
+    border: 1px solid var(--border-secondary);
   }
 
   .confirm-input {
     background: white;
-    border: 2px solid var(--gray-300);
-    color: var(--gray-900);
+    border: 2px solid var(--border-secondary);
+    color: var(--text-primary);
 
     &:focus {
-      border-color: var(--red-500);
+      border-color: var(--error);
       box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
   }
 
   .cancel-button {
-    background: var(--gray-200);
-    color: var(--gray-900);
+    background: var(--border-secondary);
+    color: var(--text-primary);
 
     &:hover {
-      background: var(--gray-300);
+      background: var(--bg-secondary);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+/* Dark theme overrides */
+.profile-settings.dark {
+  .profile-overview {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-primary);
+  }
+
+  .change-password,
+  .notification-preferences {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-primary);
+  }
+
+  .password-input,
+  .input-name,
+  .input-phone,
+  .input-location,
+  .input-position {
+    background: white;
+    border: 2px solid var(--border-secondary);
+    color: var(--text-primary);
+
+    &:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
+      background: var(--bg-secondary);
+    }
+
+    &::placeholder {
+      color: var(--text-secondary);
+    }
+  }
+
+  .input-label {
+    color: var(--text-primary);
+  }
+
+  .visibility-toggle {
+    color: var(--text-secondary);
+
+    &:hover {
+      color: var(--accent-primary);
+      background: rgba(168, 255, 0, 0.1);
+    }
+  }
+
+  .toggle-switch {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-secondary);
+
+    &:hover {
+      background: var(--bg-secondary);
+      border-color: var(--border-secondary);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .toggle-icon:not(.enabled) {
+    background: var(--border-secondary);
+    border-color: var(--border-secondary);
+  }
+
+  .toggle-button:not(.enabled) {
+    background: var(--border-secondary);
+    border-color: var(--border-secondary);
+  }
+
+  .toggle-label {
+    color: var(--text-primary);
+  }
+
+  .toggle-description {
+    color: var(--text-secondary);
+  }
+
+  .delete-account {
+    background: var(--warning-dark);
+    border: 1px solid var(--warning);
+    color: var(--text-primary);
+  }
+
+  .modal-content {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-secondary);
+  }
+
+  .confirm-input {
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-secondary);
+    color: var(--text-primary);
+
+    &:focus {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+
+  .cancel-button {
+    background: var(--border-secondary);
+    color: var(--text-primary);
+
+    &:hover {
+      background: var(--bg-secondary);
       transform: translateY(-1px);
     }
   }

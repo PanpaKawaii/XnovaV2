@@ -1,5 +1,5 @@
-/* BookingHistory.css */
-.booking-history {
+/* FavoriteFields.css */
+.favorite-fields {
   border-radius: 1rem;
   padding: 1.5rem;
   background: var(--bg-secondary);
@@ -68,6 +68,35 @@
     flex: 1;
   }
 
+  & .search-group {
+    position: relative;
+  }
+
+  & .search-bar {
+    position: relative;
+  }
+
+  & .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    width: 1rem;
+    height: 1rem;
+  }
+
+  & .search-bar input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-secondary);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s;
+    font-size: 0.875rem;
+  }
+
   & .label {
     display: block;
     font-size: 0.875rem;
@@ -105,33 +134,60 @@
     border-color: var(--border-primary);
   }
 
-  & .booking-list-container {
+  & .favorite-list-container {
     max-height: calc(4 * 6rem + 3 * 1rem); /* 4 items * height per item + gaps */
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border-secondary) var(--bg-primary);
   }
 
-  & .booking-list-container::-webkit-scrollbar {
+  & .favorite-list-container::-webkit-scrollbar {
     width: 8px;
   }
 
-  & .booking-list-container::-webkit-scrollbar-track {
+  & .favorite-list-container::-webkit-scrollbar-track {
     background: var(--bg-primary);
   }
 
-  & .booking-list-container::-webkit-scrollbar-thumb {
+  & .favorite-list-container::-webkit-scrollbar-thumb {
     background: var(--border-secondary);
     border-radius: 4px;
   }
 
-  & .booking-list {
-    display: flex;
-    flex-direction: column;
+  & .fields-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  & .fields-table th, & .fields-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-secondary);
+  }
+
+  & .fields-table th {
+    background: var(--bg-tertiary);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  & .fields-table td {
+    color: var(--text-secondary);
+  }
+
+  & .table-image {
+    width: 100px;
+    height: auto;
+    border-radius: 0.25rem;
+  }
+
+  & .grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
   }
 
-  & .booking-card {
+  & .grid-card {
     padding: 1rem;
     border-radius: 0.5rem;
     border: 1px solid var(--border-secondary);
@@ -140,10 +196,12 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    min-height: 6rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 20rem;
   }
 
-  & .booking-card::before {
+  & .grid-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -155,166 +213,88 @@
     transition: opacity 0.3s ease;
   }
 
-  & .booking-card:hover {
+  & .grid-card:hover {
     box-shadow: 0 10px 15px -3px rgba(var(--accent-primary-rgb), 0.1), 0 4px 6px -4px rgba(var(--accent-primary-rgb), 0.1);
     transform: translateY(-2px);
     border-color: var(--accent-primary);
   }
 
-  & .booking-card:hover::before {
+  & .grid-card:hover::before {
     opacity: 1;
   }
 
-  & .card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    justify-content: space-between;
+  & .grid-image {
+    width: 100%;
+    height: 10rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
   }
 
-  @media (min-width: 640px) {
-    & .card-content {
-      flex-direction: row;
-      align-items: center;
-      gap: 0;
-    }
-  }
-
-  & .field-info {
-    flex: 1;
+  & .grid-info {
+    padding: 1rem 0;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  & .field-name {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  & .map-icon {
-    width: 1rem;
-    height: 1rem;
-    color: var(--purple);
-  }
-
-  & .field-title {
+  & .grid-name {
     font-weight: 600;
     color: var(--text-primary);
   }
 
-  & .details {
+  & .grid-details {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.25rem;
     font-size: 0.875rem;
   }
 
-  & .date,
-  & .time {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  & .date-icon,
-  & .time-icon {
+  & .detail-icon {
     width: 1rem;
     height: 1rem;
     color: var(--text-tertiary);
   }
 
-  & .details span {
-    color: var(--text-secondary);
-  }
-
-  & .price-status {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  & .price {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  & .dollar-icon {
-    width: 1rem;
-    height: 1rem;
-    color: var(--purple);
-  }
-
-  & .price-amount {
+  & .grid-price {
     font-weight: 600;
     color: var(--text-primary);
   }
 
-  & .status {
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border: 1px solid var(--border-secondary);
-    background-color: var(--bg-tertiary);
+  & .grid-added {
+    font-size: 0.875rem;
     color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
+  }
+
+  & .remove-button {
+    background: var(--error);
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    margin-top: auto;
   }
 
-  & .status::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: currentColor;
-    opacity: 0.3;
+  & .remove-button:hover {
+    background: var(--error-dark);
   }
 
-  & .status.completed {
-    background-color: rgba(34, 197, 94, 0.1);
-    color: var(--success);
-    border-color: var(--success-dark);
+  & .remove-icon {
+    width: 1rem;
+    height: 1rem;
   }
 
-  & .status.cancelled {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: var(--error);
-    border-color: var(--error);
-  }
-
-  & .status.upcoming {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: var(--info);
-    border-color: var(--info);
-  }
-
-  & .no-bookings {
+  & .no-favorites {
     text-align: center;
     padding: 2rem 0;
     color: var(--text-tertiary);
-    
-    .no-bookings-message {
-      margin-top: 1rem;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    
-    .no-bookings-subtext {
-      margin-top: 0.5rem;
-      font-size: 0.875rem;
-      opacity: 0.7;
-    }
   }
 
-  & .no-bookings-icon {
+  & .no-favorites-icon {
     width: 3rem;
     height: 3rem;
     margin: 0 auto 1rem;
@@ -322,34 +302,22 @@
     color: var(--text-quaternary);
   }
 
-  /* Loading state */
   &.loading {
     opacity: 0.7;
     pointer-events: none;
   }
 
-  &.loading .booking-card {
+  &.loading .grid-card {
     animation: pulse 1.5s ease-in-out infinite;
   }
 }
 
-/* Dark theme - handled by CSS variables automatically */
-/* Additional dark mode specific styling if needed */
-[data-theme="dark"] .booking-history {
+[data-theme="dark"] .favorite-fields {
   & .header-icon {
-    color: var(--green);
-  }
-
-  & .map-icon {
-    color: var(--green);
-  }
-
-  & .dollar-icon {
     color: var(--green);
   }
 }
 
-/* Animations */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -370,12 +338,11 @@
   }
 }
 
-/* Animation for booking cards */
-.booking-history .booking-card {
+.favorite-fields .grid-card {
   animation: slideIn 0.5s ease-out;
 }
 
-.booking-history .booking-card:nth-child(1) { animation-delay: 0.1s; }
-.booking-history .booking-card:nth-child(2) { animation-delay: 0.2s; }
-.booking-history .booking-card:nth-child(3) { animation-delay: 0.3s; }
-.booking-history .booking-card:nth-child(4) { animation-delay: 0.4s; }
+.favorite-fields .grid-card:nth-child(1) { animation-delay: 0.1s; }
+.favorite-fields .grid-card:nth-child(2) { animation-delay: 0.2s; }
+.favorite-fields .grid-card:nth-child(3) { animation-delay: 0.3s; }
+.favorite-fields .grid-card:nth-child(4) { animation-delay: 0.4s; }

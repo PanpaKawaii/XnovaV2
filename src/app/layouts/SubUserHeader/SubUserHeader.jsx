@@ -11,7 +11,7 @@ const SubUserHeader = ({ activeTab, onTabChange }) => {
       <div className="header-left">
         <div className="pulse-bar"></div>
         <h1 className="title">
-          XNOVA Profile
+          {activeTab === 'profile' ? 'My Profile' : 'My Team'}
         </h1>
       </div>
       

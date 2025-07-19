@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Camera, Edit3, Check, X, User, MapPin, Award, Eye, EyeOff, Lock, Trash2, AlertTriangle, Bell, Calendar, Users, Gift } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
 import './ProfileSettings.css';
-import './BookingHistory.css';
 import SubUserHeader from '../../layouts/SubUserHeader/SubUserHeader';
 import BookingHistory from './BookingHistory';
+import FavoriteFields from './FavoriteFields';
+import Voucher from './Voucher';
+import { useTranslation } from 'react-i18next';
 
 const initialUser = {
   id: '1',
@@ -24,49 +26,15 @@ const initialPreferences = {
   promotions: true,
 };
 
-const sampleBookings = [
-  {
-    id: '1',
-    fieldName: 'Central Park Field',
-    date: '2025-07-10',
-    time: '14:00',
-    duration: '2h',
-    price: 80,
-    status: 'completed'
-  },
-  {
-    id: '2',
-    fieldName: 'Riverside Stadium',
-    date: '2025-07-15',
-    time: '18:00',
-    duration: '1.5h',
-    price: 60,
-    status: 'upcoming'
-  },
-  {
-    id: '3',
-    fieldName: 'City Arena',
-    date: '2025-06-20',
-    time: '10:00',
-    duration: '1h',
-    price: 40,
-    status: 'cancelled'
-  },
-  {
-    id: '4',
-    fieldName: 'Downtown Pitch',
-    date: '2025-07-05',
-    time: '16:00',
-    duration: '2h',
-    price: 75,
-    status: 'completed'
-  }
-];
 
 const ProfileSettings = () => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const bookingRef = useRef(null);
+  const favoriteRef = useRef(null);
+  const voucherRef = useRef(null);
   const passedUser = location.state?.user || {};
   const passedUserInfo = location.state?.userInfo || {};
 
@@ -154,6 +122,25 @@ const ProfileSettings = () => {
       setConfirmText('');
     }, 2000);
   };
+  useEffect(() => {
+    const section = location.state?.section;
+    let targetRef;
+    if (section === 'bookingHistory') {
+      targetRef = bookingRef;
+    } else if (section === 'favoriteFields') {
+      targetRef = favoriteRef;
+    } else if (section === 'vouchers') {
+      targetRef = voucherRef;
+    }
+    if (targetRef && targetRef.current) {
+      const offset = 100; // Khoảng cách (px)
+      const rect = targetRef.current.getBoundingClientRect();
+      window.scrollTo({
+        top: rect.top + window.scrollY - offset,
+        behavior: 'smooth'
+      });
+    }
+  }, [location.state]);
 
   const ToggleSwitch = ({ enabled, onChange, label, description, icon }) => (
     <div className={`toggle-switch`}>
@@ -186,7 +173,7 @@ const ProfileSettings = () => {
                 <div className="profile-image-border">
                   <div className="profile-image-inner">
                     {user.profileImage ? (
-                      <img src={user.profileImage} alt="Profile" className="profile-image" />
+                      <img src={user.profileImage} alt={t('Profile Image')} className="profile-image" />
                     ) : (
                       <User className="profile-user-icon" />
                     )}
@@ -205,16 +192,16 @@ const ProfileSettings = () => {
                 {isEditing ? (
                   <div className="editing-form">
                     <div className="editing-grid1">
-                      <input type="text" value={editedUser.name} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} className="input-name" placeholder="Full Name" />
-                      <input type="tel" value={editedUser.phone} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} className="input-phone" placeholder="Phone Number" />
+                      <input type="text" value={editedUser.name} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} className="input-name" placeholder={t('Full Name')} />
+                      <input type="tel" value={editedUser.phone} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} className="input-phone" placeholder={t('Phone Number')} />
                     </div>
                     <div className="editing-grid2">
-                      <input type="text" value={editedUser.location || ''} onChange={(e) => setEditedUser({ ...editedUser, location: e.target.value })} className="input-location" placeholder="Location" />
-                      <input type="text" value={editedUser.position || ''} onChange={(e) => setEditedUser({ ...editedUser, position: e.target.value })} className="input-position" placeholder="Position" />
+                      <input type="text" value={editedUser.location || ''} onChange={(e) => setEditedUser({ ...editedUser, location: e.target.value })} className="input-location" placeholder={t('Location')} />
+                      <input type="text" value={editedUser.position || ''} onChange={(e) => setEditedUser({ ...editedUser, position: e.target.value })} className="input-position" placeholder={t('Position')} />
                     </div>
                     <div className="editing-buttons">
-                      <button onClick={handleSaveProfile} className="save-button"><Check className="icon" /><span>Save Changes</span></button>
-                      <button onClick={handleCancelProfile} className="cancel-button"><X className="icon" /><span>Cancel</span></button>
+                      <button onClick={handleSaveProfile} className="save-button"><Check className="icon" /><span>{t('Save Changes')}</span></button>
+                      <button onClick={handleCancelProfile} className="cancel-button"><X className="icon" /><span>{t('Cancel')}</span></button>
                     </div>
                   </div>
                 ) : (
@@ -237,10 +224,10 @@ const ProfileSettings = () => {
                       )}
                       <div className="detail-item">
                         <Award className="detail-icon" />
-                        <p className="detail-member">Member since {new Date(user.joinedDate).toLocaleDateString()}</p>
+                        <p className="detail-member">{t('Member since')} {new Date(user.joinedDate).toLocaleDateString()}</p>
                       </div>
                     </div>
-                    <button onClick={() => setIsEditing(true)} className="save-button"><Edit3 className="icon" /><span>Edit Profile</span></button>
+                    <button onClick={() => setIsEditing(true)} className="save-button"><Edit3 className="icon" /><span>{t('Edit Profile')}</span></button>
                   </div>
                 )}
               </div>
@@ -250,45 +237,37 @@ const ProfileSettings = () => {
             <div className="change-password">
               <div className="section-header">
                 <Lock className="section-icon" />
-                <h3 className="section-title">Change Password</h3>
+                <h3 className="section-title">{t('Change Password')}</h3>
               </div>
               <form onSubmit={handleSubmitPassword} className="password-form">
                 <div>
-                  <label className="input-label">Current Password</label>
+                  <label className="input-label">{t('Current Password')}</label>
                   <div className="input-wrapper">
-                    <input type={showPasswords.old ? 'text' : 'password'} value={formData.oldPassword} onChange={(e) => setFormData({ ...formData, oldPassword: e.target.value })} className="password-input" placeholder="Enter current password" required />
+                    <input type={showPasswords.old ? 'text' : 'password'} value={formData.oldPassword} onChange={(e) => setFormData({ ...formData, oldPassword: e.target.value })} className="password-input" placeholder={t('Enter current password')} required />
                     <button type="button" onClick={() => togglePasswordVisibility('old')} className="visibility-toggle">
                       {showPasswords.old ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
                     </button>
                   </div>
                 </div>
                 <div>
-                  <label className="input-label">New Password</label>
+                  <label className="input-label">{t('New Password')}</label>
                   <div className="input-wrapper">
-                    <input type={showPasswords.new ? 'text' : 'password'} value={formData.newPassword} onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })} className="password-input" placeholder="Enter new password" required />
+                    <input type={showPasswords.new ? 'text' : 'password'} value={formData.newPassword} onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })} className="password-input" placeholder={t('Enter new password')} required />
                     <button type="button" onClick={() => togglePasswordVisibility('new')} className="visibility-toggle">
                       {showPasswords.new ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
                     </button>
                   </div>
                 </div>
                 <div>
-                  <label className="input-label">Confirm New Password</label>
+                  <label className="input-label">{t('Confirm Password')}</label>
                   <div className="input-wrapper">
-                    <input type={showPasswords.confirm ? 'text' : 'password'} value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} className="password-input" placeholder="Confirm new password" required />
+                    <input type={showPasswords.confirm ? 'text' : 'password'} value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} className="password-input" placeholder={t('Confirm new password')} required />
                     <button type="button" onClick={() => togglePasswordVisibility('confirm')} className="visibility-toggle">
                       {showPasswords.confirm ? <EyeOff className="eye-icon" /> : <Eye className="eye-icon" />}
                     </button>
                   </div>
                 </div>
-                <button type="submit" disabled={isLoadingPassword || successPassword} className={`submit-button ${successPassword ? 'success' : ''} ${isLoadingPassword ? 'loading-disabled' : ''}`}>
-                  {successPassword ? (
-                    <div className="success-message"><Check className="icon" /><span>Password Changed!</span></div>
-                  ) : isLoadingPassword ? (
-                    'Changing Password...'
-                  ) : (
-                    'Change Password'
-                  )}
-                </button>
+                <button type="submit" className={`submit-button${isLoadingPassword ? ' loading-disabled' : ''}${successPassword ? ' success' : ''}`}>{isLoadingPassword ? t('Processing...') : successPassword ? t('Preferences Saved!') : t('Save Changes')}</button>
               </form>
             </div>
             <div className="notification-preferences">
@@ -296,54 +275,58 @@ const ProfileSettings = () => {
                 <div className="header-icon-border">
                   <Bell className="bell-icon" />
                 </div>
-                <h3 className="section-title">Notification Preferences</h3>
+                <h3 className="section-title">{t('Notification Preferences')}</h3>
               </div>
               <div className="preferences-list">
-                <ToggleSwitch enabled={localPreferences.bookingReminders} onChange={() => handleTogglePref('bookingReminders')} label="Booking Reminders" description="Get notified before your scheduled bookings" icon={<Calendar className="toggle-icon-inner" />} />
-                <ToggleSwitch enabled={localPreferences.matchInvites} onChange={() => handleTogglePref('matchInvites')} label="Match Invites" description="Receive invitations to team matches and events" icon={<Users className="toggle-icon-inner" />} />
-                <ToggleSwitch enabled={localPreferences.promotions} onChange={() => handleTogglePref('promotions')} label="Promotions & Events" description="Stay updated on special offers and events" icon={<Gift className="toggle-icon-inner" />} />
+                <ToggleSwitch enabled={localPreferences.bookingReminders} onChange={() => handleTogglePref('bookingReminders')} label={t('Booking Reminders')} description={t('Get notified before your scheduled bookings')} icon={<Calendar className="toggle-icon-inner" />} />
+                <ToggleSwitch enabled={localPreferences.matchInvites} onChange={() => handleTogglePref('matchInvites')} label={t('Match Invites')} description={t('Receive invitations to team matches and events')} icon={<Users className="toggle-icon-inner" />} />
+                <ToggleSwitch enabled={localPreferences.promotions} onChange={() => handleTogglePref('promotions')} label={t('Promotions & Events')} description={t('Stay updated on special offers and events')} icon={<Gift className="toggle-icon-inner" />} />
               </div>
               <button onClick={handleSavePref} disabled={isLoadingPref || successPref} className={`save-pref-button ${successPref ? 'success' : ''} ${isLoadingPref ? 'loading-disabled' : ''}`}>
                 {successPref ? (
-                  <div className="success-message"><Check className="icon" /><span>Preferences Saved!</span></div>
+                  <div className="success-message"><Check className="icon" /><span>{t('Preferences Saved!')}</span></div>
                 ) : isLoadingPref ? (
-                  'Saving Preferences...'
+                  t('Processing...')
                 ) : (
-                  'Save Preferences'
+                  t('Save Preferences')
                 )}
               </button>
             </div>
           </div>
-          <div className="booking-history-section">
-            <BookingHistory bookings={sampleBookings} />
+          <div className="booking-history-section" ref={bookingRef}>
+            <BookingHistory />
+          </div>
+          <div className="favorite-fields-section" ref={favoriteRef}>
+            <FavoriteFields />
+          </div>
+          <div className="vouchers-section" ref={voucherRef}>
+            <Voucher />
           </div>
           <div className="delete-account">
             <div className="section-header">
               <AlertTriangle className="alert-icon" />
-              <h3 className="section-title">Danger Zone</h3>
+              <h3 className="section-title">{t('Danger Zone')}</h3>
             </div>
-            <p className="warning-text">Once you delete your account, there is no going back. Please be certain.</p>
-            <button onClick={() => setShowModal(true)} className="delete-button"><Trash2 className="icon" /><span>Delete Account</span></button>
+            <p className="warning-text">{t('Once you delete your account, there is no going back. Please be certain.')}</p>
+            <button onClick={() => setShowModal(true)} className="delete-button"><Trash2 className="icon" /><span>{t('Delete Account')}</span></button>
           </div>
           {showModal && (
             <div className="modal-overlay">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h3 className="modal-title">Delete Account</h3>
+                  <h3 className="modal-title">{t('Delete Account')}</h3>
                   <button onClick={() => setShowModal(false)} className="close-button"><X className="close-icon" /></button>
                 </div>
                 <div className="modal-body">
-                  <p className="modal-description">This action cannot be undone. This will permanently delete your account and remove all your data from our servers.</p>
+                  <p className="modal-description">{t('This action cannot be undone. This will permanently delete your account and remove all your data from our servers.')}</p>
                   <div>
-                    <label className="input-label">Please type <span className="delete-word">DELETE</span> to confirm:</label>
-                    <input type="text" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} className="confirm-input" placeholder="Type DELETE here" />
+                    <label className="input-label">{t('Please type DELETE to confirm:')}<span className="delete-word">DELETE</span></label>
+                    <input type="text" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} className="confirm-input" placeholder={t('Type DELETE here')} />
                   </div>
                 </div>
                 <div className="modal-actions">
-                  <button onClick={handleDelete} disabled={confirmText !== 'DELETE' || isLoadingDelete} className={`confirm-delete ${confirmText === 'DELETE' && !isLoadingDelete ? 'enabled' : ''}`}>
-                    {isLoadingDelete ? 'Deleting...' : 'Delete Account'}
-                  </button>
-                  <button onClick={() => setShowModal(false)} className="cancel-button">Cancel</button>
+                  <button onClick={handleDelete} disabled={confirmText !== 'DELETE' || isLoadingDelete} className={`confirm-delete ${confirmText === 'DELETE' && !isLoadingDelete ? 'enabled' : ''}`}>{isLoadingDelete ? t('Processing...') : t('Delete Account')}</button>
+                  <button onClick={() => setShowModal(false)} className="cancel-button">{t('Cancel')}</button>
                 </div>
               </div>
             </div>
@@ -351,8 +334,8 @@ const ProfileSettings = () => {
         </>
       ) : (
         <div className="team-placeholder">
-          <h2>Team Content</h2>
-          <p>Team section coming soon...</p>
+          <h2>{t('Team Content')}</h2>
+          <p>{t('Team section coming soon...')}</p>
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
-/* BookingHistory.css */
-.booking-history {
+/* Voucher.css */
+.voucher {
   border-radius: 1rem;
   padding: 1.5rem;
   background: var(--bg-secondary);
@@ -105,33 +105,33 @@
     border-color: var(--border-primary);
   }
 
-  & .booking-list-container {
+  & .voucher-list-container {
     max-height: calc(4 * 6rem + 3 * 1rem); /* 4 items * height per item + gaps */
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border-secondary) var(--bg-primary);
   }
 
-  & .booking-list-container::-webkit-scrollbar {
+  & .voucher-list-container::-webkit-scrollbar {
     width: 8px;
   }
 
-  & .booking-list-container::-webkit-scrollbar-track {
+  & .voucher-list-container::-webkit-scrollbar-track {
     background: var(--bg-primary);
   }
 
-  & .booking-list-container::-webkit-scrollbar-thumb {
+  & .voucher-list-container::-webkit-scrollbar-thumb {
     background: var(--border-secondary);
     border-radius: 4px;
   }
 
-  & .booking-list {
+  & .voucher-list {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
 
-  & .booking-card {
+  & .voucher-card {
     padding: 1rem;
     border-radius: 0.5rem;
     border: 1px solid var(--border-secondary);
@@ -143,7 +143,7 @@
     min-height: 6rem;
   }
 
-  & .booking-card::before {
+  & .voucher-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -155,13 +155,13 @@
     transition: opacity 0.3s ease;
   }
 
-  & .booking-card:hover {
+  & .voucher-card:hover {
     box-shadow: 0 10px 15px -3px rgba(var(--accent-primary-rgb), 0.1), 0 4px 6px -4px rgba(var(--accent-primary-rgb), 0.1);
     transform: translateY(-2px);
     border-color: var(--accent-primary);
   }
 
-  & .booking-card:hover::before {
+  & .voucher-card:hover::before {
     opacity: 1;
   }
 
@@ -180,26 +180,26 @@
     }
   }
 
-  & .field-info {
+  & .voucher-info {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  & .field-name {
+  & .voucher-name {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  & .map-icon {
+  & .gift-icon {
     width: 1rem;
     height: 1rem;
     color: var(--purple);
   }
 
-  & .field-title {
+  & .voucher-title {
     font-weight: 600;
     color: var(--text-primary);
   }
@@ -211,15 +211,17 @@
     font-size: 0.875rem;
   }
 
-  & .date,
-  & .time {
+  & .discount {
+    color: var(--text-secondary);
+  }
+
+  & .expiry {
     display: flex;
     align-items: center;
     gap: 0.25rem;
   }
 
-  & .date-icon,
-  & .time-icon {
+  & .calendar-icon {
     width: 1rem;
     height: 1rem;
     color: var(--text-tertiary);
@@ -229,27 +231,10 @@
     color: var(--text-secondary);
   }
 
-  & .price-status {
+  & .status-section {
     display: flex;
     align-items: center;
     gap: 1rem;
-  }
-
-  & .price {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  & .dollar-icon {
-    width: 1rem;
-    height: 1rem;
-    color: var(--purple);
-  }
-
-  & .price-amount {
-    font-weight: 600;
-    color: var(--text-primary);
   }
 
   & .status {
@@ -278,43 +263,25 @@
     opacity: 0.3;
   }
 
-  & .status.completed {
+  & .status.active {
     background-color: rgba(34, 197, 94, 0.1);
     color: var(--success);
     border-color: var(--success-dark);
   }
 
-  & .status.cancelled {
+  & .status.expired {
     background-color: rgba(239, 68, 68, 0.1);
     color: var(--error);
     border-color: var(--error);
   }
 
-  & .status.upcoming {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: var(--info);
-    border-color: var(--info);
-  }
-
-  & .no-bookings {
+  & .no-vouchers {
     text-align: center;
     padding: 2rem 0;
     color: var(--text-tertiary);
-    
-    .no-bookings-message {
-      margin-top: 1rem;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    
-    .no-bookings-subtext {
-      margin-top: 0.5rem;
-      font-size: 0.875rem;
-      opacity: 0.7;
-    }
   }
 
-  & .no-bookings-icon {
+  & .no-vouchers-icon {
     width: 3rem;
     height: 3rem;
     margin: 0 auto 1rem;
@@ -322,34 +289,26 @@
     color: var(--text-quaternary);
   }
 
-  /* Loading state */
   &.loading {
     opacity: 0.7;
     pointer-events: none;
   }
 
-  &.loading .booking-card {
+  &.loading .voucher-card {
     animation: pulse 1.5s ease-in-out infinite;
   }
 }
 
-/* Dark theme - handled by CSS variables automatically */
-/* Additional dark mode specific styling if needed */
-[data-theme="dark"] .booking-history {
+[data-theme="dark"] .voucher {
   & .header-icon {
     color: var(--green);
   }
 
-  & .map-icon {
-    color: var(--green);
-  }
-
-  & .dollar-icon {
+  & .gift-icon {
     color: var(--green);
   }
 }
 
-/* Animations */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -370,12 +329,11 @@
   }
 }
 
-/* Animation for booking cards */
-.booking-history .booking-card {
+.voucher .voucher-card {
   animation: slideIn 0.5s ease-out;
 }
 
-.booking-history .booking-card:nth-child(1) { animation-delay: 0.1s; }
-.booking-history .booking-card:nth-child(2) { animation-delay: 0.2s; }
-.booking-history .booking-card:nth-child(3) { animation-delay: 0.3s; }
-.booking-history .booking-card:nth-child(4) { animation-delay: 0.4s; }
+.voucher .voucher-card:nth-child(1) { animation-delay: 0.1s; }
+.voucher .voucher-card:nth-child(2) { animation-delay: 0.2s; }
+.voucher .voucher-card:nth-child(3) { animation-delay: 0.3s; }
+.voucher .voucher-card:nth-child(4) { animation-delay: 0.4s; }

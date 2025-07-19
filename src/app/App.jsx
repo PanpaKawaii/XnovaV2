@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './layouts';
 import { useAuth } from './hooks/AuthContext/AuthContext';
 import ChatBox from './components/ChatBox/ChatBox';
@@ -13,6 +13,14 @@ import LoginRegister from './pages/LoginRegister/LoginRegister';
 import { ThemeProvider } from './hooks/ThemeContext';
 import './App.css';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   const { user } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -20,6 +28,7 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
+        <ScrollToTop />
         <Layout onLoginClick={() => setIsLoginModalOpen(true)}>
           <Routes>
             <Route path="/" element={<Homepage />} />
