@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Zap, User, Calendar, Users } from 'lucide-react';
-import ThemeToggle from '../../components/ui/ThemeToggle';
-import LOGO from '../../assets/LOGO.png';
-import VNFlag from '../../assets/vn.jpg';
-import UKFlag from '../../assets/uk.png';
+import ThemeToggle from '../../../components/ui/ThemeToggle.jsx';
+import LOGO from "../../../assets/LOGO.png";
+import VNFlag from '../../../assets/vn.jpg';
+import UKFlag from '../../../assets/uk.png';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../hooks/AuthContext/AuthContext';
-import { fetchData } from '../../../mocks/CallingAPI.js';
-import UserDropdown from './UserDropdown'; // Import component mới
+import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
+import { fetchData } from '../../../../mocks/CallingAPI.js';
+import UserDropdown from './UserDropdown.jsx'; // Import component mới
 import './Header.css';
 
 const LANGUAGES = [

@@ -1,0 +1,407 @@
+/* DashboardOverview.css */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dashboard-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  animation: fadeIn 0.3s ease-in;
+
+  &.light {
+    --bg-card: #ffffff;
+    --bg-subcard: #f9fafb;
+    --border: #d1d5db;
+    --text: #1f2937;
+    --text-light: #374151;
+    --text-sub: #4b5563;
+    --placeholder: #6b7280;
+    --icon: #6b7280;
+    --trend-green: #A8FF00;
+    --trend-purple: #A259FF;
+    --trend-blue: #3b82f6;
+    --trend-green-light: #22c55e;
+    --bar-revenue-from: #A8FF00;
+    --bar-revenue-to: #A259FF;
+    --bar-bookings-from: #3b82f6;
+    --bar-bookings-to: #93c5fd;
+    --status-active-bg: #dcfce7;
+    --status-active-text: #166534;
+    --status-maintenance-bg: #fef9c3;
+    --status-maintenance-text: #854d0e;
+    --status-hidden-bg: #fee2e2;
+    --status-hidden-text: #991b1b;
+  }
+
+  &.dark {
+    --bg-card: #1f2937;
+    --bg-subcard: #374151;
+    --border: #4b5563;
+    --text: #ffffff;
+    --text-light: #d1d5db;
+    --text-sub: #9ca3af;
+    --placeholder: #9ca3af;
+    --icon: #9ca3af;
+    --trend-green: #A8FF00;
+    --trend-purple: #A259FF;
+    --trend-blue: #3b82f6;
+    --trend-green-light: #22c55e;
+    --bar-revenue-from: #A8FF00;
+    --bar-revenue-to: #A259FF;
+    --bar-bookings-from: #3b82f6;
+    --bar-bookings-to: #93c5fd;
+    --status-active-bg: #dcfce7;
+    --status-active-text: #166534;
+    --status-maintenance-bg: #fef9c3;
+    --status-maintenance-text: #854d0e;
+    --status-hidden-bg: #fee2e2;
+    --status-hidden-text: #991b1b;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .subtitle {
+    color: var(--text-sub);
+  }
+
+  .period-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .select {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    color: var(--text);
+    transition: all 0.3s;
+    &:focus {
+      border-color: var(--trend-green);
+      box-shadow: 0 0 0 2px rgba(168, 255, 0, 0.2);
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .stat-card {
+    background-color: var(--bg-card);
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    transition: all 0.5s;
+    &:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transform: translateY(-0.5rem) scale(1.05);
+    }
+
+    &.revenue {
+      border-left: 4px solid var(--trend-green);
+      .stat-icon {
+        background-color: rgba(168, 255, 0, 0.2);
+        &:hover {
+          background-color: rgba(168, 255, 0, 0.3);
+        }
+        .icon {
+          color: var(--trend-green);
+        }
+      }
+      .stat-trend {
+        color: var(--trend-green);
+      }
+    }
+
+    &.users {
+      border-left: 4px solid var(--trend-purple);
+      .stat-icon {
+        background-color: rgba(162, 89, 255, 0.2);
+        &:hover {
+          background-color: rgba(162, 89, 255, 0.3);
+        }
+        .icon {
+          color: var(--trend-purple);
+        }
+      }
+      .stat-trend {
+        color: var(--trend-purple);
+      }
+    }
+
+    &.bookings {
+      border-left: 4px solid var(--trend-blue);
+      .stat-icon {
+        background-color: rgba(59, 130, 246, 0.2);
+        &:hover {
+          background-color: rgba(59, 130, 246, 0.3);
+        }
+        .icon {
+          color: var(--trend-blue);
+        }
+      }
+      .stat-trend {
+        color: var(--trend-blue);
+      }
+    }
+
+    &.fields {
+      border-left: 4px solid var(--trend-green-light);
+      .stat-icon {
+        background-color: rgba(34, 197, 94, 0.2);
+        &:hover {
+          background-color: rgba(34, 197, 94, 0.3);
+        }
+        .icon {
+          color: var(--trend-green-light);
+        }
+      }
+      .stat-trend {
+        color: var(--trend-green-light);
+      }
+    }
+  }
+
+  .stat-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: var(--text-sub);
+  }
+
+  .stat-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .stat-trend {
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    .trend-icon {
+      width: 0.75rem;
+      height: 0.75rem;
+      margin-right: 0.25rem;
+    }
+  }
+
+  .stat-icon {
+    padding: 1rem;
+    border-radius: 9999px;
+    transition: all 0.3s;
+    .icon {
+      width: 2rem;
+      height: 2rem;
+      transition: transform 0.3s;
+    }
+    &:hover .icon {
+      transform: scale(1.1);
+    }
+  }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .chart-card {
+    background-color: var(--bg-card);
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+  }
+
+  .chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .chart-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .chart-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--icon);
+  }
+
+  .chart-content {
+    height: 16rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .bar-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bar {
+    width: 100%;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+    transition: opacity 0.3s;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .chart-card:nth-child(1) .bar {
+    background: linear-gradient(to top, var(--bar-revenue-from), var(--bar-revenue-to));
+  }
+
+  .chart-card:nth-child(2) .bar {
+    background: linear-gradient(to top, var(--bar-bookings-from), var(--bar-bookings-to));
+  }
+
+  .bar-label {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+    color: var(--text-sub);
+  }
+
+  .top-fields-card {
+    background-color: var(--bg-card);
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+  }
+
+  .fields-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .field-card {
+    background-color: var(--bg-subcard);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    transition: all 0.3s;
+    &:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  .field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .field-name {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .field-status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    &.active {
+      background-color: var(--status-active-bg);
+      color: var(--status-active-text);
+    }
+    &.under-maintenance {
+      background-color: var(--status-maintenance-bg);
+      color: var(--status-maintenance-text);
+    }
+    &.hidden {
+      background-color: var(--status-hidden-bg);
+      color: var(--status-hidden-text);
+    }
+  }
+
+  .field-location {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-sub);
+  }
+
+  .field-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+  }
+
+  .field-bookings {
+    color: var(--text-sub);
+  }
+
+  .field-revenue {
+    font-weight: 600;
+    color: var(--trend-green);
+  }
+}

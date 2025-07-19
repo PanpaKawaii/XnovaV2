@@ -1,0 +1,94 @@
+.header {
+  display: block;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  background-color: #ffffff;
+}
+
+@media (min-width: 1024px) {
+  .header {
+    display: none;
+  }
+}
+
+.dark .header {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+.header .header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.header .menu-button,
+.header .theme-button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.header .menu-button:hover {
+  background-color: #f3f4f6;
+}
+
+.dark .header .menu-button:hover {
+  background-color: #1f2937;
+}
+
+.header .theme-button:hover {
+  background-color: #f3f4f6;
+}
+
+.dark .header .theme-button:hover {
+  background-color: #1f2937;
+}
+
+.header .menu-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #6b7280;
+}
+
+.dark .header .menu-icon {
+  color: #9ca3af;
+}
+
+.header .header-title {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.dark .header .header-title {
+  color: #ffffff;
+}
+
+.header .theme-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.header .theme-sun {
+  color: #9ca3af;
+  display: none;
+}
+
+.dark .header .theme-sun {
+  display: block;
+}
+
+.header .theme-moon {
+  color: #6b7280;
+  display: block;
+}
+
+.dark .header .theme-moon {
+  display: none;
+}

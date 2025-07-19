@@ -1,6 +1,6 @@
 import React from 'react';
 import { User2, Users } from 'lucide-react';
-import { useTheme } from '../../hooks/ThemeContext';
+import { useTheme } from '../../../hooks/ThemeContext';
 import './SubUserHeader.css';
 
 const SubUserHeader = ({ activeTab, onTabChange }) => {

@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from './Header/Header';
-import Footer from './Footer/Footer';
+import Header from './UserLayout/Header/Header';
+import Footer from './UserLayout/Footer/Footer';
 import './Layout.css';
 
 const Layout = ({ children, onLoginClick }) => {
