@@ -1,12 +1,14 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { postData } from '../../../../mocks/CallingAPI.js';
+import LogoImage from '../../../assets/LOGO.png';
+import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
 import CheckValidation from './CheckValidation.jsx';
 import CountdownTimer from './CountdownTimer.jsx';
-import LogoImage from '../../../assets/LOGO.png';
 import './Register.css';
 
-export default function Register({ setIsLogin }) {
+export default function Register({ setIsLogin, setIsLoginModalOpen }) {
     console.log('Register');
+    const { login } = useAuth();
 
     const ResetRegisterInputs = () => {
         var inputs = document.querySelectorAll('input');
@@ -109,12 +111,12 @@ export default function Register({ setIsLogin }) {
             const result = await postData('User/register-confirm', CheckOTP, '');
             console.log('result', result);
 
-            // if (data.role && data.role === 'User') {
+            // if (data.role && data.role === 'User') { }
             setRegisterSuccess('Đăng kí thành công!');
-            //     moveImageBack();
-            // }
             setRegisterError({ value: '', name: '' });
             setLoading(false);
+            login(result);
+            setIsLoginModalOpen(false);
         } catch (error) {
             console.log('Đăng kí thất bại:', error);
             setRegisterError({ value: 'Đăng kí thất bại', name: 'Email or OTP' });

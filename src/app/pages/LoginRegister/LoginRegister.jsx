@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Login from './Login/Login';
-import Register from './Register/Register';
 import './LoginRegister.css';
-
-// import LoginImage from '../../assets/Purple.png';
-// import RegisterImage from '../../assets/Green.png';
-// import Transparent from '../../assets/Transparent.png';
-// import JellyFish from '../../assets/JellyFish.png';
+import Register from './Register/Register';
 
 export default function LoginRegister({ isOpen, setIsLoginModalOpen }) {
     console.log('Login-Register');
@@ -21,12 +16,11 @@ export default function LoginRegister({ isOpen, setIsLoginModalOpen }) {
                 {isLogin ?
                     <Login setIsLogin={setIsLogin} setIsLoginModalOpen={setIsLoginModalOpen} />
                     :
-                    <Register setIsLogin={setIsLogin} />
+                    <Register setIsLogin={setIsLogin} setIsLoginModalOpen={setIsLoginModalOpen} />
                 }
                 <button className='close-button' onClick={() => setIsLoginModalOpen(false)}>
                     <i className='fa-solid fa-xmark'></i>
                 </button>
-                {/* <div className='moving-image' id='MovingImage'></div> */}
             </div>
         </div>
     )
