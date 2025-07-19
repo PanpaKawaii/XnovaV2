@@ -9,6 +9,7 @@ import FindTeammatePage from './pages/FindTeammate/FindTeammatePage';
 import ProfileSettings from './pages/Profile/ProfileSettings';
 import TeamManagement from './pages/TeamManagement/TeamManagement';
 import LoginModal from './components/Login/Register/LoginModal';
+import LoginRegister from './pages/LoginRegister/LoginRegister';
 import { ThemeProvider } from './hooks/ThemeContext';
 import './App.css';
 
@@ -39,7 +40,7 @@ function App() {
             <Route path="/find-teammates" element={<FindTeammatePage />} />
           </Routes>
         </Layout>
-        <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+        {isLoginModalOpen && <LoginRegister setIsLoginModalOpen={setIsLoginModalOpen} />}
       </Router>
       <ChatBox />
     </ThemeProvider>
