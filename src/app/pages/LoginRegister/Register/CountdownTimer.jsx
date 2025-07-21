@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import CheckValidation from './CheckValidation';
 
-const THOI_GIAN_BAT_DAU = 5;
+const THOI_GIAN_BAT_DAU = 20;
 
-export default function CountdownTimer({ DoAction, EmailRef, NameRef, PhoneRef, PasswordRef, ConfirmRef, Accept }) {
+export default function CountdownTimer({ DoAction, EmailRef, NameRef, PhoneRef, PasswordRef, ConfirmRef, Accept, SuccessSendOTP, loading }) {
 
     const [SecondsLeft, setSecondsLeft] = useState(THOI_GIAN_BAT_DAU);
     const [isActive, setIsActive] = useState(false);
@@ -59,9 +59,9 @@ export default function CountdownTimer({ DoAction, EmailRef, NameRef, PhoneRef, 
             type='submit'
             className='btn btn-otp'
             onClick={toggleTimer}
-            disabled={isActive}
+            disabled={(isActive && SuccessSendOTP) || loading}
         >
-            {isActive ? `${minutes}:${formattedSeconds}` : 'GỬI OTP'}
+            {SuccessSendOTP ? (isActive ? `${minutes}:${formattedSeconds}` : 'GỬI LẠI') : (loading ? 'ĐANG XỬ LÝ' : 'ĐĂNG KÝ')}
         </button>
     );
 }

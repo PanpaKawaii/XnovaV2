@@ -24,6 +24,7 @@ export default function Register({ setIsLogin, setIsLoginModalOpen }) {
     const [loading, setLoading] = useState(false);
     const [RegisterError, setRegisterError] = useState({ value: '', name: '' });
     const [RegisterSuccess, setRegisterSuccess] = useState(null);
+    const [SuccessSendOTP, setSuccessSendOTP] = useState(false);
 
     const SendOTP = async (Email, Name, Phone, Password, Confirm) => {
 
@@ -56,11 +57,12 @@ export default function Register({ setIsLogin, setIsLoginModalOpen }) {
 
             setRegisterSuccess('Đã gửi OTP xác thực đến Gmail.');
             setRegisterError({ value: '', name: '' });
-            setLoading(false);
+            if (!SuccessSendOTP) setSuccessSendOTP(true);
         } catch (error) {
             console.log('Gửi OTP thất bại:', error);
             setRegisterError({ value: 'Gửi OTP thất bại', name: 'Email or OTP' });
             setRegisterSuccess('');
+        } finally {
             setLoading(false);
         }
     };
@@ -68,7 +70,7 @@ export default function Register({ setIsLogin, setIsLoginModalOpen }) {
     const handleSendOTP = (e) => {
         e.preventDefault();
         setRegisterError({ value: '', name: '' });
-        // setRegisterSuccess('');
+        setRegisterSuccess('');
         const Email = e.target.email.value;
         const Name = e.target.name.value;
         const Phone = e.target.phone.value;
@@ -114,13 +116,13 @@ export default function Register({ setIsLogin, setIsLoginModalOpen }) {
             // if (data.role && data.role === 'User') { }
             setRegisterSuccess('Đăng kí thành công!');
             setRegisterError({ value: '', name: '' });
-            setLoading(false);
             login(result);
             setIsLoginModalOpen(false);
         } catch (error) {
             console.log('Đăng kí thất bại:', error);
             setRegisterError({ value: 'Đăng kí thất bại', name: 'Email or OTP' });
             // setRegisterSuccess('');
+        } finally {
             setLoading(false);
         }
     };
@@ -206,13 +208,16 @@ export default function Register({ setIsLogin, setIsLoginModalOpen }) {
 
     return (
         <div className='card-body' id='card-register'>
+            <button className='close-button' onClick={() => setIsLoginModalOpen(false)}>
+                <i className='fa-solid fa-xmark'></i>
+            </button>
             <div className='header'>
                 <img src={LogoImage} alt='XNOVA Logo' />
                 <div className='title'>Tham gia Xnova</div>
                 <div className='subtitle'>Tạo tài khoản để bắt đầu</div>
             </div>
             <form ref={formRef} onSubmit={handleSendOTP}>
-                <div className={`${RegisterSuccess == 'Đã gửi OTP xác thực đến Gmail.' ? 'hidden-form' : ''}`}>
+                <div className={`${SuccessSendOTP ? 'hidden-form' : ''}`}>
                     <div className='form-group form-input-register'>
                         <i className={`fa-solid fa-envelope ${RegisterError.name.includes('Email') && 'invalid-icon'}`}></i>
                         <input type='email' name='email' placeholder='Email đăng kí' ref={EmailRef} style={{ border: RegisterError.name.includes('Email') && '1px solid #dc3545', }} />
@@ -250,13 +255,27 @@ export default function Register({ setIsLogin, setIsLoginModalOpen }) {
                     </div>
                 </div>
 
-                <div className={`form-otp ${RegisterSuccess == 'Đã gửi OTP xác thực đến Gmail.' ? '' : 'hidden-form'}`}>
+                <button type='button' className={`btn-edit-register ${SuccessSendOTP ? '' : 'hidden-form'}`} onClick={() => setSuccessSendOTP(false)}>
+                    <i className='fa-solid fa-angles-left'></i> Quay lại
+                </button>
+
+                <div className={`form-otp ${SuccessSendOTP ? '' : 'hidden-form'}`}>
                     <div className='form-group form-input-register'>
                         <i className={`fa-solid ${RegisterSuccess === 'Đăng kí thành công!' ? 'fa-unlock' : 'fa-lock'} ${RegisterError.name.includes('OTP') && 'invalid-icon'}`}></i>
                         <input min={0} type='number' name='otp' placeholder='Mã OTP' ref={OTPRef} style={{ border: RegisterError.name.includes('OTP') && '1px solid #dc3545', }} />
                         {/* <input disabled={DisabledInput} min={0} type='number' name='otp' value={PinCode} onChange={handlePinChange} placeholder='Mã OTP' style={{ border: RegisterError.name.includes('OTP') && '1px solid #dc3545', }} /> */}
                     </div>
                     {/* <button type='button' className='btn' onClick={handleSendOTP}>GỬI OTP</button> */}
+                    <CountdownTimer
+                        DoAction={handleSendOtpFromOutSide}
+                        EmailRef={EmailRef}
+                        NameRef={NameRef}
+                        PhoneRef={PhoneRef}
+                        PasswordRef={PasswordRef}
+                        ConfirmRef={ConfirmRef}
+                        Accept={Accept}
+                        SuccessSendOTP={SuccessSendOTP}
+                        loading={loading} />
                 </div>
 
                 {RegisterError.value ?
@@ -267,7 +286,7 @@ export default function Register({ setIsLogin, setIsLoginModalOpen }) {
                     )
                 }
 
-                <div className={`otp-btn-box ${RegisterSuccess == 'Đã gửi OTP xác thực đến Gmail.' ? 'hidden-form' : ''}`}>
+                <div className={`otp-btn-box ${SuccessSendOTP ? 'hidden-form' : ''}`}>
                     <CountdownTimer
                         DoAction={handleSendOtpFromOutSide}
                         EmailRef={EmailRef}
@@ -275,12 +294,14 @@ export default function Register({ setIsLogin, setIsLoginModalOpen }) {
                         PhoneRef={PhoneRef}
                         PasswordRef={PasswordRef}
                         ConfirmRef={ConfirmRef}
-                        Accept={Accept} />
+                        Accept={Accept}
+                        SuccessSendOTP={SuccessSendOTP}
+                        loading={loading} />
                     <button type='reset' className='btn btn-reset' onClick={ResetRegisterInputs}>XÓA</button>
                 </div>
             </form>
 
-            <form onSubmit={handleSubmitRegister} className={`${RegisterSuccess == 'Đã gửi OTP xác thực đến Gmail.' ? '' : 'hidden-form'}`}>
+            <form onSubmit={handleSubmitRegister} className={`${SuccessSendOTP ? '' : 'hidden-form'}`}>
                 <div className='btn-box'>
                     <button type='submit' className='btn btn-submit' disabled={loading}>{!loading ? 'XÁC THỰC OTP' : 'ĐANG XỬ LÝ...'}</button>
                 </div>

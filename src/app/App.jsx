@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Layout } from './layouts';
 import { useAuth } from './hooks/AuthContext/AuthContext';
 import ChatBox from './components/ChatBox/ChatBox';
+import ChatBoxV2 from './components/ChatBoxV2/ChatBoxV2';
 import Homepage from './pages/Home/Homepage';
 import BookingPage from './pages/Booking/BookingPageV2';
 import FindTeammatePage from './pages/FindTeammate/FindTeammatePage';
@@ -56,7 +57,7 @@ function App() {
         </Layout>
         {isLoginModalOpen && <LoginRegister setIsLoginModalOpen={setIsLoginModalOpen} />}
       </Router>
-      <ChatBox />
+      <ChatBoxV2 />
     </ThemeProvider>
   );
 }
