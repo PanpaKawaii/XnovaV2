@@ -10,9 +10,10 @@ export default function ChatBox() {
     const [WidthFull, setWidthFull] = useState(false);
     const [HeightFull, setHeightFull] = useState(false);
     const [DisplayChat, setDisplayChat] = useState(false);
-    // const handleSetHeight = (status) => {
-    //     setHeightFull(p => status);
-    // }
+
+    useEffect(() => {
+        setMessages([]);
+    }, [user]);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -86,7 +87,7 @@ export default function ChatBox() {
                 <div className='chat-box' style={WidthFull ? StyleFull : (HeightFull ? StyleHeight : StyleNormal)}>
 
                     <div className='heading'>
-                        <div className='name'>Xnova {Messages.length}</div>
+                        <div className='name'>Xnova</div>
                         <div>
                             {WidthFull ?
                                 <i className='fa-solid fa-minimize' onClick={() => setWidthFull(false)}></i>
