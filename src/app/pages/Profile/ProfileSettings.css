@@ -950,7 +950,7 @@
   .input-phone,
   .input-location,
   .input-position {
-    background: white;
+    background: #cccccc20;
     border: 2px solid var(--border-secondary);
     color: var(--text-primary);
 
@@ -1064,7 +1064,7 @@
   .input-phone,
   .input-location,
   .input-position {
-    background: white;
+    background: #80808020;
     border: 2px solid var(--border-secondary);
     color: var(--text-primary);
 

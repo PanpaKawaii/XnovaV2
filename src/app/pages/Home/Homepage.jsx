@@ -1,12 +1,22 @@
-import React from 'react';
-import Hero from '../../components/Hero';
+import { useEffect, useState } from 'react';
 import Benefits from '../../components/Benefits';
-import Testimonials from '../../components/Testimonials';
 import CTA from '../../components/CTA';
+import Hero from '../../components/Hero';
+import LoadingAnimation from '../../components/LoadingAnimation/LoadingAnimation.jsx';
+import Testimonials from '../../components/Testimonials';
 import './Homepage.css';
 
 const Homepage = () => {
-  return (
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return isLoading ? <LoadingAnimation /> : (
     <div className="homepage">
       <Hero />
       <Benefits />
