@@ -23,6 +23,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
   const [bookingSlots, setBookingSlots] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingBooking, setLoadingBooking] = useState(false);
   const [error, setError] = useState(null);
 
   // Refs for auto-scrolling
@@ -217,6 +218,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
 
     if (payment == 'banking') {
 
+      setLoadingBooking(true);
       const token = user?.token;
       try {
         const result = await postData('Booking', BookingData, token);
@@ -252,6 +254,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
           window.location.href = resultPaymentMethod.paymentUrl;
         }
       } catch (error) {
+        setLoadingBooking(false);
         setError(error);
       }
     }
@@ -744,9 +747,9 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
                 </div>
 
                 <div className="booking-summary-modal__summary-actions">
-                  <button className="booking-summary-modal__confirm-button" onClick={handleConfirmBooking}>
+                  <button className="booking-summary-modal__confirm-button" onClick={handleConfirmBooking} disabled={loadingBooking}>
                     <CreditCard size={18} />
-                    Xác nhận thanh toán
+                    {loadingBooking ? 'Đang xử lý...' : 'Xác nhận thanh toán'}
                   </button>
                   <p className="booking-summary-modal__security-note"><i className='fa-solid fa-lock'></i> Thanh toán an toàn</p>
                 </div>
