@@ -1,6 +1,7 @@
 import React from 'react';
-import Header from './Header/Header';
-import Footer from './Footer/Footer';
+import { Outlet } from 'react-router-dom';
+import Header from './UserLayout/Header/Header';
+import Footer from './UserLayout/Footer/Footer';
 import './Layout.css';
 
 const Layout = ({ children, onLoginClick }) => {
@@ -9,6 +10,7 @@ const Layout = ({ children, onLoginClick }) => {
       <Header onLoginClick={onLoginClick} />
       <main className="layout__main">
         {children}
+        <Outlet />
       </main>
       <Footer />
     </div>

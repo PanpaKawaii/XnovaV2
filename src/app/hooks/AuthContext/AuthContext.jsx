@@ -5,19 +5,30 @@ const AuthContext = React.createContext(null);
 export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+        try {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+                setUser(parsedUser);
+                console.log('User loaded from localStorage:', parsedUser);
+            }
+        } catch (error) {
+            console.error('Error loading user from localStorage:', error);
+            localStorage.removeItem('user'); // Xóa dữ liệu lỗi
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 
     useEffect(() => {
         const handleStorageChange = (event) => {
             if (event.key === 'user') {
-                // window.location.reload();
-                window.location.href = '/';
+                // Chỉ reload để update state, không redirect về home
+                const updatedUser = event.newValue ? JSON.parse(event.newValue) : null;
+                setUser(updatedUser);
             }
         };
 
@@ -26,22 +37,33 @@ export const AuthProvider = ({ children }) => {
         return () => {
             window.removeEventListener('storage', handleStorageChange);
         };
-    }, [user]);
+    }, []);
 
     const login = (userData) => {
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
+        try {
+            localStorage.setItem('user', JSON.stringify(userData));
+            setUser(userData);
+            console.log('User logged in:', userData);
+        } catch (error) {
+            console.error('Error saving user to localStorage:', error);
+        }
     };
 
     const logout = () => {
-        localStorage.removeItem('user');
-        setUser(null);
+        try {
+            localStorage.removeItem('user');
+            setUser(null);
+            console.log('User logged out');
+        } catch (error) {
+            console.error('Error removing user from localStorage:', error);
+        }
     };
 
     const authContextValue = {
         user,
         login,
-        logout
+        logout,
+        isLoading
     };
 
     return (

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Camera, Edit3, Check, X, User, MapPin, Award, Eye, EyeOff, Lock, Trash2, AlertTriangle, Bell, Calendar, Users, Gift } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
 import './ProfileSettings.css';
-import SubUserHeader from '../../layouts/SubUserHeader/SubUserHeader';
+import SubUserHeader from '../../layouts/UserLayout/SubUserHeader/SubUserHeader';
 import BookingHistory from './BookingHistory';
 import FavoriteFields from './FavoriteFields';
 import Voucher from './Voucher';

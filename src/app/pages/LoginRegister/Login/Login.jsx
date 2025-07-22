@@ -54,7 +54,7 @@ export default function Login({ setIsLogin, setIsLoginModalOpen }) {
                 // navigate('/player');
             } else {
                 setIsLoginModalOpen(false);
-                // navigate('/');
+                 navigate('/owner/dashboard');
             }
         } catch (error) {
             console.log('Đăng nhập thất bại:', error);

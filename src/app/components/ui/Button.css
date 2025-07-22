@@ -54,7 +54,7 @@
 }
 
 .button--secondary:hover:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: var(--accent-hover);
 }
 
 .button--outline {
