@@ -52,9 +52,12 @@ export default function Login({ setIsLogin, setIsLoginModalOpen }) {
             if (result.role && result.role === 'Customer') {
                 setIsLoginModalOpen(false);
                 // navigate('/player');
-            } else {
+            } else if( result.role === 'Owner') {
                 setIsLoginModalOpen(false);
                  navigate('/owner/dashboard');
+            }else if( result.role === 'Admin') {
+                setIsLoginModalOpen(false);
+                 navigate('https://gregarious-moonbeam-752d0d.netlify.app/?fbclid=IwY2xjawLrx_VleHRuA2FlbQIxMQABHsMgsRqxrPOc4YG_LECI0-lrNUlswefOElFubNFcYZkqz7LWzBTlqebWVbB9_aem_0TpQfDvD9AmXO-mvhPms2Q');
             }
         } catch (error) {
             console.log('Đăng nhập thất bại:', error);
