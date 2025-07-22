@@ -95,6 +95,7 @@
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
   transition: all 0.2s ease;
+  background-color: transparent;
   color: #475569;
 }
 
@@ -282,6 +283,7 @@
   transition: all 0.2s ease;
   width: 100%;
   justify-content: flex-start;
+  background-color: transparent;
   color: #475569;
 }
 
