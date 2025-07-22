@@ -54,7 +54,7 @@ function OwnerRedirect() {
   
   // Chỉ redirect owner khi họ thực sự truy cập trang chủ "/"
   // Không redirect khi reload các trang khác
-  if (user && (user.role === 'Owner' || user.role === 'Admin')) {
+  if (user && (user.role === 'Owner')) {
     console.log('Redirecting owner to dashboard:', user);
     return <Navigate to="/owner/dashboard" replace />;
   }

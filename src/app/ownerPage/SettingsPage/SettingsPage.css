@@ -116,6 +116,7 @@
         text-align: left;
         border-radius: 0.75rem;
         transition: all 0.3s;
+        background-color: transparent;
         color: #4b5563;
 
         &:hover {
@@ -665,6 +666,10 @@
     .tab-nav {
       .tab-button {
         color: #d1d5db;
+
+        &.active {
+          color: #333;
+        }
 
         &:hover {
           background-color: #1f2937;
