@@ -269,7 +269,8 @@
 }
 
 .booking-summary-modal__time-slot:disabled {
-  background-color: #ccc;
+  opacity: 0.5;
+  background-color: #80808020;
 }
 
 .booking-summary-modal__time-slot:hover {
@@ -291,6 +292,12 @@
   font-size: 12px;
   color: var(--purple);
   margin-top: 4px;
+}
+
+.selected {
+  .booking-summary-modal__time-slot-price {
+    color: #fff
+  }
 }
 
 /* Field Grid */
@@ -1434,4 +1441,8 @@
 
 .booking-summary-modal__error button:hover {
   background: var(--accent-secondary);
+}
+
+.booking-summary_modal__summary-value {
+  color: var(--text-primary);
 }

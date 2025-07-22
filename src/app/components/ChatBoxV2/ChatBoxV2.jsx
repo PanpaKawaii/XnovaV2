@@ -15,7 +15,7 @@ export default function ChatBoxV2() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        setMessages([]);
+        setMessages(['Xin chào! Tôi là trợ lý AI của bạn. Hãy đặt câu hỏi để tôi hỗ trợ nhé!']);
     }, [user]);
 
     const addMessage = async (newMessage) => {
@@ -26,7 +26,8 @@ export default function ChatBoxV2() {
         try {
             const result = await postData('Chat/ask', SendMessage, token);
             console.log('result', result);
-            setMessages((prev) => [...prev, result.reply]);
+            if (result.reply?.includes('The model is overloaded. Please try again later.')) setMessages((prev) => [...prev, 'Kết nối không ổn định, bạn hãy thử lại sau nhé!']);
+            else setMessages((prev) => [...prev, result.reply]);
         } catch (error) {
             setMessages((prev) => [...prev, 'Kết nối không ổn định, bạn hãy thử lại sau nhé!']);
             setError(error);
@@ -76,6 +77,27 @@ export default function ChatBoxV2() {
         chatStyle = StyleHeight;
     }
 
+    const renderFormattedText = (text) => {
+        // Bước 1: Tách từng dòng theo dấu `*`
+        const lines = text.split(/(?<=\s)\*(?=\s)/);
+
+        return lines.map((line, idx) => {
+            // Bước 2: Tách và xử lý in đậm từng phần trong dòng
+            const parts = line.split(/(\*\*.*?\*\*)/g); // Giữ lại các đoạn có **...**
+            return (
+                <div key={idx}>
+                    {parts.map((part, i) =>
+                        part.startsWith('**') && part.endsWith('**') ? (
+                            <strong key={i}>{part.slice(2, -2)}</strong>
+                        ) : (
+                            <span key={i}>{part}</span>
+                        )
+                    )}
+                </div>
+            );
+        });
+    };
+
     return (
         <div className='chat-box-v2-container'>
             {!DisplayChat &&
@@ -104,7 +126,7 @@ export default function ChatBoxV2() {
                         </div>
                     </div>
                     <div ref={chatContainerRef} className='chat-content'>
-                        {Messages.length === 0 && !loading && (
+                        {/* {Messages.length === 0 && !loading && ( */}
                             <div className='welcome-message'>
                                 <i className='fa-solid fa-comments welcome-icon'></i>
                                 <div className='welcome-text'>
@@ -112,13 +134,14 @@ export default function ChatBoxV2() {
                                     <p>Hãy bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới.</p>
                                 </div>
                             </div>
-                        )}
+                        {/* )} */}
                         {Messages.map((msg, idx) => (
                             <div
                                 key={idx}
-                                className={`message ${idx % 2 === 0 ? 'user-message' : 'bot-message'}`}
+                                className={`message ${idx % 2 === 0 ? 'bot-message' : 'user-message'}`}
                             >
-                                {msg}
+                                <div>{renderFormattedText(msg)}</div>
+                                <div className='logo-bot'>X</div>
                             </div>
                         ))}
                         {loading && (
@@ -126,6 +149,7 @@ export default function ChatBoxV2() {
                                 <div className='dot'></div>
                                 <div className='dot'></div>
                                 <div className='dot'></div>
+                                <div className='logo-bot'>X</div>
                             </div>
                         )}
                     </div>
