@@ -10,7 +10,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
-import './reports.css';
+import './ReportsCSS.css';
 
 const mockData = {
   totalRevenue: 45680,
