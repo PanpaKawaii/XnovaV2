@@ -9,7 +9,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
-import './addEditField.css';
+import './AddEditField.css';
 
 const AddEditField = () => {
   const { isDark } = useTheme();
