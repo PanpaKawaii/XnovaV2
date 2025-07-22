@@ -68,7 +68,7 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
           <History className="header__mobile-user-menu-icon" />
           <span>{t('Booking History')}</span>
         </button>
-        <button className="header__user-menu-item" onClick={handleFavoriteFields}>
+        <button className="header__mobile-user-menu-item" onClick={handleFavoriteFields}>
             <Heart className="header__user-menu-icon" />
             <span>{t('Favorite Fields')}</span>
         </button>

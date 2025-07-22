@@ -1,17 +1,17 @@
-// AddEditField.jsx
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { 
   Upload, 
   MapPin, 
   DollarSign, 
+  FileText,
   X,
-  Save
+  Save,
+  AlertCircle
 } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
-import './AddEditField.css';
+import './addEditField.css';
 
-function AddEditField() {
+const AddEditField = () => {
   const { isDark } = useTheme();
   const [formData, setFormData] = useState({
     name: '',
@@ -21,11 +21,42 @@ function AddEditField() {
     status: 'Active',
     image: null
   });
-  const [isDragOver, setIsDragOver ] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Field name is required';
+    if (!formData.location.trim()) newErrors.location = 'Location is required';
+    if (!formData.pricePerHour || parseFloat(formData.pricePerHour) <= 0) {
+      newErrors.pricePerHour = 'Valid price per hour is required';
+    }
+    if (!formData.image) newErrors.image = 'Field image is required';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    
+    setIsSubmitting(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
     console.log('Form submitted:', formData);
+    setIsSubmitting(false);
+    // Reset form or show success
+    setFormData({
+      name: '',
+      location: '',
+      description: '',
+      pricePerHour: '',
+      status: 'Active',
+      image: null
+    });
+    setErrors({});
+    alert('Field added successfully!');
   };
 
   const handleDrag = (e) => {
@@ -41,6 +72,7 @@ function AddEditField() {
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
       setFormData(prev => ({ ...prev, image: files[0] }));
+      setErrors(prev => ({ ...prev, image: undefined }));
     }
   };
 
@@ -48,6 +80,7 @@ function AddEditField() {
     const files = e.target.files;
     if (files && files.length > 0) {
       setFormData(prev => ({ ...prev, image: files[0] }));
+      setErrors(prev => ({ ...prev, image: undefined }));
     }
   };
 
@@ -55,91 +88,111 @@ function AddEditField() {
     setFormData(prev => ({ ...prev, image: null }));
   };
 
+  const handleInputChange = (field) => (e) => {
+    setFormData(prev => ({ ...prev, [field]: e.target.value }));
+    setErrors(prev => ({ ...prev, [field]: undefined }));
+  };
+
   return (
-    <div className={`add-edit-field ${isDark ? 'dark' : 'light'}`}>
-      <div className="header">
-        <div>
-          <h1 className="title">
+    <div className="add-edit-field">
+      <div className="header-section">
+        <div className="title-container">
+          <h1 className="page-title">
             Add New Field
           </h1>
-          <p className="subtitle">
+          <p className="page-description">
             Create a new sports field and configure its settings.
           </p>
         </div>
         <button
           onClick={handleSubmit}
-          className="btn save-btn"
+          disabled={isSubmitting}
+          className={`save-button ${isSubmitting ? 'submitting' : ''}`}
         >
-          <Save className="icon mr" />
-          Save Field
+          <Save className="save-icon" />
+          {isSubmitting ? 'Saving...' : 'Save Field'}
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="form">
-        <div className="card">
+      <form className="field-form" onSubmit={handleSubmit}>
+        <div className="basic-info-section">
           <h3 className="section-title">
             Basic Information
           </h3>
-          <div className="grid">
-            <div>
-              <label className="label" htmlFor="name">
+          <div className="input-grid">
+            <div className="input-group">
+              <label className="input-label">
                 Field Name
               </label>
               <input
                 type="text"
-                id="name"
                 value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                className="input"
+                onChange={handleInputChange('name')}
+                className={`text-input ${errors.name ? 'error' : ''}`}
                 placeholder="Enter field name"
                 required
               />
+              {errors.name && (
+                <div className="error-message">
+                  <AlertCircle className="error-icon" />
+                  {errors.name}
+                </div>
+              )}
             </div>
-            <div>
-              <label className="label" htmlFor="location">
+            <div className="input-group">
+              <label className="input-label">
                 Location
               </label>
-              <div className="input-container">
-                <MapPin className="icon" />
+              <div className="input-wrapper">
+                <MapPin className="input-icon" />
                 <input
                   type="text"
-                  id="location"
                   value={formData.location}
-                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                  className="input with-icon"
+                  onChange={handleInputChange('location')}
+                  className={`text-input with-icon ${errors.location ? 'error' : ''}`}
                   placeholder="Enter location"
                   required
                 />
               </div>
+              {errors.location && (
+                <div className="error-message">
+                  <AlertCircle className="error-icon" />
+                  {errors.location}
+                </div>
+              )}
             </div>
-            <div>
-              <label className="label" htmlFor="pricePerHour">
+            <div className="input-group">
+              <label className="input-label">
                 Price per Hour
               </label>
-              <div className="input-container">
-                <DollarSign className="icon" />
+              <div className="input-wrapper">
+                <DollarSign className="input-icon" />
                 <input
                   type="number"
-                  id="pricePerHour"
                   value={formData.pricePerHour}
-                  onChange={(e) => setFormData(prev => ({ ...prev, pricePerHour: e.target.value }))}
-                  className="input with-icon"
+                  onChange={handleInputChange('pricePerHour')}
+                  className={`text-input with-icon ${errors.pricePerHour ? 'error' : ''}`}
                   placeholder="0.00"
                   min="0"
                   step="0.01"
                   required
                 />
               </div>
+              {errors.pricePerHour && (
+                <div className="error-message">
+                  <AlertCircle className="error-icon" />
+                  {errors.pricePerHour}
+                </div>
+              )}
             </div>
-            <div>
-              <label className="label" htmlFor="status">
+            <div className="input-group">
+              <label className="input-label">
                 Status
               </label>
               <select
-                id="status"
                 value={formData.status}
-                onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
-                className="select"
+                onChange={handleInputChange('status')}
+                className="select-field"
               >
                 <option value="Active">Active</option>
                 <option value="Under Maintenance">Under Maintenance</option>
@@ -147,38 +200,37 @@ function AddEditField() {
               </select>
             </div>
           </div>
-          <div className="mt">
-            <label className="label" htmlFor="description">
+          <div className="description-group">
+            <label className="input-label">
               Description
             </label>
             <textarea
-              id="description"
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={handleInputChange('description')}
               rows={4}
-              className="textarea"
+              className="description-textarea"
               placeholder="Describe the field, its features, and any special requirements..."
             />
           </div>
         </div>
 
-        <div className="card">
+        <div className="image-upload-section">
           <h3 className="section-title">
             Field Image
           </h3>
           {!formData.image ? (
             <div
+              className={`upload-dropzone ${isDragOver ? 'drag-over' : ''} ${errors.image ? 'error' : ''}`}
               onDragOver={handleDrag}
               onDragEnter={() => setIsDragOver(true)}
               onDragLeave={() => setIsDragOver(false)}
               onDrop={handleDrop}
-              className={`upload-area ${isDragOver ? 'drag-over' : ''}`}
             >
               <Upload className="upload-icon" />
               <p className="upload-title">
                 Upload Field Image
               </p>
-              <p className="upload-desc">
+              <p className="upload-description">
                 Drag and drop an image here, or click to browse
               </p>
               <input
@@ -190,7 +242,7 @@ function AddEditField() {
               />
               <label
                 htmlFor="image-upload"
-                className="btn choose-file"
+                className="upload-button"
               >
                 Choose File
               </label>
@@ -200,15 +252,21 @@ function AddEditField() {
               <img
                 src={URL.createObjectURL(formData.image)}
                 alt="Field preview"
-                className="preview-img"
+                className="preview-image"
               />
               <button
                 type="button"
                 onClick={removeImage}
-                className="remove-btn"
+                className="remove-image-button"
               >
-                <X className="icon" />
+                <X className="remove-icon" />
               </button>
+            </div>
+          )}
+          {errors.image && (
+            <div className="error-message">
+              <AlertCircle className="error-icon" />
+              {errors.image}
             </div>
           )}
         </div>
@@ -216,7 +274,5 @@ function AddEditField() {
     </div>
   );
 };
-
-AddEditField.propTypes = {};
 
 export default AddEditField;

@@ -1,6 +1,4 @@
-// ManageFields.jsx
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { 
   Eye, 
   EyeOff, 
@@ -13,15 +11,16 @@ import {
   Filter
 } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
+
 import './ManageFields.css';
 
-function ManageFields({ fields }) {
+const ManageFields = ({ fields }) => {
   const { isDark } = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const fieldList = fields || mockFields;
+  const [fieldsData, setFieldsData] = useState(fields);
 
-  const getStatusColor = (status) => {
+  const getStatusClass = (status) => {
     switch (status) {
       case 'Active': return 'status-active';
       case 'Under Maintenance': return 'status-maintenance';
@@ -42,7 +41,7 @@ function ManageFields({ fields }) {
     setFieldsData(prev => prev.filter(field => field.id !== fieldId));
   };
 
-  const filteredFields = fieldList.filter(field => {
+  const filteredFields = fieldsData.filter(field => {
     const matchesSearch = field.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          field.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || field.status === statusFilter;
@@ -50,23 +49,23 @@ function ManageFields({ fields }) {
   });
 
   return (
-    <div className={`manage-fields ${isDark ? 'dark' : 'light'}`}>
-      <div className="header">
-        <div>
-          <h1 className="title">
+    <div className="manage-fields-wrapper">
+      <div className="header-section">
+        <div className="title-container">
+          <h1 className="page-title">
             Manage Fields
           </h1>
-          <p className="subtitle">
+          <p className="page-description">
             View and manage all your sports fields and their settings.
           </p>
         </div>
-        <button className="add-btn">
+        <button className="add-button">
           Add New Field
         </button>
       </div>
 
-      <div className="filters-card">
-        <div className="filters">
+      <div className="filter-container">
+        <div className="filter-wrapper">
           <div className="search-container">
             <Search className="search-icon" />
             <input
@@ -77,12 +76,12 @@ function ManageFields({ fields }) {
               className="search-input"
             />
           </div>
-          <div className="filter-container">
+          <div className="status-container">
             <Filter className="filter-icon" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="filter-select"
+              className="status-select"
             >
               <option value="all">All Status</option>
               <option value="Active">Active</option>
@@ -95,12 +94,12 @@ function ManageFields({ fields }) {
 
       <div className="fields-grid">
         {filteredFields.map((field) => (
-          <div key={field.id} className="field-card">
+          <div key={`manage-fields-${field.id}`} className="field-card">
             <div className="field-header">
               <h3 className="field-name">
                 {field.name}
               </h3>
-              <span className={`field-status ${getStatusColor(field.status)}`}>
+              <span className={`status-badge ${getStatusClass(field.status)}`}>
                 {field.status}
               </span>
             </div>
@@ -126,7 +125,7 @@ function ManageFields({ fields }) {
               </div>
             </div>
 
-            <div className="revenue">
+            <div className="revenue-section">
               <span className="revenue-amount">
                 ${field.revenue.toLocaleString()}
               </span>
@@ -135,10 +134,10 @@ function ManageFields({ fields }) {
               </span>
             </div>
 
-            <div className="actions">
+            <div className="action-buttons">
               <button
                 onClick={() => toggleFieldVisibility(field.id)}
-                className={`action-btn visibility ${field.isVisible ? 'hide' : 'show'}`}
+                className={`visibility-button ${field.isVisible ? 'visibility-visible' : 'visibility-hidden'}`}
               >
                 {field.isVisible ? (
                   <>
@@ -152,13 +151,13 @@ function ManageFields({ fields }) {
                   </>
                 )}
               </button>
-              <button className="action-btn edit">
+              <button className="edit-button">
                 <Edit className="action-icon" />
                 Edit
               </button>
               <button
                 onClick={() => deleteField(field.id)}
-                className="action-btn delete"
+                className="delete-button"
               >
                 <Trash2 className="action-icon" />
                 Delete
@@ -169,14 +168,14 @@ function ManageFields({ fields }) {
       </div>
 
       {filteredFields.length === 0 && (
-        <div className="no-results">
-          <div className="emoji">
+        <div className="no-fields-container">
+          <div className="no-fields-icon">
             🏟️
           </div>
-          <h3 className="no-results-title">
+          <h3 className="no-fields-title">
             No fields found
           </h3>
-          <p className="no-results-text">
+          <p className="no-fields-description">
             Try adjusting your search or filter criteria.
           </p>
         </div>
@@ -184,29 +183,5 @@ function ManageFields({ fields }) {
     </div>
   );
 };
-
-ManageFields.propTypes = {
-  fields: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    location: PropTypes.string,
-    status: PropTypes.oneOf(['Active', 'Under Maintenance', 'Hidden']),
-    bookings: PropTypes.number,
-    revenue: PropTypes.number,
-    pricePerHour: PropTypes.number,
-    description: PropTypes.string,
-    image: PropTypes.string,
-    isVisible: PropTypes.bool
-  }))
-};
-
-// Mock data cho ManageFields
-const mockFields = [
-  { id: '1', name: 'Premier Field A', location: 'Downtown', status: 'Active', bookings: 45, revenue: 8900, pricePerHour: 80, description: 'Professional grade field with LED lighting', isVisible: true },
-  { id: '2', name: 'Champions Ground', location: 'Westside', status: 'Active', bookings: 38, revenue: 7200, pricePerHour: 75, description: 'Newly renovated with artificial turf', isVisible: true },
-  { id: '3', name: 'Victory Stadium', location: 'Eastend', status: 'Active', bookings: 32, revenue: 6100, pricePerHour: 70, description: 'Traditional grass field with spectator seating', isVisible: true },
-  { id: '4', name: 'Green Park Field', location: 'Northside', status: 'Under Maintenance', bookings: 0, revenue: 0, pricePerHour: 65, description: 'Community field under renovation', isVisible: false },
-  { id: '5', name: 'Elite Training Ground', location: 'Central', status: 'Hidden', bookings: 0, revenue: 0, pricePerHour: 90, description: 'High-end training facility', isVisible: false }
-];
 
 export default ManageFields;

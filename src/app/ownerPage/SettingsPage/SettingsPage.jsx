@@ -1,6 +1,4 @@
-// SettingsPage.jsx
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { 
   User, 
   Lock, 
@@ -16,7 +14,7 @@ import {
 import { useTheme } from '../../hooks/ThemeContext';
 import './SettingsPage.css';
 
-function SettingsPage() {
+const SettingsPage = () => {
   const { isDark, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('profile');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -37,125 +35,91 @@ function SettingsPage() {
           <div className="profile-content">
             <div className="profile-header">
               <div className="avatar">
-                <span>VO</span>
+                <span className="avatar-text">VO</span>
               </div>
               <div>
-                <h3 className="name">
-                  Venue Owner
-                </h3>
-                <p className="email">
-                  owner@xnova.com
-                </p>
+                <h3 className="user-name">Venue Owner</h3>
+                <p className="user-email">owner@xnova.com</p>
               </div>
             </div>
-            <div className="form-grid">
+            <div className="profile-form">
               <div>
-                <label className="label">
-                  Full Name
-                </label>
+                <label className="input-label">Full Name</label>
                 <input
                   type="text"
                   defaultValue="Venue Owner"
-                  className="input"
+                  className="input-field"
                 />
               </div>
               <div>
-                <label className="label">
-                  Email
-                </label>
+                <label className="input-label">Email</label>
                 <input
                   type="email"
                   defaultValue="owner@xnova.com"
-                  className="input"
+                  className="input-field"
                 />
               </div>
               <div>
-                <label className="label">
-                  Phone
-                </label>
+                <label className="input-label">Phone</label>
                 <input
                   type="tel"
                   defaultValue="+1 (555) 123-4567"
-                  className="input"
+                  className="input-field"
                 />
               </div>
               <div>
-                <label className="label">
-                  Company
-                </label>
+                <label className="input-label">Company</label>
                 <input
                   type="text"
                   defaultValue="Xnova Sports"
-                  className="input"
+                  className="input-field"
                 />
               </div>
             </div>
-            <button className="save-btn">
-              Save Changes
-            </button>
+            <button className="save-button">Save Changes</button>
           </div>
         );
 
       case 'security':
         return (
           <div className="security-content">
-            <div className="security-item">
-              <div className="item-header">
-                <div className="item-info">
-                  <Shield className="item-icon" />
+            <div className="security-card">
+              <div className="card-header">
+                <div className="card-title">
+                  <Shield className="card-icon" />
                   <div>
-                    <h4 className="item-title">
-                      Two-Factor Authentication
-                    </h4>
-                    <p className="item-desc">
-                      Add an extra layer of security to your account
-                    </p>
+                    <h4 className="card-heading">Two-Factor Authentication</h4>
+                    <p className="card-description">Add an extra layer of security to your account</p>
                   </div>
                 </div>
-                <button className="enable-btn">
-                  Enable
-                </button>
+                <button className="enable-button">Enable</button>
               </div>
             </div>
-
-            <div className="security-item">
-              <div className="item-header">
-                <div className="item-info">
-                  <Lock className="item-icon" />
+            <div className="security-card">
+              <div className="card-header">
+                <div className="card-title">
+                  <Lock className="card-icon" />
                   <div>
-                    <h4 className="item-title">
-                      Change Password
-                    </h4>
-                    <p className="item-desc">
-                      Update your account password
-                    </p>
+                    <h4 className="card-heading">Change Password</h4>
+                    <p className="card-description">Update your account password</p>
                   </div>
                 </div>
                 <button 
                   onClick={() => setShowPasswordModal(true)}
-                  className="change-btn"
-                >
-                  Change
-                </button>
+                  className="change-button"
+                >Change</button>
               </div>
             </div>
-
-            <div className="security-item">
-              <div className="item-header">
-                <div className="item-info">
-                  <AlertCircle className="item-icon" />
+            <div className="security-card">
+              <div className="card-header">
+                <div className="card-title">
+                  <AlertCircle className="card-icon" />
                   <div>
-                    <h4 className="item-title">
-                      Login History
-                    </h4>
-                    <p className="item-desc">
-                      View recent login activity
-                    </p>
+                    <h4 className="card-heading">Login History</h4>
+                    <p className="card-description">View recent login activity</p>
                   </div>
                 </div>
-                <button className="view-btn">
-                  View
-                </button>
+                <button className="view-button">View</button>
               </div>
             </div>
           </div>
@@ -165,54 +129,34 @@ function SettingsPage() {
         return (
           <div className="notifications-content">
             <div className="notification-item">
-              <div className="item-header">
-                <div>
-                  <h4 className="item-title">
-                    Email Notifications
-                  </h4>
-                  <p className="item-desc">
-                    Receive notifications via email
-                  </p>
-                </div>
-                <label className="switch">
-                  <input type="checkbox" defaultChecked />
-                  <div className="slider"></div>
-                </label>
+              <div>
+                <h4 className="notification-title">Email Notifications</h4>
+                <p className="notification-description">Receive notifications via email</p>
               </div>
+              <label className="toggle-switch">
+                <input type="checkbox" defaultChecked className="sr-only" />
+                <div className="toggle-slider"></div>
+              </label>
             </div>
-
             <div className="notification-item">
-              <div className="item-header">
-                <div>
-                  <h4 className="item-title">
-                    Push Notifications
-                  </h4>
-                  <p className="item-desc">
-                    Receive push notifications in browser
-                  </p>
-                </div>
-                <label className="switch">
-                  <input type="checkbox" defaultChecked />
-                  <div className="slider"></div>
-                </label>
+              <div>
+                <h4 className="notification-title">Push Notifications</h4>
+                <p className="notification-description">Receive push notifications in browser</p>
               </div>
+              <label className="toggle-switch">
+                <input type="checkbox" defaultChecked className="sr-only" />
+                <div className="toggle-slider"></div>
+              </label>
             </div>
-
             <div className="notification-item">
-              <div className="item-header">
-                <div>
-                  <h4 className="item-title">
-                    Booking Alerts
-                  </h4>
-                  <p className="item-desc">
-                    Get notified about new bookings
-                  </p>
-                </div>
-                <label className="switch">
-                  <input type="checkbox" defaultChecked />
-                  <div className="slider"></div>
-                </label>
+              <div>
+                <h4 className="notification-title">Booking Alerts</h4>
+                <p className="notification-description">Get notified about new bookings</p>
               </div>
+              <label className="toggle-switch">
+                <input type="checkbox" defaultChecked className="sr-only" />
+                <div className="toggle-slider"></div>
+              </label>
             </div>
           </div>
         );
@@ -220,27 +164,20 @@ function SettingsPage() {
       case 'appearance':
         return (
           <div className="appearance-content">
-            <div className="appearance-item">
+            <div className="theme-switch">
               <div>
-                <h4 className="item-title">
-                  Dark Mode
-                </h4>
-                <p className="item-desc">
-                  Switch between light and dark themes
-                </p>
+                <h4 className="theme-title">Dark Mode</h4>
+                <p className="theme-description">Switch between light and dark themes</p>
               </div>
               <button
                 onClick={toggleTheme}
-                className="theme-btn"
+                className="theme-button"
               >
                 {isDark ? 'Switch to Light' : 'Switch to Dark'}
               </button>
             </div>
-
             <div className="color-theme">
-              <h4 className="item-title">
-                Color Theme
-              </h4>
+              <h4 className="color-title">Color Theme</h4>
               <div className="color-grid">
                 {['#A8FF00', '#A259FF', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'].map((color) => (
                   <button
@@ -258,21 +195,16 @@ function SettingsPage() {
         return (
           <div className="language-content">
             <div>
-              <label className="label">
-                Language
-              </label>
-              <select className="select">
+              <label className="input-label">Language</label>
+              <select className="select-field">
                 <option value="en">English</option>
                 <option value="vi">Tiếng Việt</option>
                 <option value="jp">日本語</option>
               </select>
             </div>
-
             <div>
-              <label className="label">
-                Time Zone
-              </label>
-              <select className="select">
+              <label className="input-label">Time Zone</label>
+              <select className="select-field">
                 <option value="utc-7">Pacific Time (UTC-7)</option>
                 <option value="utc-6">Mountain Time (UTC-6)</option>
                 <option value="utc-5">Central Time (UTC-5)</option>
@@ -287,60 +219,40 @@ function SettingsPage() {
       case 'data':
         return (
           <div className="data-content">
-            <div className="data-item">
-              <div className="item-header">
-                <div className="item-info">
-                  <Download className="item-icon" />
+            <div className="data-card">
+              <div className="card-header">
+                <div className="card-title">
+                  <Download className="card-icon" />
                   <div>
-                    <h4 className="item-title">
-                      Export Data
-                    </h4>
-                    <p className="item-desc">
-                      Download your data as CSV or JSON
-                    </p>
+                    <h4 className="card-heading">Export Data</h4>
+                    <p className="card-description">Download your data as CSV or JSON</p>
                   </div>
                 </div>
-                <button className="export-btn">
-                  Export
-                </button>
+                <button className="export-button">Export</button>
               </div>
             </div>
-
-            <div className="data-item">
-              <div className="item-header">
-                <div className="item-info">
-                  <Upload className="item-icon" />
+            <div className="data-card">
+              <div className="card-header">
+                <div className="card-title">
+                  <Upload className="card-icon" />
                   <div>
-                    <h4 className="item-title">
-                      Import Data
-                    </h4>
-                    <p className="item-desc">
-                      Import data from CSV or JSON files
-                    </p>
+                    <h4 className="card-heading">Import Data</h4>
+                    <p className="card-description">Import data from CSV or JSON files</p>
                   </div>
                 </div>
-                <button className="import-btn">
-                  Import
-                </button>
+                <button className="import-button">Import</button>
               </div>
             </div>
-
-            <div className="data-item">
-              <div className="item-header">
-                <div className="item-info">
-                  <Database className="item-icon" />
+            <div className="data-card">
+              <div className="card-header">
+                <div className="card-title">
+                  <Database className="card-icon" />
                   <div>
-                    <h4 className="item-title">
-                      Clear Data
-                    </h4>
-                    <p className="item-desc">
-                      Clear all local data and cache
-                    </p>
+                    <h4 className="card-heading">Clear Data</h4>
+                    <p className="card-description">Clear all local data and cache</p>
                   </div>
                 </div>
-                <button className="clear-btn">
-                  Clear
-                </button>
+                <button className="clear-button">Clear</button>
               </div>
             </div>
           </div>
@@ -353,89 +265,73 @@ function SettingsPage() {
 
   return (
     <div className="settings-page">
-      <div>
-        <h1 className="title">
-          Settings
-        </h1>
-        <p className="subtitle">
-          Manage your account settings and preferences.
-        </p>
+      <div className="header-section">
+        <div className="title-container">
+          <h1 className="page-title">Settings</h1>
+          <p className="page-description">Manage your account settings and preferences.</p>
+        </div>
+        {/* Nếu cần thêm nút cho header, thêm ở đây */}
       </div>
-
-      <div className="layout">
+      <div className="settings-layout">
         <div className="sidebar">
-          <nav className="nav">
+          <nav className="tab-nav">
             {settingsTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
+                  className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
                 >
-                  <Icon className="nav-icon" />
+                  <Icon className="tab-icon" />
                   {tab.name}
                 </button>
               );
             })}
           </nav>
         </div>
-
-        <div className="content">
+        <div className="content-area">
           <div className="content-card">
             {renderTabContent()}
           </div>
         </div>
       </div>
-
       {showPasswordModal && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h3 className="modal-title">
-              Change Password
-            </h3>
+          <div className="modal-content">
+            <h3 className="modal-title">Change Password</h3>
             <div className="modal-form">
               <div>
-                <label className="label">
-                  Current Password
-                </label>
+                <label className="input-label">Current Password</label>
                 <input
                   type="password"
-                  className="input"
+                  className="input-field"
                 />
               </div>
               <div>
-                <label className="label">
-                  New Password
-                </label>
+                <label className="input-label">New Password</label>
                 <input
                   type="password"
-                  className="input"
+                  className="input-field"
                 />
               </div>
               <div>
-                <label className="label">
-                  Confirm New Password
-                </label>
+                <label className="input-label">Confirm New Password</label>
                 <input
                   type="password"
-                  className="input"
+                  className="input-field"
                 />
               </div>
             </div>
-            <div className="modal-buttons">
+            <div className="modal-actions">
               <button
                 onClick={() => setShowPasswordModal(false)}
-                className="cancel-btn"
-              >
-                Cancel
-              </button>
+                className="cancel-button"
+              >Cancel</button>
               <button
                 onClick={() => setShowPasswordModal(false)}
-                className="update-btn"
-              >
-                Update
-              </button>
+                className="update-button"
+              >Update</button>
             </div>
           </div>
         </div>
@@ -443,7 +339,5 @@ function SettingsPage() {
     </div>
   );
 };
-
-SettingsPage.propTypes = {};
 
 export default SettingsPage;

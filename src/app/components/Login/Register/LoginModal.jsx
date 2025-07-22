@@ -118,7 +118,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       if (result.role === 'Customer') {
         // onClose(); // Không chuyển hướng, đóng modal
       } else if (result.role === 'Owner' || result.role === 'Admin') {
-        navigate('/'); // Chuyển hướng đến trang chính
+        navigate('/owner/dashboard'); // Chuyển hướng đến dashboard owner
         // onClose();
       }
     } catch (error) {

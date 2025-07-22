@@ -4,6 +4,7 @@
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #f9fafb 100%);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   transition: background-color 0.3s ease;
+  padding-top: 65px;
 }
 
 [data-theme="dark"] .layout {
@@ -12,4 +13,42 @@
 
 .layout__main {
   padding-top: 4rem;
+}
+
+/* Owner Layout Customization */
+.owner-layout-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ef 100%);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .owner-layout-bg {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.owner-layout-wrapper {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.owner-main-content {
+  flex: 1;
+  padding: 0;
+  min-width: 0;
+  margin-left: 0;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .owner-main-content {
+    margin-left: 16rem; /* Sidebar width */
+  }
+  
+  .layout__main {
+    padding-top: 0;
+  }
 }

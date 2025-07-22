@@ -1,0 +1,43 @@
+.owner-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-quaternary) 100%);
+  transition: all 0.3s ease;
+}
+
+.dark .owner-layout {
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-quaternary) 100%);
+}
+
+.owner-layout-container {
+  display: flex;
+  flex: 1;
+  position: relative;
+}
+
+.owner-main-content {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .owner-main-content {
+    margin-left: 16rem; /* Matches desktop sidebar width */
+    padding-top: 0; /* Since header is hidden on desktop, adjust if needed */
+  }
+}
+
+.owner-main-content > * {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .owner-main-content {
+    padding: 1rem;
+  }
+}
