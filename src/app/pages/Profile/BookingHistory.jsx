@@ -1,78 +1,112 @@
 // BookingHistory.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Filter, MapPin, Clock, DollarSign } from 'lucide-react';
 import { useTheme } from '../../hooks/ThemeContext';
+import { useAuth } from '../../hooks/AuthContext/AuthContext.jsx';
+import { fetchData } from '../../../mocks/CallingAPI.js';
 import './BookingHistory.css';
 
 const BookingHistory = () => {
   const { theme } = useTheme();
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('date');
-  const bookings = [
-  {
-    id: '1',
-    fieldName: 'Central Park Field',
-    date: '2025-07-10',
-    time: '14:00',
-    duration: '2h',
-    price: 80,
-    status: 'completed'
-  },
-  {
-    id: '2',
-    fieldName: 'Riverside Stadium',
-    date: '2025-07-15',
-    time: '18:00',
-    duration: '1.5h',
-    price: 60,
-    status: 'upcoming'
-  },
-  {
-    id: '3',
-    fieldName: 'City Arena',
-    date: '2025-06-20',
-    time: '10:00',
-    duration: '1h',
-    price: 40,
-    status: 'cancelled'
-  },
-  {
-    id: '4',
-    fieldName: 'Downtown Pitch',
-    date: '2025-07-05',
-    time: '16:00',
-    duration: '2h',
-    price: 75,
-    status: 'completed'
-  },
-  {
-    id: '5',
-    fieldName: 'Alexandria Stadium',
-    date: '2025-07-06',
-    time: '12:00',
-    duration: '2h',
-    price: 75,
-    status: 'completed'
-  },
-  {
-    id: '6',
-    fieldName: 'Mina Jetsica',
-    date: '2025-07-06',
-    time: '12:00',
-    duration: '2h',
-    price: 75,
-    status: 'completed'
-  },
-  {
-    id: '7',
-    fieldName: 'Mina Jetsica',
-    date: '2025-07-06',
-    time: '12:00',
-    duration: '2h',
-    price: 75,
-    status: 'completed'
-  }
-];
+  const { user } = useAuth();
+
+  const FakeBookings = [
+    {
+      id: '1',
+      fieldName: 'Central Park Field',
+      date: '2025-07-10',
+      time: '14:00',
+      duration: '2h',
+      price: 80,
+      status: 'completed'
+    },
+    {
+      id: '2',
+      fieldName: 'Riverside Stadium',
+      date: '2025-07-15',
+      time: '18:00',
+      duration: '1.5h',
+      price: 60,
+      status: 'upcoming'
+    },
+    {
+      id: '3',
+      fieldName: 'City Arena',
+      date: '2025-06-20',
+      time: '10:00',
+      duration: '1h',
+      price: 40,
+      status: 'cancelled'
+    },
+    {
+      id: '4',
+      fieldName: 'Downtown Pitch',
+      date: '2025-07-05',
+      time: '16:00',
+      duration: '2h',
+      price: 75,
+      status: 'completed'
+    },
+    {
+      id: '5',
+      fieldName: 'Alexandria Stadium',
+      date: '2025-07-06',
+      time: '12:00',
+      duration: '2h',
+      price: 75,
+      status: 'completed'
+    },
+    {
+      id: '6',
+      fieldName: 'Mina Jetsica',
+      date: '2025-07-06',
+      time: '12:00',
+      duration: '2h',
+      price: 75,
+      status: 'completed'
+    },
+    {
+      id: '7',
+      fieldName: 'Mina Jetsica',
+      date: '2025-07-06',
+      time: '12:00',
+      duration: '2h',
+      price: 75,
+      status: 'completed'
+    }
+  ];
+
+  const [bookings, setBookings] = useState(FakeBookings || []);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const token = user?.token;
+    if (!user || !token) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchUserInfo = async () => {
+      try {
+        const BOOKINGs = await fetchData('booking', token);
+        console.log('BOOKINGs', BOOKINGs);
+        const UserBookings = BOOKINGs?.filter(booking => booking.userId == user?.id);
+        console.log('UserBookings', UserBookings);
+
+        setBookings(UserBookings);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserInfo();
+  }, [user]);
+
   const filteredBookings = bookings.filter(booking => {
     if (filter === 'all') return true;
     return booking.status === filter;
@@ -165,7 +199,7 @@ const BookingHistory = () => {
                     </span>
                   </div>
                   <span className={`status ${booking.status}`}>
-                    {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                    STATUS: {booking.status}
                   </span>
                 </div>
               </div>
