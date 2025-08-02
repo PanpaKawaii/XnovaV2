@@ -157,7 +157,6 @@
 
   & .booking-card:hover {
     box-shadow: 0 10px 15px -3px rgba(var(--accent-primary-rgb), 0.1), 0 4px 6px -4px rgba(var(--accent-primary-rgb), 0.1);
-    transform: translateY(-2px);
     border-color: var(--accent-primary);
   }
 
