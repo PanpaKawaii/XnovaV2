@@ -53,7 +53,7 @@ const BookingPage = () => {
         // Fetch Type for Badminton
         const typesResponse = await fetchData('Type', token);
         const types = Array.isArray(typesResponse) ? typesResponse : [typesResponse];
-        const badmintonType = types.find(type => type.name === 'Cầu lông');
+        const badmintonType = types.find(type => type.id == 1);
         if (!badmintonType) throw new Error('Badminton type not found');
 
         // Filter venues by badminton type

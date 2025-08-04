@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 const AuthContext = React.createContext(null);
 
@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem('user');
             setUser(null);
             console.log('User logged out');
+            window.location.href = '/';
         } catch (error) {
             console.error('Error removing user from localStorage:', error);
         }
