@@ -11,10 +11,6 @@
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1f2937 100%);
 }
 
-.layout__main {
-  padding-top: 4rem;
-}
-
 /* Owner Layout Customization */
 .owner-layout-bg {
   min-height: 100vh;
