@@ -108,36 +108,41 @@
     }
 
     .title {
-      font-size: 48px;
-      font-weight: 700;
-      margin-bottom: 24px;
+      font-size: 56px;
+      font-weight: bold;
+      margin-bottom: 40px;
       line-height: 1.1;
-
-      @media (min-width: 768px) {
-        font-size: 72px;
-      }
 
       .main {
         color: #fff;
       }
 
       .highlight {
+        font-size: 90px;
         background: linear-gradient(135deg, #a8ff00, #84cc16);
         -webkit-background-clip: text;
         color: transparent;
         animation: float 3s ease-in-out infinite;
+        animation-delay: 500ms;
+      }
+
+      .subtitle {
+        font-size: 20px;
       }
     }
 
     .desc {
       font-size: 20px;
       margin-bottom: 32px;
-      max-width: 512px;
       line-height: 1.6;
 
       @media (min-width: 1024px) {
         margin-left: 0;
-        margin-right: auto;
+      }
+
+      span:first-child {
+        font-size: 24px;
+        font-weight: bold;
       }
     }
 

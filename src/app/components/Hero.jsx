@@ -29,15 +29,15 @@ const Hero = () => {
             </div>
 
             <h1 className="title">
-              <span className="main">Đặt Sân</span>
-              <br />
-              <span className="highlight">Trong Mơ</span>
+              <div className="main">Your Next Game</div>
+              <div className="highlight">START HERE</div>
+              <div className="subtitle">Bắt đầu trận đấu tiếp theo ngay tại đây</div>
             </h1>
 
-            <p className="desc">
-              Tham gia cộng đồng bóng đá đỉnh cao. Đặt sân chất lượng, tìm đồng đội phù hợp,
-              và nâng tầm trận đấu của bạn với nền tảng Xnova.
-            </p>
+            <div className="desc">
+              <span>Xnova</span>
+              <span> – Nền tảng đặt sân đầu tiên tại Việt Nam ứng dụng AI, được thiết kế như người bạn đồng hành thể thao thông minh, giúp việc chơi thể thao dễ dàng và cá nhân hóa hơn.</span>
+            </div>
 
             <div className="actions">
               <Link to="/booking" className="cta primary">
