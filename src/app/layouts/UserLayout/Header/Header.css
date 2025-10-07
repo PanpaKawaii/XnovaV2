@@ -111,7 +111,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: var(--accent-primary);
+      background: linear-gradient(135deg, #a8ff00, #84cc16);
       color: var(--bg-primary);
       padding: 0.5rem 1.25rem;
       border-radius: 9999px;
@@ -123,8 +123,8 @@
       text-decoration: none;
 
       &:hover {
-        background: var(--accent-hover);
-        box-shadow: 0 10px 15px -3px var(--accent-primary);
+        background: linear-gradient(135deg, #84cc16, #a8ff00);
+        box-shadow: 0 8px 12px -4px rgba(168, 255, 0, 0.5);
         transform: scale(1.05);
       }
 

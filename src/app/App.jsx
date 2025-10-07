@@ -20,6 +20,7 @@ import { ThemeProvider } from './hooks/ThemeContext';
 import './App.css';
 import { venues } from '../mocks/venueData';
 import RoleRoute from './components/RoleRoute';
+import RandomWheel from './pages/Profile/Reward/Reward';
 
 // Helper to transform venues to fields expected by ManageFields
 const fields = venues.map((venue, idx) => ({
@@ -46,19 +47,19 @@ function ScrollToTop() {
 // Component để redirect owner về owner layout khi truy cập trang chủ
 function OwnerRedirect() {
   const { user, isLoading } = useAuth();
-  
+
   // Hiển thị loading khi đang kiểm tra user
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  
+
   // Chỉ redirect owner khi họ thực sự truy cập trang chủ "/"
   // Không redirect khi reload các trang khác
   if (user && (user.role === 'Owner')) {
     console.log('Redirecting owner to dashboard:', user);
     return <Navigate to="/owner/dashboard" replace />;
   }
-  
+
   return <Homepage />;
 }
 
@@ -69,11 +70,11 @@ function App() {
   // Loading state toàn app
   if (isLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
       }}>
         Loading...
       </div>
@@ -86,14 +87,7 @@ function App() {
         <ScrollToTop />
         <Routes>
           {/* Owner Layout */}
-          <Route
-            path="/owner/*"
-            element={
-              <RoleRoute allowedRoles={['Owner']}>
-                <OwnerLayout />
-              </RoleRoute>
-            }
-          >
+          <Route path="/owner/*" element={<RoleRoute allowedRoles={['Owner']}><OwnerLayout /></RoleRoute>}>
             <Route index element={<DashboardOverview />} />
             <Route path="dashboard" element={<DashboardOverview />} />
             <Route path="manage-fields" element={<ManageFields fields={fields} />} />
@@ -102,7 +96,7 @@ function App() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="" element={<DashboardOverview />} />
           </Route>
-          
+
           {/* User Layout - Owner cũng có thể truy cập */}
           <Route element={<Layout onLoginClick={() => setIsLoginModalOpen(true)} />}>
             <Route path="/" element={<OwnerRedirect />} />
@@ -112,12 +106,13 @@ function App() {
             <Route path="/team" element={<TeamManagement />} />
             <Route path="/team-management" element={<TeamManagement />} />
             <Route path="/find-teammates" element={<FindTeammatePage />} />
+            <Route path="/randomwheel" element={<RandomWheel />} />
           </Route>
-          
+
           {/* Catch-all route for unknown paths */}
           <Route path="*" element={<OwnerRedirect />} />
         </Routes>
-        {isLoginModalOpen && <LoginRegister  setIsLoginModalOpen={setIsLoginModalOpen} />}
+        {isLoginModalOpen && <LoginRegister setIsLoginModalOpen={setIsLoginModalOpen} />}
       </Router>
       <ChatBoxV2 />
     </ThemeProvider>

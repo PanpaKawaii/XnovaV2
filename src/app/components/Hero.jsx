@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { PlayCircle, ArrowRight, Star, Users, MapPin } from 'lucide-react';
-import HomeBackGround from '../assets/HomeBackGround.jpg';
-import './Hero.css';
+import { Link } from "react-router-dom";
+import { PlayCircle, ArrowRight, Star, Users, MapPin } from "lucide-react";
+import HomeBackGround from "../assets/HomeBackGround.jpg";
+import "./Hero.css";
 
 const Hero = () => {
   return (
