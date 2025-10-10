@@ -48,6 +48,7 @@
 
     .tab-nav {
       display: flex;
+      gap: 0.25rem;
       border-radius: 0.75rem;
       padding: 0.25rem;
       backdrop-filter: blur(4px);

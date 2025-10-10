@@ -139,6 +139,7 @@
         box-shadow: 0 20px 40px var(--shadow-tertiary);
 
         .header {
+            background-color: transparent;
             margin: 0 0 40px;
             display: flex;
             flex-direction: column;

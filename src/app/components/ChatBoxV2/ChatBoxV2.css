@@ -16,8 +16,8 @@
     .open-icon {
         cursor: pointer;
         pointer-events: all;
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
         border: 2px solid rgba(255, 255, 255, 0.3);
         box-sizing: border-box;
         border-radius: 50%;
@@ -27,7 +27,7 @@
         text-align: center;
         align-content: center;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 18px;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;

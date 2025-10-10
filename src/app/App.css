@@ -8,6 +8,17 @@ a {
   text-decoration: none;
 }
 
+button {
+  border: none;
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
+}
+
+.custom-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }

@@ -163,7 +163,7 @@ const ProfileSettings = () => {
   );
 
   return (
-    <div className={`profile-settings ${theme}`}>
+    <div className={`profile-settings ${theme} custom-container`}>
       <SubUserHeader activeTab={activeTab} onTabChange={handleTabChange} />
       {activeTab === 'profile' ? (
         <>

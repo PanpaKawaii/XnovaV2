@@ -194,7 +194,7 @@ const TeamManagement = () => {
   );
 
   return (
-    <div className={`team-management ${theme}`}>
+    <div className={`team-management ${theme} custom-container`}>
       <SubUserHeader 
         activeTab={activeTab} 
         onTabChange={handleTabChange} 
