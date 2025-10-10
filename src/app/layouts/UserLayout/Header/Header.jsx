@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Zap, User, Calendar, Users } from 'lucide-react';
-import ThemeToggle from '../../../components/ui/ThemeToggle.jsx';
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Zap, User, Calendar, Users } from "lucide-react";
+import ThemeToggle from "../../../components/ui/ThemeToggle.jsx";
 import LOGO from "../../../assets/LOGO.png";
-import VNFlag from '../../../assets/vn.jpg';
-import UKFlag from '../../../assets/uk.png';
-import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
-import { fetchData } from '../../../../mocks/CallingAPI.js';
-import UserDropdown from './UserDropdown.jsx'; // Import component mới
-import './Header.css';
+import VNFlag from "../../../assets/vn.jpg";
+import UKFlag from "../../../assets/uk.png";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "../../../hooks/AuthContext/AuthContext.jsx";
+import { fetchData } from "../../../../mocks/CallingAPI.js";
+import UserDropdown from "./UserDropdown.jsx"; // Import component mới
+import "./Header.css";
 
 const LANGUAGES = [
-  { code: 'vi', name: 'Tiếng Việt', flag: VNFlag },
-  { code: 'en', name: 'English', flag: UKFlag },
+  { code: "vi", name: "Tiếng Việt", flag: VNFlag },
+  { code: "en", name: "English", flag: UKFlag },
 ];
 
 const Header = ({ onLoginClick }) => {
@@ -32,8 +32,8 @@ const Header = ({ onLoginClick }) => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -43,8 +43,8 @@ const Header = ({ onLoginClick }) => {
         setLangDropdown(false);
       }
     };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, [langDropdown]);
 
   useEffect(() => {
@@ -73,39 +73,39 @@ const Header = ({ onLoginClick }) => {
   };
 
   const navLinks = [
-    { to: '/', icon: Zap, label: t('Home') },
-    { to: '/booking', icon: Calendar, label: t('Book Field') },
-    { to: '/find-teammates', icon: Users, label: t('Find Teammates') },
+    { to: "/", icon: Zap, label: t("Home") },
+    { to: "/booking", icon: Calendar, label: t("Book Field") },
+    { to: "/find-teammates", icon: Users, label: t("Find Teammates") },
   ];
 
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
 
   return (
-    <header className={`header ${isScrolled ? 'header--scrolled' : ''}`}>
-      <div className="header__container">
-        <div className="header__wrapper">
-          <Link to="/" className="header__logo">
+    <header className={`header ${isScrolled ? "header--scrolled" : ""}`}>
+      <div className="container">
+        <div className="wrapper">
+          <Link to="/" className="logo">
             <img
               src={LOGO}
               alt="Xnova Logo"
-              className="header__logo-img"
+              className="logo-img"
             />
           </Link>
 
-          <nav className="header__nav">
+          <nav className="nav">
             {navLinks.map(({ to, icon: Icon, label }) => (
               <Link
                 key={to}
                 to={to}
-                className={`header__nav-link ${location.pathname === to ? 'header__nav-link--active' : ''}`}
+                className={`nav-link ${location.pathname === to ? "nav-link--active" : ""}`}
               >
-                <Icon className="header__nav-icon" />
+                <Icon className="nav-icon" />
                 <span>{label}</span>
               </Link>
             ))}
           </nav>
 
-          <div className="header__actions">
+          <div className="actions">
             <ThemeToggle />
             
             {user ? (
@@ -119,27 +119,27 @@ const Header = ({ onLoginClick }) => {
             ) : (
               <button
                 onClick={onLoginClick}
-                className="header__login-btn"
+                className="login-btn"
               >
-                <User className="header__login-icon" />
-                <span>{t('Login')}</span>
+                <User className="login-icon" />
+                <span>{t("Login")}</span>
               </button>
             )}
             
-            <div className="header__lang-dropdown" ref={langBtnRef}>
+            <div className="lang-dropdown" ref={langBtnRef}>
               <button
-                className={`header__lang-btn ${langDropdown ? 'header__lang-btn--active' : ''}`}
+                className={`lang-btn ${langDropdown ? "lang-btn--active" : ""}`}
                 onClick={() => setLangDropdown((v) => !v)}
                 aria-label="Change language"
               >
                 <img 
                   src={currentLang.flag} 
                   alt={currentLang.name} 
-                  className="header__lang-flag" 
+                  className="lang-flag" 
                 />
               </button>
               {langDropdown && (
-                <div className="header__lang-menu">
+                <div className="lang-menu">
                   {LANGUAGES.map((lang) => (
                     <button
                       key={lang.code}
@@ -148,14 +148,14 @@ const Header = ({ onLoginClick }) => {
                         setLangDropdown(false);
                       }}
                       disabled={i18n.language === lang.code}
-                      className={`header__lang-item ${i18n.language === lang.code ? 'header__lang-item--active' : ''}`}
+                      className={`lang-item ${i18n.language === lang.code ? "lang-item--active" : ""}`}
                     >
                       <img 
                         src={lang.flag} 
                         alt={lang.name} 
-                        className="header__lang-item-flag" 
+                        className="lang-item-flag" 
                       />
-                      <span className="header__lang-item-name">{lang.name}</span>
+                      <span className="lang-item-name">{lang.name}</span>
                     </button>
                   ))}
                 </div>
@@ -165,24 +165,24 @@ const Header = ({ onLoginClick }) => {
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="header__mobile-btn"
+            className="mobile-btn"
           >
-            {isMenuOpen ? <X className="header__mobile-icon" /> : <Menu className="header__mobile-icon" />}
+            {isMenuOpen ? <X className="mobile-icon" /> : <Menu className="mobile-icon" />}
           </button>
         </div>
       </div>
 
       {isMenuOpen && (
-        <div className="header__mobile-menu">
-          <div className="header__mobile-content">
+        <div className="mobile-menu">
+          <div className="mobile-content">
             {navLinks.map(({ to, icon: Icon, label }) => (
               <Link
                 key={to}
                 to={to}
                 onClick={() => setIsMenuOpen(false)}
-                className={`header__mobile-link ${location.pathname === to ? 'header__mobile-link--active' : ''}`}
+                className={`mobile-link ${location.pathname === to ? "mobile-link--active" : ""}`}
               >
-                <Icon className="header__mobile-link-icon" />
+                <Icon className="mobile-link-icon" />
                 <span>{label}</span>
               </Link>
             ))}
@@ -204,29 +204,29 @@ const Header = ({ onLoginClick }) => {
                   onLoginClick();
                   setIsMenuOpen(false);
                 }}
-                className="header__mobile-login"
+                className="mobile-login"
               >
-                <User className="header__mobile-login-icon" />
-                <span>{t('Login')}</span>
+                <User className="mobile-login-icon" />
+                <span>{t("Login")}</span>
               </button>
             )}
             
-            <div className="header__mobile-actions">
+            <div className="mobile-actions">
               <ThemeToggle />
-              <div className="header__mobile-lang" ref={langBtnRef}>
+              <div className="mobile-lang" ref={langBtnRef}>
                 <button
-                  className={`header__mobile-lang-btn ${langDropdown ? 'header__mobile-lang-btn--active' : ''}`}
+                  className={`mobile-lang-btn ${langDropdown ? "mobile-lang-btn--active" : ""}`}
                   onClick={() => setLangDropdown((v) => !v)}
                   aria-label="Change language"
                 >
                   <img 
                     src={currentLang.flag} 
                     alt={currentLang.name} 
-                    className="header__mobile-lang-flag" 
+                    className="mobile-lang-flag" 
                   />
                 </button>
                 {langDropdown && (
-                  <div className="header__mobile-lang-menu">
+                  <div className="mobile-lang-menu">
                     {LANGUAGES.map((lang) => (
                       <button
                         key={lang.code}
@@ -235,14 +235,14 @@ const Header = ({ onLoginClick }) => {
                           setLangDropdown(false);
                         }}
                         disabled={i18n.language === lang.code}
-                        className={`header__mobile-lang-item ${i18n.language === lang.code ? 'header__mobile-lang-item--active' : ''}`}
+                        className={`mobile-lang-item ${i18n.language === lang.code ? "mobile-lang-item--active" : ""}`}
                       >
                         <img 
                           src={lang.flag} 
                           alt={lang.name} 
-                          className="header__mobile-lang-item-flag" 
+                          className="mobile-lang-item-flag" 
                         />
-                        <span className="header__mobile-lang-item-name">{lang.name}</span>
+                        <span className="mobile-lang-item-name">{lang.name}</span>
                       </button>
                     ))}
                   </div>

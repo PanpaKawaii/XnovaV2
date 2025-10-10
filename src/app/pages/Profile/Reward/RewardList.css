@@ -1,0 +1,82 @@
+.reward-list {
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 2rem auto;
+    color: #e0e0e0;
+
+    .items {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .item {
+        background-color: #2c3a47;
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 2px solid #4B5563;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: border-color 0.2s ease-in-out;
+
+        &.selected {
+            border-color: #fbbc05;
+        }
+
+        .info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            i {
+                color: #A8FF00;
+            }
+
+            .description {
+                margin: 0;
+                font-size: 0.95rem;
+            }
+        }
+
+        .action {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            .points {
+                font-weight: 600;
+                font-size: 0.9rem;
+                color: #aebecd;
+            }
+        }
+
+        .button {
+            border: none;
+            border-radius: 100px;
+            padding: 4px 20px;
+            font-weight: 500;
+            color: #ffffff;
+            cursor: pointer;
+
+            &.blue {
+                color: #60A5FA;
+                background-color: #1e3fae33;
+                border: 2px solid #1D4ED8;
+            }
+
+            &.green {
+                color: #4ADE80;
+                background-color: #16653433;
+                border: 2px solid #15803D;
+            }
+
+            &.yellow {
+                color: #FDE047;
+                background-color: #fddf4933;
+                border: 2px solid #FACC15;
+            }
+        }
+    }
+}
