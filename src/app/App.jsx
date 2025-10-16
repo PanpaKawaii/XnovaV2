@@ -19,7 +19,7 @@ import { ThemeProvider } from './hooks/ThemeContext';
 import './App.css';
 import { venues } from '../mocks/venueData';
 import RoleRoute from './components/RoleRoute';
-import RandomWheel from './pages/Profile/Reward/Reward';
+import RandomWheel from './pages/userPage/Profile/Reward/Reward';
 
 // Helper to transform venues to fields expected by ManageFields
 const fields = venues.map((venue, idx) => ({
