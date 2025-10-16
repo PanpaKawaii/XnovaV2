@@ -3,17 +3,18 @@ import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'r
 import { Layout, OwnerLayout } from './layouts';
 import { useAuth } from './hooks/AuthContext/AuthContext';
 import ChatBoxV2 from './components/ChatBoxV2/ChatBoxV2';
-import Homepage from './pages/Home/Homepage';
-import BookingPage from './pages/Booking/BookingPageV2';
-import FindTeammatePage from './pages/FindTeammate/FindTeammatePage';
-import ProfileSettings from './pages/Profile/ProfileSettings';
-import TeamManagement from './pages/TeamManagement/TeamManagement';
-import LoginRegister from './pages/LoginRegister/LoginRegister';
-import ManageFields from './ownerPage/ManageFields/ManageFields';
-import AddEditField from './ownerPage/AddEditField/AddEditField';
-import Reports from './ownerPage/Reports/Reports';
-import SettingsPage from './ownerPage/SettingsPage/SettingsPage';
-import DashboardOverview from './ownerPage/DashboardOverview/DashboardOverview';
+import Homepage from './pages/userPage/Home/Homepage';
+import BookingPage from './pages/userPage/Booking/BookingPageV2';
+import FindTeammatePage from './pages/userPage/FindTeammate/FindTeammatePage';
+import ProfileSettings from './pages/userPage/Profile/ProfileSettings';
+import TeamManagement from './pages/userPage/TeamManagement/TeamManagement';
+import LoginRegister from './pages/userPage/LoginRegister/LoginRegister';
+import ManageFields from './pages/ownerPage/ManageFields/ManageFields';
+import AddEditField from './pages/ownerPage/AddEditField/AddEditField';
+import Reports from './pages/ownerPage/Reports/Reports';
+import SettingsPage from './pages/ownerPage/SettingsPage/SettingsPage';
+import DashboardOverview from './pages/ownerPage/DashboardOverview/DashboardOverview';
+
 import { ThemeProvider } from './hooks/ThemeContext';
 import './App.css';
 import { venues } from '../mocks/venueData';
@@ -42,7 +43,7 @@ function ScrollToTop() {
   return null;
 }
 
-// Component để redirect owner về owner layout khi truy cập trang chủ
+// Component để redirect owner/admin về dashboard tương ứng khi truy cập trang chủ
 function OwnerRedirect() {
   const { user, isLoading } = useAuth();
 
@@ -51,11 +52,16 @@ function OwnerRedirect() {
     return <div>Loading...</div>;
   }
 
-  // Chỉ redirect owner khi họ thực sự truy cập trang chủ "/"
-  // Không redirect khi reload các trang khác
-  if (user && (user.role === 'Owner')) {
-    console.log('Redirecting owner to dashboard:', user);
-    return <Navigate to="/owner/dashboard" replace />;
+  // Redirect dựa trên role của user
+  if (user) {
+    if (user.role === 'Admin') {
+      console.log('Redirecting admin to dashboard:', user);
+      return <Navigate to="/admin/dashboard" replace />;
+    }
+    if (user.role === 'Owner') {
+      console.log('Redirecting owner to dashboard:', user);
+      return <Navigate to="/owner/dashboard" replace />;
+    }
   }
 
   return <Homepage />;
@@ -83,7 +89,13 @@ function App() {
     <ThemeProvider>
       <Router>
         <ScrollToTop />
-        <Routes>
+        <Routes>  
+           {/* Adminn Layout
+          <Route path="/admin/*" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="" element={<AdminDashboard />} />
+          </Route> */}
           {/* Owner Layout */}
           <Route path="/owner/*" element={<RoleRoute allowedRoles={['Owner']}><OwnerLayout /></RoleRoute>}>
             <Route index element={<DashboardOverview />} />

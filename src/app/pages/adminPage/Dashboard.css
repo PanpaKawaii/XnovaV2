@@ -1,0 +1,142 @@
+/* Dashboard.tsx -> Dashboard.css (BEM + standard CSS Nesting) */
+/* Tailwind default theme used for spacing, colors, radii, shadows, breakpoints. */
+.dashboard {
+  padding: 1rem;                 /* p-4 */
+  max-width: 100%;               /* max-w-full */
+
+  /* space-y-6: vertical rhythm between immediate children */
+  & > * + * {
+    margin-top: 1.5rem;          /* space-y-6 => 1.5rem */
+  }
+
+  @media (min-width: 1024px) {   /* lg */
+    padding: 1.5rem;             /* lg:p-6 */
+  }
+
+  /* === Stats grid === */
+  &__stats-grid {
+    display: grid;                          /* grid */
+    grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
+    gap: 1rem;                               /* gap-4 */
+
+    @media (min-width: 640px) {              /* sm */
+      grid-template-columns: repeat(2, minmax(0, 1fr)); /* sm:grid-cols-2 */
+    }
+    @media (min-width: 1024px) {             /* lg */
+      grid-template-columns: repeat(4, minmax(0, 1fr)); /* lg:grid-cols-4 */
+      gap: 1.5rem;                            /* lg:gap-6 */
+    }
+  }
+
+  /* === Charts grid === */
+  &__charts-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));   /* grid-cols-1 */
+    gap: 1rem;                                          /* gap-4 */
+
+    @media (min-width: 1024px) {                        /* lg */
+      gap: 1.5rem;                                      /* lg:gap-6 */
+    }
+    @media (min-width: 1280px) {                        /* xl */
+      grid-template-columns: repeat(2, minmax(0, 1fr)); /* xl:grid-cols-2 */
+    }
+  }
+
+  /* === Revenue by Field Type grid === */
+  &__revenue-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));   /* grid-cols-1 */
+    gap: 1rem;                                          /* gap-4 */
+
+    @media (min-width: 1024px) {                        /* lg */
+      gap: 1.5rem;                                      /* lg:gap-6 */
+    }
+    @media (min-width: 1280px) {                        /* xl */
+      grid-template-columns: repeat(3, minmax(0, 1fr)); /* xl:grid-cols-3 */
+    }
+  }
+
+  &__revenue-left {
+    @media (min-width: 1280px) {                        /* xl */
+      grid-column: span 1 / span 1;                     /* xl:col-span-1 */
+    }
+  }
+
+  &__revenue-right {
+    @media (min-width: 1280px) {                        /* xl */
+      grid-column: span 2 / span 2;                     /* xl:col-span-2 */
+    }
+  }
+
+  /* === Summary card === */
+  &__summary-card {
+    background-color: #ffffff;          /* bg-white */
+    border-radius: 0.75rem;             /* rounded-xl */
+    padding: 1.5rem;                    /* p-6 */
+    border: 1px solid #e5e7eb;          /* border border-gray-200 */
+  }
+
+  &__summary-title {
+    font-size: 1.125rem;                /* text-lg */
+    line-height: 1.75rem;
+    font-weight: 600;                   /* font-semibold */
+    color: #111827;                     /* text-gray-900 */
+    margin-bottom: 1rem;                /* mb-4 */
+  }
+
+  &__summary-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));   /* grid-cols-1 */
+    gap: 1rem;                                          /* gap-4 */
+    @media (min-width: 640px) {                         /* sm */
+      grid-template-columns: repeat(3, minmax(0, 1fr)); /* sm:grid-cols-3 */
+    }
+  }
+
+  &__summary-item {
+    text-align: center;                 /* text-center */
+    padding: 1rem;                      /* p-4 */
+    border-radius: 0.5rem;              /* rounded-lg */
+
+    &--blue   { background-color: #eff6ff; } /* bg-blue-50 */
+    &--green  { background-color: #f0fdf4; } /* bg-green-50 */
+    &--purple { background-color: #faf5ff; } /* bg-purple-50 */
+  }
+
+  &__summary-value {
+    font-size: 1.5rem;                  /* text-2xl */
+    line-height: 2rem;
+    font-weight: 700;                   /* font-bold */
+    margin-bottom: 0.25rem;
+  }
+
+  /* color based on item variant */
+  &__summary-item--blue &__summary-value   { color: #2563eb; } /* text-blue-600 */
+  &__summary-item--green &__summary-value  { color: #16a34a; } /* text-green-600 */
+  &__summary-item--purple &__summary-value { color: #9333ea; } /* text-purple-600 */
+
+  &__summary-label {
+    font-size: 0.875rem;                /* text-sm */
+    line-height: 1.25rem;
+    color: #4b5563;                     /* text-gray-600 */
+  }
+
+  /* Dark mode */
+  :where(.dark) & {
+    .dashboard__summary-card {
+      background-color: #1f2937;        /* dark:bg-gray-800 */
+      border-color: #374151;            /* dark:border-gray-700 */
+    }
+    .dashboard__summary-title { color: #ffffff; } /* dark:text-white */
+
+    .dashboard__summary-item--blue   { background-color: rgba(30, 58, 138, 0.5); } /* blue-900/50 */
+    .dashboard__summary-item--green  { background-color: rgba(20, 83, 45, 0.5); }  /* green-900/50 */
+    .dashboard__summary-item--purple { background-color: rgba(88, 28, 135, 0.5); } /* purple-900/50 */
+
+    .dashboard__summary-item--blue   .dashboard__summary-value { color: #60a5fa; } /* text-blue-400 */
+    .dashboard__summary-item--green  .dashboard__summary-value { color: #4ade80; } /* text-green-400 */
+    .dashboard__summary-item--purple .dashboard__summary-value { color: #c084fc; } /* text-purple-400 */
+
+    .dashboard__summary-label { color: #9ca3af; } /* dark:text-gray-400 */
+  }
+}

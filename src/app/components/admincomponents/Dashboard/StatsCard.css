@@ -1,0 +1,148 @@
+.stats-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s;
+  height: 100%;
+}
+
+.stats-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card.dark {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.stats-card-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.stats-card-info {
+  flex: 1;
+}
+
+.stats-card-title {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.stats-card.dark .stats-card-title {
+  color: #9ca3af;
+}
+
+.stats-card-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  word-break: break-word;
+}
+
+.stats-card.dark .stats-card-value {
+  color: white;
+}
+
+.stats-card-change {
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.stats-card-change.positive {
+  color: #16a34a;
+}
+
+.stats-card.dark .stats-card-change.positive {
+  color: #4ade80;
+}
+
+.stats-card-change.negative {
+  color: #dc2626;
+}
+
+.stats-card.dark .stats-card-change.negative {
+  color: #f87171;
+}
+
+.stats-card-change.neutral {
+  color: #6b7280;
+}
+
+.stats-card.dark .stats-card-change.neutral {
+  color: #9ca3af;
+}
+
+.stats-card-icon {
+  padding: 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.stats-card-icon.blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.stats-card.dark .stats-card-icon.blue {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.stats-card-icon.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.stats-card.dark .stats-card-icon.green {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.stats-card-icon.yellow {
+  background: #fef3c7;
+  color: #ca8a04;
+}
+
+.stats-card.dark .stats-card-icon.yellow {
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+}
+
+.stats-card-icon.purple {
+  background: #f3e8ff;
+  color: #9333ea;
+}
+
+.stats-card.dark .stats-card-icon.purple {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+.stats-card-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (min-width: 1024px) {
+  .stats-card {
+    padding: 1.5rem;
+  }
+  
+  .stats-card-value {
+    font-size: 1.5rem;
+  }
+  
+  .stats-card-icon {
+    padding: 12px;
+  }
+  
+  .stats-card-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}
