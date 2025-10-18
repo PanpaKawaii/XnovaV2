@@ -1,62 +1,62 @@
 /* Header */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  transition: all 0.3s ease;
-  background: var(--bg-primary);
-
-  &.header--scrolled {
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    transition: all 0.3s ease;
     background: var(--bg-primary);
-    backdrop-filter: blur(1rem);
-    box-shadow: var(--shadow-primary);
-    border-bottom: 1px solid var(--border-primary);
-  }
 
-  .container {
-    max-width: 88rem;
-    margin: 0 auto;
-    padding: 0 1rem;
-
-    @media (min-width: 640px) {
-      padding: 0 1.5rem;
+    &.header--scrolled {
+      background: var(--bg-primary);
+      backdrop-filter: blur(1rem);
+      box-shadow: var(--shadow-primary);
+      border-bottom: 1px solid var(--border-primary);
     }
 
-    @media (min-width: 1024px) {
-      padding: 0 2rem;
-    }
-  }
+    .container {
+      max-width: 88rem;
+      margin: 0 auto;
+      padding: 0 1rem;
 
-  .wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 4rem;
-  }
+      @media (min-width: 640px) {
+        padding: 0 1.5rem;
+      }
 
-  /* Logo */
-  .logo {
-    display: flex;
-    align-items: center;
-    height: 4rem;
-    padding-right: 0.5rem;
-    transition: transform 0.3s ease;
-
-    &:hover {
-      transform: scale(1.1);
+      @media (min-width: 1024px) {
+        padding: 0 2rem;
+      }
     }
 
-    .logo-img {
-      height: 3rem;
-      width: auto;
-      max-height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 4px 16px var(--shadow-primary));
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
+    }
+
+    /* Logo */
+    .logo {
+      display: flex;
+      align-items: center;
+      height: 4rem;
+      padding-right: 0.5rem;
       transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      .logo-img {
+        height: 3rem;
+        width: auto;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 16px var(--shadow-primary));
+        transition: transform 0.3s ease;
+      }
     }
-  }
 
   /* Navigation */
   .nav {

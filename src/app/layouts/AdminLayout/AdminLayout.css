@@ -1,0 +1,66 @@
+﻿/* AdminLayout Component - BEM Style with Nested CSS */
+
+.ad-admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg-secondary, #f9fafb);
+  transition: background-color 0.2s ease;
+
+  .dark & {
+    background-color: var(--color-bg-secondary, #111827);
+  }
+}
+
+.ad-admin-layout__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  /* Add margin on large screens when sidebar is expanded */
+  @media (min-width: 1024px) {
+    margin-left: 0;
+  }
+}
+
+.ad-admin-layout__main {
+  flex: 1;
+  overflow: auto;
+  
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  
+  /* Hide scrollbar for WebKit browsers (optional) */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .dark & {
+      background-color: rgba(255, 255, 255, 0.2);
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1023px) {
+  .ad-admin-layout__content {
+    width: 100%;
+  }
+}
+
