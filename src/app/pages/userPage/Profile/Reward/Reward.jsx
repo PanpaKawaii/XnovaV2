@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { fetchData } from '../../../../mocks/CallingAPI.js';
-import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
+import { fetchData } from '../../../../../mocks/CallingAPI.js';
+import { useAuth } from '../../../../hooks/AuthContext/AuthContext.jsx';
 import RewardList from './RewardList.jsx';
 import Spinner from './Spinner.jsx';
 import RewardResult from './RewardResult.jsx';
