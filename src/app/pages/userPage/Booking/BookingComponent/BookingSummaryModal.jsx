@@ -217,7 +217,6 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
     console.log('BookingData:', BookingData);
 
     if (payment == 'banking') {
-
       setLoadingBooking(true);
       const token = user?.token;
       try {
@@ -269,7 +268,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
     // };
     // console.log('CashPaymentData:', CashPaymentData);
 
-    // if (payment === 'Thanh toán bằng tiền mặt') {
+    // if (payment === 'cash' || payment === 'card' || payment === 'momo') {
     //     try {
     //         const response = await fetch('https://localhost:7166/api/Payment', {
     //             method: 'POST',
@@ -407,7 +406,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
         {error && (
           <div className="booking-summary-modal__error">
             <div className="booking-summary-modal__error-icon">❌</div>
-            <p>Lỗi: {error}</p>
+            <p>Lỗi: {JSON.stringify(error)}</p>
             <button onClick={() => setError(null)}>Thử lại</button>
           </div>
         )}

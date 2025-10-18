@@ -1,6 +1,7 @@
 .spinner-container {
     position: relative;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 40px;
@@ -20,8 +21,9 @@
             position: absolute;
             top: 50%;
             left: 50%;
+            padding: 20px;
             color: #fff;
-            font-size: 24px;
+            text-align: end;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             user-select: none;
@@ -37,7 +39,7 @@
         height: 0;
         border-right: 21px solid transparent;
         border-left: 21px solid transparent;
-        border-bottom: 30px solid #f1c40f;
+        border-bottom: 30px solid #999;
     }
 
     .spinner-center {
@@ -54,9 +56,6 @@
     }
 
     .result {
-        position: absolute;
-        top: 90%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        color: #fff;
     }
 }
