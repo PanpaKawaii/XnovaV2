@@ -1,73 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { Sun, Moon, Globe, Bell } from 'lucide-react';
+import React from 'react';
+import { Sun, Moon, Bell } from 'lucide-react';
+import { useTheme } from '../../../hooks/useTheme';
 import './Header.css';
 
-const Header = () => {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') || 'light';
-    }
-    return 'light';
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (_) {}
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
-
-  const language = (typeof window !== 'undefined' && localStorage.getItem('language')) || 'vi';
-  const toggleLanguage = () => {
-    try {
-      const next = language === 'vi' ? 'en' : 'vi';
-      localStorage.setItem('language', next);
-    } catch (_) {}
-    if (typeof window !== 'undefined') window.location.reload();
-  };
+export const Header = () => {
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="header">
-      <div className="header__inner">
-        <div className="header__brand">
-          <h1 className="header__title">SportAdmin</h1>
+    <header className="ad-header">
+      <div className="ad-header__container">
+        <div className="ad-header__logo">
+          <h1 className="ad-header__title">
+            SportAdmin
+          </h1>
         </div>
-
-        <div className="header__actions">
-          {/* Language Toggle */}
-          <button onClick={toggleLanguage} className="header__btn header__btn--lang">
-            <Globe className="header__icon header__icon--sm" />
-            <span className="header__btn-text">{language === 'vi' ? 'VI' : 'EN'}</span>
-          </button>
-
+        <div className="ad-header__actions">
           {/* Theme Toggle */}
-          <button onClick={toggleTheme} className="header__btn header__btn--icon">
+          <button
+            onClick={toggleTheme}
+            className="ad-header__button ad-header__button--theme"
+            aria-label="Toggle theme"
+          >
             {theme === 'light' ? (
-              <Moon className="header__icon header__icon--md" />
+              <Moon className="ad-header__icon" />
             ) : (
-              <Sun className="header__icon header__icon--md" />
+              <Sun className="ad-header__icon" />
             )}
           </button>
 
           {/* Notifications */}
-          <button className="header__btn header__btn--icon header__btn--notif">
-            <Bell className="header__icon header__icon--md" />
-            <span className="header__badge">3</span>
+          <button 
+            className="ad-header__button ad-header__button--notification"
+            aria-label="Notifications"
+          >
+            <Bell className="ad-header__icon" />
+            <span className="ad-header__badge">
+              3
+            </span>
           </button>
 
           {/* User Avatar */}
-          <div className="header__user">
-            <div className="header__user-info">
-              <p className="header__user-name">Admin User</p>
-              <p className="header__user-email">admin@sportfield.com</p>
+          <div className="ad-header__user">
+            <div className="ad-header__user-info">
+              <p className="ad-header__user-name">Admin User</p>
+              <p className="ad-header__user-email">admin@sportfield.com</p>
             </div>
-            <div className="header__avatar">
-              <span className="header__avatar-initial">A</span>
+            <div className="ad-header__avatar">
+              <span className="ad-header__avatar-text">A</span>
             </div>
           </div>
         </div>
@@ -75,4 +54,3 @@ const Header = () => {
     </header>
   );
 };
-export default Header;

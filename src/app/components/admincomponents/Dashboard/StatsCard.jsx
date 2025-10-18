@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import './StatsCard.css';
 
 export const StatsCard = ({
@@ -9,22 +10,26 @@ export const StatsCard = ({
   changeType = 'neutral',
   color = 'blue'
 }) => {
-  const isDark = document.documentElement.classList.contains('dark');
-  
   return (
-    <div className={`stats-card ${isDark ? 'dark' : ''}`}>
-      <div className="stats-card-content">
-        <div className="stats-card-info">
-          <p className="stats-card-title">{title}</p>
-          <p className="stats-card-value">{value}</p>
+    <div className="ad-stats-card">
+      <div className="ad-stats-card__content">
+        <div className="ad-stats-card__info">
+          <p className="ad-stats-card__title">{title}</p>
+          <p className="ad-stats-card__value">{value}</p>
           {change && (
-            <p className={`stats-card-change ${changeType}`}>
+            <p className={clsx(
+              'ad-stats-card__change',
+              `ad-stats-card__change--${changeType}`
+            )}>
               {change}
             </p>
           )}
         </div>
-        <div className={`stats-card-icon ${color}`}>
-          <Icon />
+        <div className={clsx(
+          'ad-stats-card__icon-wrapper',
+          `ad-stats-card__icon-wrapper--${color}`
+        )}>
+          <Icon className="ad-stats-card__icon" />
         </div>
       </div>
     </div>

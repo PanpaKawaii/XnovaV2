@@ -11,21 +11,20 @@ import {
   X
 } from 'lucide-react';
 import clsx from 'clsx';
+import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 
 const menuItems = [
-  { id: 'dashboard', icon: LayoutDashboard, key: 'dashboard' },
-  { id: 'bookings', icon: Calendar, key: 'bookingManagement' },
-  { id: 'fieldOwners', icon: Users, key: 'fieldOwnerManagement' },
-  { id: 'users', icon: Users, key: 'userManagement' },
-  { id: 'fields', icon: MapPin, key: 'fieldManagement' },
-  { id: 'revenue', icon: TrendingUp, key: 'revenueAnalytics' },
-  { id: 'settings', icon: Settings, key: 'settings' },
+  { id: 'admin/dashboard', icon: LayoutDashboard, label: 'Trang chủ' },
+  { id: 'admin/bookings', icon: Calendar, label: 'Quản lý đặt sân' },
+  { id: 'admin/fieldOwners', icon: Users, label: 'Quản lý chủ sân' },
+  { id: 'admin/users', icon: Users, label: 'Quản lý khách hàng' },
+  { id: 'admin/fields', icon: MapPin, label: 'Quản lý sân' },
+  { id: 'admin/revenue', icon: TrendingUp, label: 'Thống kê doanh thu' },
+  { id: 'admin/settings', icon: Settings, label: 'Cài đặt' },
 ];
 
-const Sidebar = ({
-  activeTab,
-  setActiveTab,
+export const Sidebar = ({
   sidebarOpen,
   setSidebarOpen,
   notificationCount = 3
@@ -35,60 +34,58 @@ const Sidebar = ({
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
-          className="sidebar__overlay"
+          className="ad-sidebar__overlay"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside
-        className={clsx('sidebar', sidebarOpen ? 'sidebar--open' : 'sidebar--closed')}
-      >
+      <aside className={clsx(
+        'ad-sidebar',
+        sidebarOpen && 'ad-sidebar--open'
+      )}>
         {/* Header */}
-        <div className="sidebar__header">
-          <h1 className="sidebar__brand">SportAdmin</h1>
+        <div className="ad-sidebar__header">
+          <h1 className="ad-sidebar__title">
+            SportAdmin
+          </h1>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="sidebar__close-btn"
+            className="ad-sidebar__close-btn"
+            aria-label="Close sidebar"
           >
-            <X className="sidebar__icon sidebar__icon--md" />
+            <X className="ad-sidebar__close-icon" />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="sidebar__nav">
+        <nav className="ad-sidebar__nav">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            
+
             return (
-              <button
+              <NavLink
                 key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setSidebarOpen(false);
-                }}
-                className={clsx('sidebar__item', isActive && 'sidebar__item--active')}
+                to={
+                  item.id === 'dashboard' ? '/' : `/${item.id}`
+                }
+                onClick={() => setSidebarOpen(false)}
+                className={({ isActive }) => clsx(
+                  'ad-sidebar__link',
+                  isActive && 'ad-sidebar__link--active'
+                )}
               >
-                <Icon className="sidebar__icon sidebar__icon--md sidebar__icon--left" />
-                <span className="sidebar__label">{
-                  item.key === 'dashboard' ? 'Trang chủ' :
-                  item.key === 'bookingManagement' ? 'Quản lý đặt sân' :
-                  item.key === 'fieldOwnerManagement' ? 'Quản lý chủ sân' :
-                  item.key === 'userManagement' ? 'Quản lý khách hàng' :
-                  item.key === 'fieldManagement' ? 'Quản lý sân' :
-                  item.key === 'revenueAnalytics' ? 'Thống kê doanh thu' :
-                  item.key === 'settings' ? 'Cài đặt' : item.key
-                }</span>
+                <Icon className="ad-sidebar__link-icon" />
+                <span className="ad-sidebar__link-text">{item.label}</span>
                 {item.id === 'dashboard' && notificationCount > 0 && (
-                  <span className="sidebar__badge-wrap">
-                    <Bell className="sidebar__icon sidebar__icon--sm sidebar__badge-icon" />
-                    <span className="sidebar__notif">
+                  <span className="ad-sidebar__notification">
+                    <Bell className="ad-sidebar__notification-icon" />
+                    <span className="ad-sidebar__notification-badge">
                       {notificationCount}
                     </span>
                   </span>
                 )}
-              </button>
+              </NavLink>
             );
           })}
         </nav>
@@ -97,11 +94,11 @@ const Sidebar = ({
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(true)}
-        className="sidebar__mobile-trigger"
+        className="ad-sidebar__toggle-btn"
+        aria-label="Open sidebar"
       >
-        <Menu className="sidebar__icon sidebar__icon--md" />
+        <Menu className="ad-sidebar__toggle-icon" />
       </button>
     </>
   );
 };
-export default Sidebar;
