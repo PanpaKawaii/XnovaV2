@@ -21,7 +21,7 @@
         align-items: center;
         transition: border-color 0.2s ease-in-out;
 
-        &.selected {
+        &:hover {
             border-color: #fbbc05;
         }
 
@@ -38,6 +38,14 @@
                 margin: 0;
                 font-size: 0.95rem;
             }
+        }
+
+        .min {
+            color: #fb8b24;
+        }
+
+        .max {
+            color: #28a745;
         }
 
         .action {
