@@ -1,9 +1,34 @@
 import { useState } from 'react';
+import { postData } from '../../../../mocks/CallingAPI';
+import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
 import './Spinner.css';
 
 export default function Spinner({ items, setResult, setPopupOpen }) {
+    const { user } = useAuth();
 
     const [randomDegree, setRandomDegree] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const receiveVoucher = async (voucherId) => {
+        setLoading(true);
+        const UserVoucherData = {
+            id: 0,
+            receiveDate: new Date(),
+            userId: user?.id,
+            voucherId: voucherId,
+        }
+        const token = user?.token || null;
+
+        try {
+            await postData('UserVoucher', UserVoucherData, token);
+        } catch (err) {
+            setError(err.message);
+            console.error('Error posting voucher data:', JSON.stringify(err));
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const numItems = items.length;
     const anglePerItem = 360 / numItems;
@@ -17,14 +42,22 @@ export default function Spinner({ items, setResult, setPopupOpen }) {
         return `${color} ${startAngle}deg ${endAngle}deg`;
     }).join(', ');
 
-    const getRandomDegree = () => {
-        const NewRandomDegree = Math.floor(Math.random() * 360) + 3600;
-        setRandomDegree(p => p + NewRandomDegree);
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const getRandomDegree = async () => {
 
-        setTimeout(() => {
-            setResult(items[Math.floor((randomDegree + NewRandomDegree) % 360 / anglePerItem)]);
-            setPopupOpen(true);
-        }, 5100);
+        const spinnerWheel = document.getElementsByClassName('spinner-wheel');
+        Array.from(spinnerWheel).forEach(w => {
+            w.style.animation = 'none';
+        });
+        await sleep(10);
+
+        const NewRandomDegree = randomDegree + Math.floor(Math.random() * 360) + 3600;
+        setRandomDegree(NewRandomDegree);
+        await sleep(5100);
+
+        setResult(items[Math.floor((NewRandomDegree) % 360 / anglePerItem)]);
+        setPopupOpen(true);
+        receiveVoucher(items[Math.floor((NewRandomDegree) % 360 / anglePerItem)]?.id);
     }
 
     return (
