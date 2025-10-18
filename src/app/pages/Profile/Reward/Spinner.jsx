@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Spinner.css';
 
-export default function Spinner({ items }) {
+export default function Spinner({ items, setResult, setPopupOpen }) {
 
     const [randomDegree, setRandomDegree] = useState(0);
 
@@ -20,12 +20,17 @@ export default function Spinner({ items }) {
     const getRandomDegree = () => {
         const NewRandomDegree = Math.floor(Math.random() * 360) + 3600;
         setRandomDegree(p => p + NewRandomDegree);
+
+        setTimeout(() => {
+            setResult(items[Math.floor((randomDegree + NewRandomDegree) % 360 / anglePerItem)]);
+            setPopupOpen(true);
+        }, 5100);
     }
 
     return (
-        <div className="spinner-container">
+        <div className='spinner-container'>
             <div
-                className="spinner-wheel"
+                className='spinner-wheel'
                 style={{
                     background: `conic-gradient(${gradientColors})`,
                     transform: `rotateZ(${randomDegree}deg)`
@@ -33,16 +38,14 @@ export default function Spinner({ items }) {
                 {items.map((item, index) => {
                     const rotationAngle = index * anglePerItem + anglePerItem / 2 + 90;
                     return (
-                        <div key={index} className="spinner-text" style={{ transform: `translate(-50%, -50%) rotateZ(${-rotationAngle}deg) translateX(100px)` }}>
-                            {item}
+                        <div key={index} className='spinner-text' style={{ transform: `translate(-50%, -50%) rotateZ(${-rotationAngle}deg) translateX(100px)` }}>
+                            {item.name}
                         </div>
                     );
                 })}
             </div>
-            <div className="spinner-pointer"></div>
-            <div className="spinner-center" onClick={() => getRandomDegree()}></div>
-            {/* <div className='result'>{items[Math.floor(randomDegree % 360 / anglePerItem)]} - Deg: {randomDegree} - Deg(360): {randomDegree % 360} - randomDegree % 360 / anglePerItem : {randomDegree % 360 / anglePerItem}</div> */}
-            <div className='result'>{items[Math.floor(randomDegree % 360 / anglePerItem)]}</div>
+            <div className='spinner-pointer'></div>
+            <div className='spinner-center' onClick={() => getRandomDegree()}></div>
         </div>
     )
 }

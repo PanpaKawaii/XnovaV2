@@ -1,39 +1,29 @@
-import React from 'react';
-import './RewardList.css'; // Import file CSS thuần
+import './RewardList.css';
 
-const rewardsData = [
-    { id: 1, description: 'Giảm 10% cho lần đặt sân tiếp theo', points: 30 },
-    { id: 2, description: 'Tặng thêm 1 giờ chơi miễn phí', points: 50 },
-    { id: 3, description: 'Kích hoạt gói Premium 1 tuần', points: 100 },
-    { id: 4, description: 'Voucher 200.000đ sân VIP', points: 200 },
-    { id: 5, description: 'Voucher 300.000đ sân VIP', points: 500 },
-];
+export default function RewardList({ vouchers }) {
 
-function getButtonColorClass(points) {
-    if (points >= 500) return 'yellow';
-    if (points >= 100) return 'green';
-    return 'blue';
-}
+    const getButtonColorClass = (points) => {
+        if (points >= 20000) return 'yellow';
+        if (points >= 10000) return 'green';
+        return 'blue';
+    }
 
-export default function RewardList() {
     return (
-        // Class cha bao bọc toàn bộ component
-        <div className="reward-list">
-            <div className="items">
-                {rewardsData.map((reward, index) => {
-                    // Dùng 2 class riêng biệt: 'item' và 'selected'
-                    const itemClasses = index === 0 ? "item selected" : "item";
-                    const buttonColorClass = getButtonColorClass(reward.points);
-
+        <div className='reward-list'>
+            <div className='items'>
+                {vouchers.map((v, index) => {
+                    const itemClasses = index === 0 ? 'item selected' : 'item';
+                    const buttonColorClass = getButtonColorClass(v.maxEffect);
                     return (
-                        <div key={reward.id} className={itemClasses}>
-                            <div className="info">
+                        <div key={v.id} className={itemClasses}>
+                            <div className='info'>
                                 <i className='fa-solid fa-location-dot'></i>
-                                <p className="description">{reward.description}</p>
+                                <p className='description'>{v.name}</p>
                             </div>
-                            <div className="action">
-                                <span className="points">{reward.points}</span>
-                                {/* Nút có class 'button' và class màu */}
+                            <p className='min'>Đơn tối thiểu {v.minEffect?.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</p>
+                            <p className='max'>Giảm tối đa {v.maxEffect?.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</p>
+                            <div className='action'>
+                                {/* <span className='points'>{v.points}</span> */}
                                 <button className={`button ${buttonColorClass}`}>
                                     Nova
                                 </button>
