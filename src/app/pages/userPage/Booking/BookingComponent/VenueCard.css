@@ -55,10 +55,24 @@
   font-weight: 500;
 }
 
-.venue-card__rating {
+.venue-card__favorite {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+  cursor: pointer;
+
+  .btn-favorite {
+    background-color: transparent;
+    color: #ff3863;
+  }
+}
+
+.venue-card__rating {
+  position: absolute;
+  top: 0.5rem;
+  right: 3rem;
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
   border-radius: 0.5rem;
@@ -280,30 +294,30 @@
   .venue-card__content {
     padding: 0.75rem;
   }
-  
+
   .venue-card__image {
     height: 6rem;
   }
-  
+
   .venue-card__title {
     font-size: 1rem;
   }
-  
+
   .venue-card__location {
     font-size: 0.8125rem;
   }
-  
+
   .venue-card__slots-container {
     flex-direction: column;
     gap: 0.25rem;
   }
-  
+
   .venue-card__actions {
     flex-direction: column;
     gap: 0.5rem;
     align-items: stretch;
   }
-  
+
   .venue-card__book-button {
     width: 100%;
   }
