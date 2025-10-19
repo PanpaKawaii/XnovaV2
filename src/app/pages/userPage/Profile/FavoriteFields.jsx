@@ -1,79 +1,103 @@
 // FavoriteFields.jsx
-import React, { useState } from 'react';
-import { Heart, MapPin, Star, Search, Clock, Trash2 } from 'lucide-react';
+import { Heart, MapPin, Search, Star, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { deleteData, fetchData } from '../../../../mocks/CallingAPI';
+import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
 import { useTheme } from '../../../hooks/ThemeContext';
 import './FavoriteFields.css';
 
-const sampleFavorites = [
-  {
-    id: '1',
-    name: 'Central Park Field',
-    location: 'New York, NY',
-    rating: 4.8,
-    pricePerHour: 50,
-    image: 'https://tse4.mm.bing.net/th/id/OIP.bsikEwakEnMDuwRLgUBUXwHaEJ?pid=ImgDet&w=184&h=103&c=7&dpr=1.4&o=7&rm=3',
-    addedDate: new Date('2025-07-01')
-  },
-  {
-    id: '2',
-    name: 'Riverside Stadium',
-    location: 'Los Angeles, CA',
-    rating: 4.5,
-    pricePerHour: 45,
-    image: 'https://tse4.mm.bing.net/th/id/OIP.bsikEwakEnMDuwRLgUBUXwHaEJ?pid=ImgDet&w=184&h=103&c=7&dpr=1.4&o=7&rm=3',
-    addedDate: new Date('2025-06-15')
-  },
-  {
-    id: '3',
-    name: 'City Arena',
-    location: 'Chicago, IL',
-    rating: 4.7,
-    pricePerHour: 55,
-    image: 'https://tse4.mm.bing.net/th/id/OIP.bsikEwakEnMDuwRLgUBUXwHaEJ?pid=ImgDet&w=184&h=103&c=7&dpr=1.4&o=7&rm=3',
-    addedDate: new Date('2025-07-10')
-  },
-  {
-    id: '3',
-    name: 'City Arena',
-    location: 'Chicago, IL',
-    rating: 4.7,
-    pricePerHour: 55,
-    image: 'https://tse4.mm.bing.net/th/id/OIP.bsikEwakEnMDuwRLgUBUXwHaEJ?pid=ImgDet&w=184&h=103&c=7&dpr=1.4&o=7&rm=3',
-    addedDate: new Date('2025-07-10')
-  },
-  {
-    id: '3',
-    name: 'City Arena',
-    location: 'Chicago, IL',
-    rating: 4.7,
-    pricePerHour: 55,
-    image: 'https://tse4.mm.bing.net/th/id/OIP.bsikEwakEnMDuwRLgUBUXwHaEJ?pid=ImgDet&w=184&h=103&c=7&dpr=1.4&o=7&rm=3',
-    addedDate: new Date('2025-07-10')
-  },
-  {
-    id: '4',
-    name: 'Downtown Pitch',
-    location: 'Miami, FL',
-    rating: 4.6,
-    pricePerHour: 60,
-    image: 'https://tse4.mm.bing.net/th/id/OIP.bsikEwakEnMDuwRLgUBUXwHaEJ?pid=ImgDet&w=184&h=103&c=7&dpr=1.4&o=7&rm=3',
-    addedDate: new Date('2025-05-20')
-  }
-];
-
 const FavoriteFields = () => {
+  const { user } = useAuth();
+
   const { theme } = useTheme();
   const [viewMode, setViewMode] = useState('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  const filteredFavorites = sampleFavorites
-    .filter(field => 
-      field.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      field.location.toLowerCase().includes(searchTerm.toLowerCase())
+  const [favoriteFields, setFavoriteFields] = useState([]);
+  const [refresh, setRefresh] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFavoriteFieldData = async () => {
+      const token = user?.token || null;
+      try {
+        const fieldsResponse = await fetchData('Field', token);
+        const venuesResponse = await fetchData('Venue', token);
+        const favoriteFieldsResponse = await fetchData('FavoriteField', token);
+        const imagesResponse = await fetchData('Image', token);
+
+        // Map cho tra cứu nhanh
+        const fieldMap = Object.fromEntries(fieldsResponse.map(f => [f.id, f]));
+        const venueMap = Object.fromEntries(venuesResponse.map(v => [v.id, v]));
+
+        // Gom images theo venueId
+        const imagesByVenue = imagesResponse.reduce((acc, img) => {
+          if (!acc[img.venueId]) acc[img.venueId] = [];
+          acc[img.venueId].push(img);
+          return acc;
+        }, {});
+
+        // Gộp tất cả
+        const newFavoriteField = favoriteFieldsResponse
+          .filter(ff => ff.userId === user?.id)
+          .map(ff => {
+            const field = fieldMap[ff.fieldId];
+            const venue = field ? venueMap[field.venueId] : null;
+            const venueWithImages = venue
+              ? { ...venue, images: imagesByVenue[venue.id] || [] }
+              : null;
+
+            return {
+              ...ff,
+              field: field
+                ? { ...field, venue: venueWithImages }
+                : null,
+            };
+          });
+
+        setFavoriteFields(newFavoriteField);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching favorite field data:', JSON.stringify(err));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFavoriteFieldData();
+  }, [user?.token, refresh]);
+
+  const deleteFavoriteField = async (favoriteFieldId) => {
+    setLoading(true);
+    console.log('delete');
+    const token = user?.token || null;
+    try {
+      await deleteData(`FavoriteField/${favoriteFieldId}`, token);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error deleting favorite field:', JSON.stringify(err));
+    } finally {
+      setLoading(false);
+      setRefresh(p => p + 1);
+    }
+  }
+
+  const filteredFavorites = favoriteFields
+    .filter(f =>
+      f.field?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      f.field?.venue?.address?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      return sortOrder === 'asc' ? a.addedDate - b.addedDate : b.addedDate - a.addedDate;
+      const dateA = new Date(a.setDate);
+      const dateB = new Date(b.setDate);
+
+      if (sortOrder === 'asc') {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
     });
 
   return (
@@ -88,11 +112,11 @@ const FavoriteFields = () => {
           <label className="label">Search</label>
           <div className="search-bar">
             <Search className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="Search by name or location" 
-              value={searchTerm} 
-              onChange={(e) => setSearchTerm(e.target.value)} 
+            <input
+              type="text"
+              placeholder="Search by name or address"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
@@ -118,47 +142,50 @@ const FavoriteFields = () => {
             <thead>
               <tr>
                 <th>Image</th>
+                <th>Venue</th>
                 <th>Name</th>
-                <th>Location</th>
-                <th>Rating</th>
-                <th>Price</th>
+                <th>Address</th>
+                {/* <th>Rating</th> */}
+                {/* <th>Price</th> */}
                 <th>Added Date</th>
                 <th>Remove</th>
               </tr>
             </thead>
             <tbody>
-              {filteredFavorites.map(field => (
-                <tr key={field.id}>
-                  <td><img src={field.image} alt={field.name} className="table-image" /></td>
-                  <td>{field.name}</td>
-                  <td>{field.location}</td>
-                  <td>{field.rating} / 5</td>
-                  <td>${field.pricePerHour}/hour</td>
-                  <td>{field.addedDate.toLocaleDateString()}</td>
-                  <td><button className="remove-button"><Trash2 className="remove-icon" /></button></td>
+              {filteredFavorites.map(f => (
+                <tr key={f.id}>
+                  <td><img src={f.field.venue.images[0].link} alt={f.field.venue.name} className="table-image" /></td>
+                  <td>{f.field.venue.name}</td>
+                  <td>{f.field.name}</td>
+                  <td>{f.field.venue.address}</td>
+                  {/* <td>{f.field.rating} / 5</td> */}
+                  {/* <td>${f.field.pricePerHour}/hour</td> */}
+                  <td>{(new Date(f.setDate)).toLocaleDateString()}</td>
+                  <td><button className="remove-button" onClick={() => deleteFavoriteField(f.id)}><Trash2 className="remove-icon" /></button></td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
           <div className="grid-view">
-            {filteredFavorites.map(field => (
-              <div key={field.id} className="grid-card">
-                <img src={field.image} alt={field.name} className="grid-image" />
+            {filteredFavorites.map(f => (
+              <div key={f.id} className="grid-card">
+                <img src={f.field.venue.images[0].link} alt={f.field.venue.name} className="grid-image" />
                 <div className="grid-info">
-                  <h4 className="grid-name">{field.name}</h4>
+                  <h4 className="grid-name">{f.field.venue.name}</h4>
+                  <h5 className="grid-name">{f.field.name}</h5>
                   <div className="grid-details">
                     <MapPin className="detail-icon" />
-                    <span>{field.location}</span>
+                    <span>{f.field.venue.address}</span>
                   </div>
                   <div className="grid-details">
                     <Star className="detail-icon" />
-                    <span>{field.rating} / 5</span>
+                    {/* <span>{f.field.rating} / 5</span> */}
                   </div>
-                  <p className="grid-price">${field.pricePerHour}/hour</p>
-                  <p className="grid-added">Added: {field.addedDate.toLocaleDateString()}</p>
+                  {/* <p className="grid-price">${f.field.pricePerHour}/hour</p> */}
+                  <p className="grid-added">Added: {(new Date(f.setDate)).toLocaleDateString()}</p>
                 </div>
-                <button className="remove-button"><Trash2 className="remove-icon" /></button>
+                <button className="remove-button" onClick={() => deleteFavoriteField(f.id)}><Trash2 className="remove-icon" /></button>
               </div>
             ))}
           </div>

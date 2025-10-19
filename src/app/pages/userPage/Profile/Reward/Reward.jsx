@@ -5,17 +5,15 @@ import RewardList from './RewardList.jsx';
 import Spinner from './Spinner.jsx';
 import RewardResult from './RewardResult.jsx';
 
-export default function RandomWheel() {
+export default function Reward() {
     const { user } = useAuth();
 
-    // API data states
     const [vouchers, setVouchers] = useState([]);
     const [result, setResult] = useState('');
     const [PopupOpen, setPopupOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch venue data when modal opens
     useEffect(() => {
         const fetchVoucherData = async () => {
             const token = user?.token || null;
@@ -32,7 +30,6 @@ export default function RandomWheel() {
 
         fetchVoucherData();
     }, [user?.token]);
-
 
     const names = ['An', 'Binh', 'Cuong', 'Duong', 'En', 'Giang', 'Huong', 'In', 'Khanh', 'Linh', 'Manh', 'Nhan', 'Oanh', 'Phuoc', 'Quynh', 'Rot', 'Son', 'Thien', 'Uyen', 'Viet', 'Xinh', 'Yen'];
     const name = [1, 2, 3, 4, 5, 6];
