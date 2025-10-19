@@ -1,0 +1,119 @@
+﻿/* Button Component - BEM Style with Nested CSS */
+
+.ad-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  position: relative;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  /* Variants */
+  &--primary {
+    background-color: #3b82f6;
+    color: #ffffff;
+
+    &:hover:not(.ad-button--disabled) {
+      background-color: #2563eb;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    }
+  }
+
+  &--secondary {
+    background-color: var(--color-bg-hover, #f3f4f6);
+    color: var(--color-text-primary, #111827);
+
+    &:hover:not(.ad-button--disabled) {
+      background-color: #e5e7eb;
+    }
+
+    .dark & {
+      background-color: var(--color-bg-hover-dark, #374151);
+      color: var(--color-text-primary-dark, #ffffff);
+
+      &:hover:not(.ad-button--disabled) {
+        background-color: #4b5563;
+      }
+    }
+  }
+
+  &--danger {
+    background-color: #ef4444;
+    color: #ffffff;
+
+    &:hover:not(.ad-button--disabled) {
+      background-color: #dc2626;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.5);
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: var(--color-text-secondary, #374151);
+
+    &:hover:not(.ad-button--disabled) {
+      background-color: var(--color-bg-hover, #f3f4f6);
+    }
+
+    .dark & {
+      color: var(--color-text-secondary-dark, #d1d5db);
+
+      &:hover:not(.ad-button--disabled) {
+        background-color: var(--color-bg-hover-dark, #1f2937);
+      }
+    }
+  }
+
+  /* Sizes */
+  &--sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  &--md {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  &--lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  /* Disabled state */
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+}
+
+.ad-button__icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.ad-button__text {
+  line-height: 1.5;
+}
+

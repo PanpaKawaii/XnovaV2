@@ -34,3 +34,31 @@ img {
   display: block;
   max-width: 100%;
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for Theme */
+:root {
+  /* Colors - Light Mode */
+  --color-bg-primary: #ffffff;
+  --color-bg-hover: #f3f4f6;
+  --color-border: #e5e7eb;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #6b7280;
+  --color-primary: #3b82f6;
+  --color-danger: #ef4444;
+}
+
+.dark {
+  /* Colors - Dark Mode */
+  --color-bg-primary-dark: #111827;
+  --color-bg-hover-dark: #1f2937;
+  --color-border-dark: #374151;
+  --color-text-primary-dark: #ffffff;
+  --color-text-secondary-dark: #d1d5db;
+  --color-text-tertiary-dark: #9ca3af;
+}
+
+

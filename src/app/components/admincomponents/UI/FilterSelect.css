@@ -1,0 +1,56 @@
+﻿/* FilterSelect Component - BEM Style with Nested CSS */
+
+.ad-filter {
+  position: relative;
+  display: inline-block;
+}
+
+.ad-filter__select {
+  appearance: none;
+  background-color: var(--color-bg-primary, #ffffff);
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  color: var(--color-text-primary, #111827);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 150px;
+
+  &:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #3b82f6;
+  }
+
+  &:hover {
+    background-color: var(--color-bg-hover, #f9fafb);
+  }
+
+  .dark & {
+    background-color: var(--color-bg-hover-dark, #374151);
+    border-color: var(--color-border-dark, #4b5563);
+    color: var(--color-text-primary-dark, #ffffff);
+
+    &:hover {
+      background-color: #4b5563;
+    }
+
+    option {
+      background-color: #374151;
+      color: #ffffff;
+    }
+  }
+}
+
+.ad-filter__icon {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+}
+
