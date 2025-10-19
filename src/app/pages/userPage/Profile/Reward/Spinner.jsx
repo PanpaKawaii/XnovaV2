@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { postData } from '../../../../mocks/CallingAPI';
-import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
+import { postData } from '../../../../../mocks/CallingAPI';
+import { useAuth } from '../../../../hooks/AuthContext/AuthContext.jsx';
 import './Spinner.css';
 
 export default function Spinner({ items, setResult, setPopupOpen }) {
