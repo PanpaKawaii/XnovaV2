@@ -15,6 +15,7 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         border: 8px solid #fff;
         transition: all 5s ease;
+        animation: rotate_wheel 10s linear infinite;
         /* transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1); */
 
         .spinner-text {
@@ -57,5 +58,15 @@
 
     .result {
         color: #fff;
+    }
+}
+
+@keyframes rotate_wheel {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }

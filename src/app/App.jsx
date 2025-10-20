@@ -32,7 +32,7 @@ import { ThemeProvider } from "./hooks/ThemeContext";
 import "./App.css";
 import { venues } from "../mocks/venueData";
 import RoleRoute from "./components/RoleRoute";
-import RandomWheel from "./pages/userPage/Profile/Reward/Reward";
+import Reward from "./pages/userPage/Profile/Reward/Reward";
 
 // Helper to transform venues to fields expected by ManageFields
 const fields = venues.map((venue, idx) => ({
@@ -149,7 +149,7 @@ function App() {
             <Route path="/team" element={<TeamManagement />} />
             <Route path="/team-management" element={<TeamManagement />} />
             <Route path="/find-teammates" element={<FindTeammatePage />} />
-            <Route path="/randomwheel" element={<RandomWheel />} />
+            <Route path="/reward" element={<Reward />} />
           </Route>
 
           {/* Catch-all route for unknown paths */}
