@@ -1,6 +1,6 @@
 // API Service for handling HTTP requests
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
-
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+//const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 export class ApiService {
   static async request(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
@@ -67,4 +67,15 @@ export const bookingService = {
   getBookings: () => ApiService.get('/bookings'),
   
   getBookingById: (id) => ApiService.get(`/bookings/${id}`),
+  
+  getBookingsByUserId: (userId) => ApiService.get(`/bookings/user/${userId}`),
+  
+  createInvitation: (invitationData) =>
+    ApiService.post('/invitations', invitationData),
+  
+  getInvitations: () => ApiService.get('/invitations'),
+  
+  getInvitationById: (id) => ApiService.get(`/invitations/${id}`),
+  
+  getInvitationsByUserId: (userId) => ApiService.get(`/invitations/user/${userId}`),
 };

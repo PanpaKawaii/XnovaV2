@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { Modal } from '../../../components/ui/Modal';
+import { CreateMatchModal } from './CreateMatchModal';
 import { useScrollAnimation } from '../../../hooks/useAnimation';
 import { 
   MapPin, 
@@ -32,6 +33,7 @@ export const FindTeammatePage = () => {
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showPlayerProfile, setShowPlayerProfile] = useState(null);
+  const [showCreateMatchModal, setShowCreateMatchModal] = useState(false);
 
   const heroRef = useScrollAnimation();
   const filtersRef = useScrollAnimation();
@@ -235,7 +237,12 @@ export const FindTeammatePage = () => {
                 <Users className="find-teammate-page__hero-button-icon" size={20} />
                 Tham Gia Cộng Đồng
               </Button>
-              <Button variant="outline" size="lg" className="find-teammate-page__hero-button-secondary">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="find-teammate-page__hero-button-secondary"
+                onClick={() => setShowCreateMatchModal(true)}
+              >
                 <Heart className="find-teammate-page__hero-button-icon" size={20} />
                 Tạo Trận Đấu
               </Button>
@@ -643,6 +650,17 @@ export const FindTeammatePage = () => {
           </div>
         </Modal>
       )}
+
+      {/* Create Match Modal */}
+      <CreateMatchModal
+        isOpen={showCreateMatchModal}
+        onClose={() => setShowCreateMatchModal(false)}
+        onSuccess={(newMatch) => {
+          console.log('Match created successfully:', newMatch);
+          alert('Trận đấu đã được tạo thành công!');
+          // You can add logic here to refresh the matches list or navigate
+        }}
+      />
     </div>
   );
 };
