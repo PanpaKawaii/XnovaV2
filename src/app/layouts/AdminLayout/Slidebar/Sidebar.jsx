@@ -8,11 +8,13 @@ import {
   Settings, 
   Bell,
   Menu,
-  X
+  X,
+  LogOut
 } from 'lucide-react';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
+import { useAuth } from '../../../hooks/AuthContext/AuthContext';
 
 const menuItems = [
   { id: 'admin/dashboard', icon: LayoutDashboard, label: 'Trang chủ' },
@@ -29,6 +31,12 @@ export const Sidebar = ({
   setSidebarOpen,
   notificationCount = 3
 }) => {
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    setSidebarOpen(false);
+    logout();
+  };
   return (
     <>
       {/* Mobile overlay */}
@@ -89,6 +97,18 @@ export const Sidebar = ({
             );
           })}
         </nav>
+
+        {/* Footer actions */}
+        <div className="ad-sidebar__footer">
+          <button
+            type="button"
+            className="ad-sidebar__logout-btn"
+            onClick={handleLogout}
+          >
+            <LogOut className="ad-sidebar__logout-icon" />
+            <span>Đăng xuất</span>
+          </button>
+        </div>
       </aside>
 
       {/* Mobile menu button */}

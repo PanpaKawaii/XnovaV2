@@ -238,3 +238,51 @@
   height: 1.25rem;
 }
 
+/* Footer */
+.ad-sidebar__footer {
+  padding: 1rem;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+
+  .dark & {
+    border-top-color: var(--color-border-dark, #374151);
+  }
+}
+
+.ad-sidebar__logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-hover, #f3f4f6);
+  color: var(--color-danger, #ef4444);
+  border: 1px solid var(--color-border, #e5e7eb);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.05s ease;
+
+  &:hover {
+    background-color: #fee2e2; /* light red hover */
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  .dark & {
+    background-color: var(--color-bg-hover-dark, #1f2937);
+    border-color: var(--color-border-dark, #374151);
+    color: #fca5a5;
+
+    &:hover {
+      background-color: #7f1d1d; /* darker red hover */
+    }
+  }
+}
+
+.ad-sidebar__logout-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
