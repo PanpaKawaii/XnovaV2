@@ -106,7 +106,14 @@ function App() {
         <ScrollToTop />
         <Routes>
           {/* Admin Layout*/}
-          <Route path="/admin/*" element={<AdminLayout />}>
+          <Route
+            path="/admin/*"
+            element={
+              <RoleRoute allowedRoles={["Admin"]}>
+                <AdminLayout />
+              </RoleRoute>
+            }
+          >
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="" element={<Dashboard />} />
