@@ -43,11 +43,18 @@ const ProfileSettings = () => {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === 'team') {
-      navigate('/team', { 
-        state: { 
-          user: passedUser, 
-          userInfo: passedUserInfo 
-        } 
+      navigate('/team', {
+        state: {
+          user: passedUser,
+          userInfo: passedUserInfo
+        }
+      });
+    } else if (tab === 'reward') {
+      navigate('/reward', {
+        state: {
+          user: passedUser,
+          userInfo: passedUserInfo
+        }
       });
     }
   };

@@ -51,25 +51,32 @@ const TeamManagement = () => {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === 'profile') {
-      navigate('/profile', { 
-        state: { 
-          user: passedUser, 
-          userInfo: passedUserInfo 
-        } 
+      navigate('/profile', {
+        state: {
+          user: passedUser,
+          userInfo: passedUserInfo
+        }
+      });
+    } else if (tab === 'reward') {
+      navigate('/reward', {
+        state: {
+          user: passedUser,
+          userInfo: passedUserInfo
+        }
       });
     }
   };
 
   const updatedInitialTeam = {
     ...initialTeam,
-    members: initialTeam.members.map(member => 
-      member.id === '1' 
+    members: initialTeam.members.map(member =>
+      member.id === '1'
         ? {
-            ...member,
-            name: passedUserInfo.name || member.name,
-            email: passedUser.email || member.email,
-            profileImage: passedUserInfo.image || member.profileImage,
-          }
+          ...member,
+          name: passedUserInfo.name || member.name,
+          email: passedUser.email || member.email,
+          profileImage: passedUserInfo.image || member.profileImage,
+        }
         : member
     ),
   };
@@ -105,10 +112,10 @@ const TeamManagement = () => {
   const handlePromoteMember = (memberId) => {
     setTeam(prev => ({
       ...prev,
-      members: prev.members.map(member => 
-        member.id === memberId 
+      members: prev.members.map(member =>
+        member.id === memberId
           ? { ...member, role: 'captain' }
-          : member.role === 'captain' 
+          : member.role === 'captain'
             ? { ...member, role: 'member' }
             : member
       )
@@ -195,9 +202,9 @@ const TeamManagement = () => {
 
   return (
     <div className={`team-management ${theme} custom-container`}>
-      <SubUserHeader 
-        activeTab={activeTab} 
-        onTabChange={handleTabChange} 
+      <SubUserHeader
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
       />
       <div className="team-overview">
         <div className="overview-container">
