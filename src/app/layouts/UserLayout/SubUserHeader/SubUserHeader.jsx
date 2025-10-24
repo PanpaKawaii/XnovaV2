@@ -11,10 +11,10 @@ const SubUserHeader = ({ activeTab, onTabChange }) => {
       <div className="header-left">
         <div className="pulse-bar"></div>
         <h1 className="title">
-          {activeTab === 'profile' ? 'My Profile' : 'My Team'}
+          {activeTab === 'profile' ? 'My Profile' : (activeTab === 'team' ? 'My Team' : (activeTab === 'reward' ? 'Reward' : 'null'))}
         </h1>
       </div>
-      
+
       <div className="header-right">
         {/* Tab Navigation */}
         <div className="tab-nav">
@@ -31,6 +31,13 @@ const SubUserHeader = ({ activeTab, onTabChange }) => {
           >
             <Users className="icon-small" />
             <span className="tab-label">Team</span>
+          </button>
+          <button
+            onClick={() => onTabChange('reward')}
+            className={`tab-button ${activeTab === 'reward' ? 'active' : ''}`}
+          >
+            <Users className="icon-small" />
+            <span className="tab-label">Reward</span>
           </button>
         </div>
       </div>
