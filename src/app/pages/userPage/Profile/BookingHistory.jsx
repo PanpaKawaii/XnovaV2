@@ -234,7 +234,7 @@ const BookingHistory = () => {
                     </span>
                   </div>
                   <span className={`status ${booking.status}`}>
-                    {booking.status == 1 ? 'Upcoming' : (booking.status == 2 ? 'Pending' : 'Unsupported status')}
+                    {booking.status == 1 ? 'Upcoming' : (booking.status == 2 ? 'Pending' : (booking.status == 3 ? 'Cancelled' : 'Unsupported status'))}
                   </span>
                 </div>
               </div>
