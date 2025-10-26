@@ -36,7 +36,7 @@ export default function Spinner({ items, setResult, setPopupOpen }) {
 
     const gradientColors = items.map((_, index) => {
         const currentHue = Math.round((numItems == 101 ? index : index * 101) * hueStep);
-        const color = `hsl(${currentHue}, 90%, 60%)`;
+        const color = `hsl(${currentHue}, 90%, 30%)`;
         const startAngle = index * anglePerItem;
         const endAngle = (index + 1) * anglePerItem;
         return `${color} ${startAngle}deg ${endAngle}deg`;
