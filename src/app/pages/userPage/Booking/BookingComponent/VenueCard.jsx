@@ -9,17 +9,19 @@ const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
 
   const [thisVenue, setThisVenue] = useState(null);
   const [favoriteFields, setFavoriteFields] = useState([]);
+  const [saveFields, setSaveFields] = useState([]);
   const [refresh, setRefresh] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchFavoriteFieldData = async () => {
+    const fetchApiData = async () => {
       const token = user?.token || null;
       try {
         const fieldsResponse = await fetchData('Field', token);
         const venuesResponse = await fetchData('Venue', token);
         const favoriteFieldsResponse = await fetchData('FavoriteField', token);
+        const saveFieldsResponse = await fetchData('SaveField', token);
         const imagesResponse = await fetchData('Image', token);
 
         const fieldMap = Object.fromEntries(fieldsResponse.map(f => [f.id, f]));
@@ -64,17 +66,36 @@ const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
             };
           });
 
+        // Gộp dữ liệu saveField (vẫn như trước)
+        const newSaveField = saveFieldsResponse
+          .filter(ff => ff.userId === user?.id)
+          .map(ff => {
+            const field = fieldMap[ff.fieldId];
+            const venue = field ? venueMap[field.venueId] : null;
+            const venueWithImages = venue
+              ? { ...venue, images: imagesByVenue[venue.id] || [] }
+              : null;
+
+            return {
+              ...ff,
+              field: field
+                ? { ...field, venue: venueWithImages }
+                : null,
+            };
+          });
+
         setFavoriteFields(newFavoriteField);
+        setSaveFields(newSaveField);
         setThisVenue(VENUE);
       } catch (err) {
         setError(err.message);
-        console.error('Error fetching favorite field data:', JSON.stringify(err));
+        console.error('Error fetching field data:', JSON.stringify(err));
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFavoriteFieldData();
+    fetchApiData();
   }, [user?.token, refresh, venue?.id]);
 
 
@@ -239,8 +260,41 @@ const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
     }
   }
 
-  console.log('venue===================================', venue);
-  console.log('thisVenue===================================', thisVenue);
+  const deleteSaveField = async () => {
+    setLoading(true);
+    const token = user?.token || null;
+    const SaveFieldId = saveFields.find(f => f.fieldId === thisVenue?.fields[0]?.id)
+    console.log('SaveFieldId', SaveFieldId);
+    try {
+      await deleteData(`SaveFieldId/${SaveFieldId?.id}`, token);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error deleting save field:', JSON.stringify(err));
+    } finally {
+      setLoading(false);
+      setRefresh(p => p + 1);
+    }
+  }
+
+  const addSaveField = async () => {
+    setLoading(true);
+    const SaveFieldData = {
+      userId: user?.id,
+      fieldId: thisVenue?.fields[0]?.id,
+      setDate: new Date()
+    }
+    console.log('SaveFieldData', SaveFieldData);
+    const token = user?.token || null;
+    try {
+      await postData('SaveField', SaveFieldData, token);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error posting save field:', JSON.stringify(err));
+    } finally {
+      setLoading(false);
+      setRefresh(p => p + 1);
+    }
+  }
 
   return (
     <div className="venue-card">
@@ -248,29 +302,42 @@ const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
         {/* Image Section */}
         <div className="venue-card__image-container">
           <img
-            src="https://i.pinimg.com/736x/30/e8/00/30e8005d937ed7f5eefd42a31761860e.jpg"
+            src={venue.images[0] || "https://i.pinimg.com/736x/30/e8/00/30e8005d937ed7f5eefd42a31761860e.jpg"}
             alt={venue.name}
             className="venue-card__image"
           />
           <div className="venue-card__badge">
             {venue.type}
           </div>
-          <div className="venue-card__favorite">
+          <div className="venue-card__favorite-save">
             {favoriteFields.some(f => f.field?.venue?.id === venue.id)
               ?
-              <button className='btn-favorite'
+              <button className='btn btn-favorite'
                 onClick={() => deleteFavoriteField()}>
                 <i className='fa-solid fa-heart' />
               </button>
               :
-              <button className='btn-favorite'
+              <button className='btn btn-favorite'
                 onClick={() => addFavoriteField()}>
                 <i className='fa-regular fa-heart' />
               </button>
             }
+            {/* FIX==Sav-eFieldAPI */}
+            {saveFields.some(f => f.field?.venue?.id === venue.id)
+              ?
+              <button className='btn btn-save'
+                onClick={() => deleteSaveField()}>
+                <i className='fa-solid fa-bookmark' />
+              </button>
+              :
+              <button className='btn btn-save'
+                onClick={() => addSaveField()}>
+                <i className='fa-regular fa-bookmark' />
+              </button>
+            }
           </div>
           <div className="venue-card__rating">
-            <Star size={12} className="venue-card__rating-star" />
+            <Star size={16} className="venue-card__rating-star" />
             <span className="venue-card__rating-text">{venue.rating}</span>
             <span className="venue-card__rating-reviews">({venue.reviews})</span>
           </div>

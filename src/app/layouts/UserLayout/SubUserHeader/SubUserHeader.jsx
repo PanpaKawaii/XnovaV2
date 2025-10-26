@@ -1,5 +1,5 @@
 import React from 'react';
-import { User2, Users } from 'lucide-react';
+import { User2, Users, TicketCheck } from 'lucide-react';
 import { useTheme } from '../../../hooks/ThemeContext';
 import './SubUserHeader.css';
 
@@ -36,7 +36,7 @@ const SubUserHeader = ({ activeTab, onTabChange }) => {
             onClick={() => onTabChange('reward')}
             className={`tab-button ${activeTab === 'reward' ? 'active' : ''}`}
           >
-            <Users className="icon-small" />
+            <TicketCheck className="icon-small" />
             <span className="tab-label">Reward</span>
           </button>
         </div>

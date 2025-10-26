@@ -53,7 +53,7 @@ const BookingPage = () => {
         // Fetch Type for Badminton
         const typesResponse = await fetchData('Type', token);
         const types = Array.isArray(typesResponse) ? typesResponse : [typesResponse];
-        const badmintonType = types.find(type => type.id == 1);
+        const badmintonType = types.find(type => type.name == 'Cầu lông');
         if (!badmintonType) throw new Error('Badminton type not found');
 
         // Filter venues by badminton type
@@ -64,6 +64,7 @@ const BookingPage = () => {
         // Fetch Images
         const imagesResponse = await fetchData('Image', token);
         const images = Array.isArray(imagesResponse) ? imagesResponse : [imagesResponse];
+        console.log('images', images);
 
         // Fetch Slots
         const slotsResponse = await fetchData('Slot', token);
@@ -78,7 +79,7 @@ const BookingPage = () => {
 
         // Map venues data
         const formattedVenues = badmintonVenues.map(venue => {
-          const venueImages = images.filter(image => image.venueId === venue.id && image.status === 0);
+          const venueImages = images.filter(image => image.venueId === venue.id && image.status === 1);
           const venueFields = venue.fields?.filter(field => field.typeId === badmintonType.id) || [];
           const venueSlots = activeSlots.filter(slot =>
             venueFields.some(field => field.id === slot.fieldId)
@@ -301,6 +302,9 @@ const BookingPage = () => {
       </div>
     );
   }
+
+  console.log('filteredVenues', filteredVenues);
+
   if (error) return <div>Error: {error}</div>;
 
   return (

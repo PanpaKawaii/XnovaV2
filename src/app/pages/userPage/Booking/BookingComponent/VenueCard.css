@@ -38,7 +38,7 @@
 
 .venue-card__image {
   width: 100%;
-  height: 7rem;
+  height: 12rem;
   object-fit: cover;
   border-radius: 0.5rem;
 }
@@ -55,7 +55,7 @@
   font-weight: 500;
 }
 
-.venue-card__favorite {
+.venue-card__favorite-save {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
@@ -63,16 +63,29 @@
   padding: 0 0.5rem;
   cursor: pointer;
 
-  .btn-favorite {
+  .btn {
     background-color: transparent;
-    color: #ff3863;
+    margin-left: 16px;
+    font-size: 20px;
+
+    &.btn-favorite {
+      color: #ff3863;
+    }
+
+    &.btn-save {
+      color: #ffc107;
+    }
+
+    i {
+      text-shadow: 0 0 2px #ffffff80;
+    }
   }
 }
 
 .venue-card__rating {
   position: absolute;
   top: 0.5rem;
-  right: 3rem;
+  right: 5rem;
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
   border-radius: 0.5rem;
@@ -89,13 +102,13 @@
 
 .venue-card__rating-text {
   color: #ffffff;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
 .venue-card__rating-reviews {
   color: #d1d5db;
-  font-size: 0.75rem;
+  font-size: 1rem;
 }
 
 /* Content Section */
