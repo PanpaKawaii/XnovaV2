@@ -1,9 +1,98 @@
+import { ArrowRight, MapPin, PlayCircle, Star, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { PlayCircle, ArrowRight, Star, Users, MapPin } from "lucide-react";
+import { fetchData } from '../../mocks/CallingAPI.js';
 import HomeBackGround from "../assets/HomeBackGround.jpg";
+import { useAuth } from '../hooks/AuthContext/AuthContext.jsx';
 import "./Hero.css";
 
 const Hero = () => {
+  const { user } = useAuth();
+
+  const [BOOKINGs, setBOOKINGs] = useState([]);
+  const [SLOTs, setSLOTs] = useState([]);
+  const [FIELDs, setFIELDs] = useState([]);
+  const [VENUEs, setVENUEs] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const token = user?.token;
+    if (!user || !token) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchUserInfo = async () => {
+      try {
+        const DataBookings = await fetchData('booking', token);
+        console.log('DataBookings', DataBookings);
+        const UserBookings = DataBookings?.filter(booking => booking.userId == user?.id);
+        console.log('UserBookings', UserBookings);
+
+        const DataSlots = await fetchData('slot', token);
+        console.log('DataSlots', DataSlots);
+
+        const DataFields = await fetchData('field', token);
+        console.log('DataFields', DataFields);
+
+        const DataVenues = await fetchData('venue', token);
+        console.log('DataVenues', DataVenues);
+
+        setBOOKINGs(UserBookings);
+        setSLOTs(DataSlots);
+        setFIELDs(DataFields);
+        setVENUEs(DataVenues);
+
+        const userData = await fetchData(`User/${user.id}`, token);
+        setUserInfo(userData);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserInfo();
+  }, [user]);
+
+  const sortedBookings = [...BOOKINGs].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+  console.log('sortedBookings', sortedBookings);
+
+  const suggessBookingRaw = sortedBookings[0];
+
+  let suggessBooking = null;
+  if (suggessBookingRaw) {
+    const updatedBookingSlots = suggessBookingRaw.bookingSlots?.map(bs => {
+      const slot = SLOTs.find(slot => slot.id == bs.slotId);
+      return {
+        ...bs,
+        slot: slot || null,
+      };
+    }).sort((a, b) => {
+      const aTime = a.slot?.startTime ?? '';
+      const bTime = b.slot?.startTime ?? '';
+      return aTime.localeCompare(bTime);
+    });
+
+    const field = FIELDs.find(field => field.id == suggessBookingRaw.fieldId);
+    const venue = VENUEs.find(venue => venue.id == field.venueId);
+
+    suggessBooking = {
+      ...suggessBookingRaw,
+      bookingSlots: updatedBookingSlots || [],
+      field: field || null,
+      venue: venue || null,
+    };
+  }
+  console.log('suggessBooking', suggessBooking);
+
+  const totalAmount = suggessBooking?.bookingSlots?.reduce((sum, item) => sum + (item.slot.price || 0), 0);
+  console.log('totalAmount', totalAmount);
+
   return (
     <section className="hero">
       {/* Background */}
@@ -68,27 +157,31 @@ const Hero = () => {
               <div className="badge">Live</div>
 
               <div className="card-header">
-                <h3 className="card-title">Khung Giờ Sắp Tới</h3>
+                <h3 className="card-title">Gợi ý sân quen thuộc</h3>
                 <div className="location">
                   <MapPin className="loc-icon" />
-                  <span>Sân Cao Cấp - Trung Tâm</span>
+                  <span>{suggessBooking?.venue?.name}</span>
                 </div>
               </div>
 
               <div className="info">
                 <div className="box time">
                   <div className="label green">Hôm nay</div>
-                  <div className="value">18:00</div>
-                  <div className="sub">2 giờ</div>
+                  {suggessBooking?.bookingSlots?.map((slot, i) => (
+                    <div key={slot.slotId}>
+                      <div className="value">{slot.slot?.startTime?.slice(0, 5)} - {slot.slot?.endTime?.slice(0, 5)}</div>
+                    </div>
+                  ))}
+                  <div className="sub">{suggessBooking?.bookingSlots?.length / 2}h</div>
                 </div>
                 <div className="box price">
-                  <div className="label purple">Giá</div>
-                  <div className="value">1.000.000₫</div>
-                  <div className="sub">mỗi giờ</div>
+                  <div className="label purple">Tổng</div>
+                  <div className="value">{totalAmount?.toLocaleString('vi-VN')} VND</div>
+                  {/* <div className="sub">mỗi giờ</div> */}
                 </div>
               </div>
 
-              <div className="progress">
+              {/* <div className="progress">
                 <div className="progress-head">
                   <span className="label">Cần thêm cầu thủ</span>
                   <span className="status">Còn 3 chỗ</span>
@@ -96,14 +189,19 @@ const Hero = () => {
                 <div className="bar">
                   <div className="fill"></div>
                 </div>
-              </div>
+              </div> */}
 
-              <button className="join">Tham Gia Trận Đấu</button>
+              <Link
+                to="/profile-settings"
+                state={{ user, userInfo, section: "bookingHistory" }}
+              >
+                <button className="join">Xem chi tiết</button>
+              </Link>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

@@ -47,6 +47,8 @@ export default function Reward() {
             const token = user?.token || null;
             try {
                 const vouchersResponse = await fetchData('Voucher', token);
+                console.log('vouchersResponse', vouchersResponse);
+
                 setVouchers(vouchersResponse);
             } catch (err) {
                 setError(err.message);
