@@ -12,16 +12,17 @@ export default function Spinner({ items, setResult, setPopupOpen }) {
 
     const receiveVoucher = async (voucherId) => {
         setLoading(true);
+        const token = user?.token || null;
         const UserVoucherData = {
-            id: 0,
-            receiveDate: new Date(),
             userId: user?.id,
             voucherId: voucherId,
+            receiveDate: new Date(),
+            cost: 100,
         }
-        const token = user?.token || null;
-
+        console.error('UserVoucherData', UserVoucherData);
         try {
-            await postData('UserVoucher', UserVoucherData, token);
+            const postDataResponse = await postData('UserVoucher', UserVoucherData, token);
+            console.error('postDataResponse', postDataResponse);
         } catch (err) {
             setError(err.message);
             console.error('Error posting voucher data:', JSON.stringify(err));

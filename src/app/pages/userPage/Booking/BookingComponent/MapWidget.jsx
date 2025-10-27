@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Navigation, Zap, Clock, Star, Maximize2 } from 'lucide-react';
+import GoogleMap from './GoogleMap';
 import './MapWidget.css';
 
 const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
@@ -178,6 +179,8 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
               <Navigation size={12} className="map-widget__location-icon" />
             </button>
           </div>
+
+            <GoogleMap />
 
           {/* Legend */}
           <div className="map-widget__legend">
