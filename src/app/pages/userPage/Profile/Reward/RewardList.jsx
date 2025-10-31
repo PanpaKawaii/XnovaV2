@@ -9,18 +9,20 @@ export default function RewardList({ vouchers }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const receiveVoucher = async (voucherId) => {
+    const receiveVoucher = async (voucherId, cost) => {
         setLoading(true);
+        const token = user?.token || null;
         const UserVoucherData = {
-            id: 0,
-            receiveDate: new Date(),
             userId: user?.id,
             voucherId: voucherId,
+            voucherPoint: cost,
+            receiveDate: new Date(),
         }
-        const token = user?.token || null;
-
+        console.error('UserVoucherData', UserVoucherData);
         try {
-            await postData('UserVoucher', UserVoucherData, token);
+            const postDataResponse = await postData('UserVoucher/create', UserVoucherData, token);
+            console.error('postDataResponse', postDataResponse);
+            setUserPoint({ point: postDataResponse?.remainingPoint });
         } catch (err) {
             setError(err.message);
             console.error('Error posting voucher data:', JSON.stringify(err));
@@ -30,17 +32,19 @@ export default function RewardList({ vouchers }) {
     };
 
     const getButtonColorClass = (points) => {
-        if (points >= 20000) return 'yellow';
-        if (points >= 10000) return 'green';
+        if (points >= 200) return 'yellow';
+        if (points >= 100) return 'green';
         return 'blue';
     }
+
+    const voucherCost = [80, 160, 220, 260, 50, 90, 120, 150];
 
     return (
         <div className='reward-list'>
             <div className='items'>
                 {vouchers.map((v, index) => {
                     const itemClasses = index === 0 ? 'item selected' : 'item';
-                    const buttonColorClass = getButtonColorClass(v.maxEffect);
+                    const buttonColorClass = getButtonColorClass(voucherCost[index]);
                     return (
                         <div key={v.id} className={itemClasses}>
                             <div className='info'>
@@ -51,7 +55,7 @@ export default function RewardList({ vouchers }) {
                             <p className='max'>Giảm tối đa {v.maxEffect?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
                             <div className='action'>
                                 {/* <span className='points'>{v.points}</span> */}
-                                <button className={`button ${buttonColorClass}`} onClick={() => receiveVoucher(v.id)}>{v.minEffect} Nova</button>
+                                <button className={`button ${buttonColorClass}`} onClick={() => receiveVoucher(v.id, voucherCost[index])}>{voucherCost[index]} Nova</button>
                             </div>
                         </div>
                     );

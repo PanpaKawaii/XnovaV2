@@ -48,6 +48,8 @@ const BookingPage = () => {
 
         // Fetch Venues
         const venuesResponse = await fetchData('Venue', token);
+        console.log('venuesResponse', venuesResponse);
+
         const venues = Array.isArray(venuesResponse) ? venuesResponse : [venuesResponse];
 
         // Fetch Type for Badminton
@@ -105,6 +107,8 @@ const BookingPage = () => {
             name: venue.name,
             location: venue.address,
             distance: '0km', // Placeholder, needs actual calculation
+            longitude: venue.longitude,
+            latitude: venue.latitude,
             rating: bookings.find(b => b.venueId === venue.id)?.rating || 0,
             basePrice: venueSlots[0]?.price || 0,
             type: badmintonType.name,
@@ -540,17 +544,18 @@ const BookingPage = () => {
             <div className="booking-page__sidebar-sticky">
               <WeatherWidget />
               <MapWidget
-                venues={filteredVenues.map(venue => ({
-                  id: venue.id,
-                  name: venue.name,
-                  location: venue.location,
-                  distance: venue.distance,
-                  rating: venue.rating,
-                  price: venue.basePrice,
-                  type: venue.type,
-                  lat: parseFloat(venue.latitude) || 10.7769,
-                  lng: parseFloat(venue.longitude) || 106.7009
-                }))}
+                // venues={filteredVenues.map(venue => ({
+                //   id: venue.id,
+                //   name: venue.name,
+                //   location: venue.location,
+                //   distance: venue.distance,
+                //   rating: venue.rating,
+                //   price: venue.basePrice,
+                //   type: venue.type,
+                //   lat: parseFloat(venue.latitude) || 10.7769,
+                //   lng: parseFloat(venue.longitude) || 106.7009
+                // }))}
+                venues={filteredVenues}
                 selectedVenue={selectedVenue || undefined}
                 onVenueSelect={setSelectedVenue}
               />
