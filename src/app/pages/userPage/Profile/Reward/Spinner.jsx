@@ -3,12 +3,15 @@ import { postData } from '../../../../../mocks/CallingAPI';
 import { useAuth } from '../../../../hooks/AuthContext/AuthContext.jsx';
 import './Spinner.css';
 
-export default function Spinner({ items, setResult, setPopupOpen }) {
+export default function Spinner({ items, passedUserInfo, setResult, setPopupOpen }) {
     const { user } = useAuth();
 
     const [randomDegree, setRandomDegree] = useState(0);
+    const [userPoint, setUserPoint] = useState(passedUserInfo);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    console.log('userPoint', userPoint);
+
 
     const receiveVoucher = async (voucherId) => {
         setLoading(true);
@@ -16,13 +19,14 @@ export default function Spinner({ items, setResult, setPopupOpen }) {
         const UserVoucherData = {
             userId: user?.id,
             voucherId: voucherId,
+            voucherPoint: 100,
             receiveDate: new Date(),
-            cost: 100,
         }
         console.error('UserVoucherData', UserVoucherData);
         try {
-            const postDataResponse = await postData('UserVoucher', UserVoucherData, token);
+            const postDataResponse = await postData('UserVoucher/create', UserVoucherData, token);
             console.error('postDataResponse', postDataResponse);
+            setUserPoint({ point: postDataResponse?.remainingPoint });
         } catch (err) {
             setError(err.message);
             console.error('Error posting voucher data:', JSON.stringify(err));
@@ -63,23 +67,27 @@ export default function Spinner({ items, setResult, setPopupOpen }) {
 
     return (
         <div className='spinner-container'>
-            <div
-                className='spinner-wheel'
-                style={{
-                    background: `conic-gradient(${gradientColors})`,
-                    transform: `rotateZ(${randomDegree}deg)`
-                }}>
-                {items.map((item, index) => {
-                    const rotationAngle = index * anglePerItem + anglePerItem / 2 + 90;
-                    return (
-                        <div key={index} className='spinner-text' style={{ transform: `translate(-50%, -50%) rotateZ(${-rotationAngle}deg) translateX(100px)` }}>
-                            {item.name}
-                        </div>
-                    );
-                })}
+            <div className='spinner'>
+                <div
+                    className='spinner-wheel'
+                    style={{
+                        background: `conic-gradient(${gradientColors})`,
+                        transform: `rotateZ(${randomDegree}deg)`
+                    }}>
+                    {items.map((item, index) => {
+                        const rotationAngle = index * anglePerItem + anglePerItem / 2 + 90;
+                        return (
+                            <div key={index} className='spinner-text' style={{ transform: `translate(-50%, -50%) rotateZ(${-rotationAngle}deg) translateX(100px)` }}>
+                                {item.name}
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className='spinner-pointer'></div>
+                <div className='spinner-center' onClick={() => getRandomDegree()}></div>
             </div>
-            <div className='spinner-pointer'></div>
-            <div className='spinner-center' onClick={() => getRandomDegree()}></div>
+            <div className='point'>Balance: {userPoint.point} Nova</div>
+            <div className='cost'>Cost: 100 Nova / Roll</div>
         </div>
     )
 }

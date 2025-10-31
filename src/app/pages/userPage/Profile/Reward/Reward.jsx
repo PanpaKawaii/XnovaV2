@@ -61,13 +61,10 @@ export default function Reward() {
         fetchVoucherData();
     }, [user?.token]);
 
-    const names = ['An', 'Binh', 'Cuong', 'Duong', 'En', 'Giang', 'Huong', 'In', 'Khanh', 'Linh', 'Manh', 'Nhan', 'Oanh', 'Phuoc', 'Quynh', 'Rot', 'Son', 'Thien', 'Uyen', 'Viet', 'Xinh', 'Yen'];
-    const name = [1, 2, 3, 4, 5, 6];
-
     return (
         <div className={`reward-management ${theme} custom-container`}>
             <SubUserHeader activeTab={activeTab} onTabChange={handleTabChange} />
-            <Spinner items={vouchers} setResult={setResult} setPopupOpen={setPopupOpen} />
+            <Spinner items={vouchers} passedUserInfo={passedUserInfo} setResult={setResult} setPopupOpen={setPopupOpen} />
             <RewardResult result={result} PopupOpen={PopupOpen} setPopupOpen={setPopupOpen} />
             <RewardList vouchers={vouchers} />
         </div>
