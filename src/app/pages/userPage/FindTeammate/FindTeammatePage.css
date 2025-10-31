@@ -5,6 +5,62 @@
   transition: background-color 0.3s ease;
 }
 
+/* Tab Navigation */
+.find-teammate-page__tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--border-color, #e0e0e0);
+  max-width: 88rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+}
+
+.find-teammate-page__tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary, #666);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.find-teammate-page__tab:hover {
+  color: var(--accent-primary, #22c55e);
+}
+
+.find-teammate-page__tab--active {
+  color: var(--accent-primary, #22c55e);
+  border-bottom-color: var(--accent-primary, #22c55e);
+}
+
+.find-teammate-page__invitations-wrapper {
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Hero Section */
 .find-teammate-page__hero {
   position: relative;
@@ -272,6 +328,67 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+/* Pagination */
+.find-teammate-page__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.find-teammate-page__pagination-button {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-secondary);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.find-teammate-page__pagination-button:hover:not(:disabled) {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.find-teammate-page__pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.find-teammate-page__pagination-pages {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.find-teammate-page__pagination-page {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-secondary);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.find-teammate-page__pagination-page:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.find-teammate-page__pagination-page.is-active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: var(--bg-primary);
 }
 
 /* Match Card */

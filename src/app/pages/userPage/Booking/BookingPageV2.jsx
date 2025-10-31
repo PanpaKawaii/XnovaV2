@@ -30,7 +30,7 @@ const BookingPage = () => {
     timeSlot: ''
   });
 
-  const locations = ['Tất cả khu vực', 'Quận 1', 'Quận 2', 'Quận 3', 'Quận 7', 'Quận Bình Thạnh'];
+  const [locations, setLocations] = useState(['Tất cả khu vực']);
   const timeSlots = ['Mọi khung giờ', '06:00-09:00', '09:00-12:00', '12:00-15:00', '15:00-18:00', '18:00-21:00', '21:00-24:00'];
 
   const amenityOptions = [
@@ -115,6 +115,20 @@ const BookingPage = () => {
         });
 
         setVenuesData(formattedVenues);
+
+        // Extract unique locations from venues
+        const uniqueLocations = ['Tất cả khu vực', ...new Set(
+          badmintonVenues
+            .map(venue => venue.address)
+            .filter(address => address) // Filter out empty addresses
+            .map(address => {
+              // Extract district/area from address (e.g., "Quận 1", "Quận 7", etc.)
+              const districtMatch = address.match(/Quận\s+\d+|Quận\s+[A-Za-zÀ-ỹ\s]+/i);
+              return districtMatch ? districtMatch[0] : address;
+            })
+        )].sort();
+        
+        setLocations(uniqueLocations);
       } catch (err) {
         setError(err.message);
       } finally {

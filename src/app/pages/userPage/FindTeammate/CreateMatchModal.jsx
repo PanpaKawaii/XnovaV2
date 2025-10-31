@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext';
-import { bookingService } from '../../../services/api';
+import { fetchData, postData } from '../../../../mocks/CallingAPI.js';
 import { 
   Calendar, 
   Clock, 
@@ -68,16 +68,54 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
 
   // Fetch user bookings when choosing "with booking"
   const fetchUserBookings = async () => {
-    if (!user?.userId) return;
+    if (!user?.id || !user?.token) return;
     
     setLoadingBookings(true);
     try {
-      const bookings = await bookingService.getBookingsByUserId(user.userId);
-      // Filter for active/upcoming bookings
-      const activeBookings = bookings.filter(b => 
-        new Date(b.date) >= new Date() && b.status === 'confirmed'
-      );
-      setUserBookings(activeBookings);
+      // Fetch bookings, slots and fields data
+      const [bookings, slots, fields] = await Promise.all([
+        fetchData('booking', user.token),
+        fetchData('slot', user.token),
+        fetchData('field', user.token)
+      ]);
+
+      // Filter for user's bookings and active/upcoming bookings
+      const userFilteredBookings = bookings
+        .filter(b => 
+          b.userId == user.id && 
+          new Date(b.date) >= new Date() && 
+          b.status === 1 // 1 = confirmed/active status
+        )
+        .map(booking => {
+          // Get field information
+          const field = fields.find(f => f.id == booking.fieldId);
+          
+          // Get slots information and sort by startTime
+          const bookingSlots = booking.bookingSlots?.map(bs => {
+            const slot = slots.find(s => s.id == bs.slotId);
+            return { ...bs, slot };
+          }).sort((a, b) => {
+            const aTime = a.slot?.startTime ?? '';
+            const bTime = b.slot?.startTime ?? '';
+            return aTime.localeCompare(bTime);
+          }) || [];
+
+          // Get earliest startTime and latest endTime
+          const startTime = bookingSlots[0]?.slot?.startTime || '';
+          const endTime = bookingSlots[bookingSlots.length - 1]?.slot?.endTime || '';
+
+          return {
+            ...booking,
+            field,
+            fieldName: field?.name || 'Sân bóng',
+            fieldLocation: field?.location || '',
+            startTime,
+            endTime,
+            bookingSlots
+          };
+        });
+
+      setUserBookings(userFilteredBookings);
     } catch (err) {
       console.error('Error fetching bookings:', err);
       setError('Không thể tải danh sách booking của bạn');
@@ -98,11 +136,13 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
   const handleBookingSelect = (booking) => {
     setFormData(prev => ({
       ...prev,
-      bookingId: booking.bookingId,
+      bookingId: booking.id,
       date: booking.date,
-      startTime: booking.startTime,
-      endTime: booking.endTime,
-      location: booking.fieldLocation || booking.location,
+      startTime: booking.startTime?.substring(0, 5) || '', // Extract HH:mm from TimeOnly
+      endTime: booking.endTime?.substring(0, 5) || '', // Extract HH:mm from TimeOnly
+      location: booking.fieldLocation || '',
+      longitude: booking.field?.longitude || '',
+      latitude: booking.field?.latitude || '',
       booked: 1
     }));
   };
@@ -147,7 +187,7 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
     e.preventDefault();
     
     if (!validateForm()) return;
-    if (!user?.userId) {
+    if (!user?.id || !user?.token) {
       setError('Bạn cần đăng nhập để tạo trận đấu');
       return;
     }
@@ -156,6 +196,9 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
     setError('');
 
     try {
+      // Prepare invitation data theo API documentation Invitation_UserInvitation.md
+      // Date & PostingDate: DateTime format
+      // StartTime & EndTime: string parseable by TimeOnly.Parse (HH:mm:ss hoặc HH:mm)
       const invitationData = {
         name: formData.name,
         booked: formData.booked,
@@ -167,17 +210,21 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
         location: formData.location,
         longitude: formData.longitude || '',
         latitude: formData.latitude || '',
-        date: formData.date,
-        startTime: formData.startTime,
-        endTime: formData.endTime,
-        postingDate: new Date().toISOString(),
-        status: 0,
-        userId: user.userId,
+        date: `${formData.date}T00:00:00`, // DateTime format
+        startTime: `${formData.startTime}:00`, // TimeOnly format (HH:mm:ss)
+        endTime: `${formData.endTime}:00`, // TimeOnly format (HH:mm:ss)
+        postingDate: new Date().toISOString(), // DateTime format
+        status: 1, // 1 = active
+        userId: user.id,
         bookingId: formData.bookingId || 0
       };
 
-      // Call API to create invitation
-      const response = await bookingService.createInvitation(invitationData);
+      console.log('Creating invitation with data:', invitationData);
+
+      // Call API to create invitation using CallingAPI
+      const response = await postData('Invitation', invitationData, user.token);
+      
+      console.log('Invitation created successfully:', response);
       
       if (onSuccess) {
         onSuccess(response);
@@ -456,16 +503,16 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
             <div className="create-match-modal__booking-list">
               {userBookings.map(booking => (
                 <div 
-                  key={booking.bookingId}
+                  key={booking.id}
                   className="create-match-modal__booking-item"
                   onClick={() => handleBookingSelect(booking)}
                 >
                   <div className="create-match-modal__booking-info">
-                    <h4>{booking.fieldName || 'Sân bóng'}</h4>
+                    <h4>{booking.fieldName}</h4>
                     <div className="create-match-modal__booking-details">
                       <span><Calendar size={14} /> {new Date(booking.date).toLocaleDateString('vi-VN')}</span>
-                      <span><Clock size={14} /> {booking.startTime} - {booking.endTime}</span>
-                      <span><MapPin size={14} /> {booking.fieldLocation || booking.location}</span>
+                      <span><Clock size={14} /> {booking.startTime?.substring(0, 5)} - {booking.endTime?.substring(0, 5)}</span>
+                      <span><MapPin size={14} /> {booking.fieldLocation}</span>
                     </div>
                   </div>
                   <Button size="sm">Chọn</Button>
@@ -487,14 +534,26 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
             <CheckCircle size={20} />
             <div>
               <strong>Booking đã chọn</strong>
-              <p>{new Date(formData.date).toLocaleDateString('vi-VN')} • {formData.startTime} - {formData.endTime}</p>
+              <p>
+                {formData.date && new Date(formData.date).toLocaleDateString('vi-VN')} 
+                {formData.startTime && formData.endTime && ` • ${formData.startTime} - ${formData.endTime}`}
+              </p>
               <p>{formData.location}</p>
             </div>
             <Button 
               type="button"
               variant="outline" 
               size="sm"
-              onClick={() => setFormData(prev => ({ ...prev, bookingId: null }))}
+              onClick={() => setFormData(prev => ({ 
+                ...prev, 
+                bookingId: null,
+                date: '',
+                startTime: '',
+                endTime: '',
+                location: '',
+                longitude: '',
+                latitude: ''
+              }))}
             >
               Đổi
             </Button>
