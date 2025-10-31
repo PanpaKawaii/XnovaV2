@@ -1,0 +1,253 @@
+/* AlertPopup.css */
+.alert-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.alert-popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.alert-popup {
+  position: relative;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 28rem;
+  padding: 2rem;
+  animation: slideInUp 0.3s ease-out;
+  z-index: 10000;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .alert-popup {
+    background-color: #1f2937;
+    color: #f9fafb;
+  }
+}
+
+.alert-popup__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-popup__close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+@media (prefers-color-scheme: dark) {
+  .alert-popup__close:hover {
+    background-color: #374151;
+    color: #d1d5db;
+  }
+}
+
+.alert-popup__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.alert-popup__icon-wrapper {
+  margin-bottom: 1rem;
+  animation: scaleIn 0.3s ease-out 0.1s both;
+}
+
+.alert-popup__icon {
+  stroke-width: 2;
+}
+
+.alert-popup__icon--success {
+  color: #10b981;
+}
+
+.alert-popup__icon--error {
+  color: #ef4444;
+}
+
+.alert-popup__icon--warning {
+  color: #f59e0b;
+}
+
+.alert-popup__icon--info {
+  color: #3b82f6;
+}
+
+.alert-popup__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: #111827;
+}
+
+@media (prefers-color-scheme: dark) {
+  .alert-popup__title {
+    color: #f9fafb;
+  }
+}
+
+.alert-popup__message {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  .alert-popup__message {
+    color: #d1d5db;
+  }
+}
+
+.alert-popup__actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.alert-popup__button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  min-width: 6rem;
+}
+
+.alert-popup__button--secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.alert-popup__button--secondary:hover {
+  background-color: #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .alert-popup__button--secondary {
+    background-color: #374151;
+    color: #d1d5db;
+  }
+
+  .alert-popup__button--secondary:hover {
+    background-color: #4b5563;
+  }
+}
+
+.alert-popup__button--primary {
+  color: white;
+}
+
+.alert-popup__button--primary.alert-popup__button--success {
+  background-color: #10b981;
+}
+
+.alert-popup__button--primary.alert-popup__button--success:hover {
+  background-color: #059669;
+}
+
+.alert-popup__button--primary.alert-popup__button--error {
+  background-color: #ef4444;
+}
+
+.alert-popup__button--primary.alert-popup__button--error:hover {
+  background-color: #dc2626;
+}
+
+.alert-popup__button--primary.alert-popup__button--warning {
+  background-color: #f59e0b;
+}
+
+.alert-popup__button--primary.alert-popup__button--warning:hover {
+  background-color: #d97706;
+}
+
+.alert-popup__button--primary.alert-popup__button--info {
+  background-color: #3b82f6;
+}
+
+.alert-popup__button--primary.alert-popup__button--info:hover {
+  background-color: #2563eb;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .alert-popup {
+    max-width: calc(100% - 2rem);
+    padding: 1.5rem;
+  }
+
+  .alert-popup__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .alert-popup__button {
+    width: 100%;
+  }
+}

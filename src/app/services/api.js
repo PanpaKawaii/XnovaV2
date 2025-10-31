@@ -1,9 +1,16 @@
 // API Service for handling HTTP requests
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-//const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+// Strategy:
+// - In development, ALWAYS use relative paths so Vite dev proxy handles '/api/*' (avoids CORS)
+// - In production, use absolute base URL from environment if provided
+const IS_DEV = import.meta?.env?.MODE !== 'production';
+const API_BASE_URL = IS_DEV
+  ? ''
+  : (import.meta.env.VITE_API_URL || import.meta.env.VITE_REACT_APP_API_URL || '').trim();
 export class ApiService {
   static async request(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = API_BASE_URL
+      ? `${API_BASE_URL}${endpoint}`
+      : endpoint; // rely on dev proxy when base is empty (dev)
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -13,13 +20,26 @@ export class ApiService {
     };
 
     try {
-      const response = await fetch(url, config);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Helpful debug: log method and URL in dev
+      if (import.meta?.env?.MODE !== 'production') {
+        // eslint-disable-next-line no-console
+        console.debug(`[ApiService] ${config.method || 'GET'} ${url}`);
       }
-      
-      return await response.json();
+
+      const response = await fetch(url, config);
+
+      if (!response.ok) {
+        // Try to read error body for better diagnostics
+        let body = '';
+        try {
+          body = await response.text();
+        } catch (_) {}
+        throw new Error(`HTTP ${response.status}: ${body?.slice(0, 300)}`);
+      }
+
+      // Some endpoints may return empty body
+      const text = await response.text();
+      return text ? JSON.parse(text) : null;
     } catch (error) {
       console.error('API request failed:', error);
       throw error;

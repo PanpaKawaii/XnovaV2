@@ -9,12 +9,18 @@ console.log('Environment:', import.meta.env.MODE);
 // Hàm gọi API GET
 export const fetchData = async (endpoint, token) => {
     try {
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+        
+        // Only add Authorization header if token is provided
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+        
         const response = await fetch(`${apiUrl}${endpoint}`, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
+            headers: headers,
         });
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);
