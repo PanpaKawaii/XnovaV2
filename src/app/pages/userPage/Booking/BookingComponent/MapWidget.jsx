@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MapPin, Navigation, Zap, Clock, Star, Maximize2 } from 'lucide-react';
 import GoogleMap from './GoogleMap';
 import './MapWidget.css';
+import SimpleMap from './SimpleMap';
 
 const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
   const [mapView, setMapView] = useState('map');
@@ -97,17 +98,15 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
           <div className="map-widget__view-toggle">
             <button
               onClick={() => setMapView('map')}
-              className={`map-widget__view-button ${
-                mapView === 'map' ? 'map-widget__view-button--active' : 'map-widget__view-button--inactive'
-              }`}
+              className={`map-widget__view-button ${mapView === 'map' ? 'map-widget__view-button--active' : 'map-widget__view-button--inactive'
+                }`}
             >
               Map
             </button>
             <button
               onClick={() => setMapView('list')}
-              className={`map-widget__view-button ${
-                mapView === 'list' ? 'map-widget__view-button--active' : 'map-widget__view-button--inactive'
-              }`}
+              className={`map-widget__view-button ${mapView === 'list' ? 'map-widget__view-button--active' : 'map-widget__view-button--inactive'
+                }`}
             >
               List
             </button>
@@ -118,17 +117,15 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
       {mapView === 'map' ? (
         <div>
           {/* Map Container */}
-          <div className="map-widget__map-container">
+          {/* <div className="map-widget__map-container">
             <div className="map-widget__map-overlay"></div>
-            
-            {/* Map Markers */}
+
             <div className="map-widget__markers">
               {mockVenues.map((venue, index) => (
                 <div
                   key={venue.id}
-                  className={`map-widget__marker ${
-                    selectedVenue === venue.id ? 'map-widget__marker--selected' : ''
-                  }`}
+                  className={`map-widget__marker ${selectedVenue === venue.id ? 'map-widget__marker--selected' : ''
+                    }`}
                   style={{
                     left: `${Math.min(Math.max(20 + index * 20, 10), 85)}%`,
                     top: `${Math.min(Math.max(25 + index * 15, 15), 80)}%`
@@ -138,7 +135,7 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
                   <div className={`map-widget__marker-icon ${getVenueTypeColor(venue.type)}`}>
                     <MapPin size={12} color="white" />
                   </div>
-                  
+
                   {selectedVenue === venue.id && (
                     <div className="map-widget__popup">
                       <div className="map-widget__popup-name">{venue.name}</div>
@@ -157,14 +154,12 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
                 </div>
               ))}
 
-              {/* Current Location */}
               <div className="map-widget__current-location">
                 <div className="map-widget__current-dot"></div>
                 <div className="map-widget__current-ping"></div>
               </div>
             </div>
 
-            {/* Map Controls */}
             <div className="map-widget__zoom-controls">
               <button className="map-widget__zoom-button">
                 <span className="map-widget__zoom-text">+</span>
@@ -174,13 +169,13 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
               </button>
             </div>
 
-            {/* Current Location Button */}
             <button className="map-widget__location-button">
               <Navigation size={12} className="map-widget__location-icon" />
             </button>
-          </div>
+          </div> */}
 
-            <GoogleMap />
+          {/* <GoogleMap /> */}
+          <SimpleMap venues={venues} />
 
           {/* Legend */}
           <div className="map-widget__legend">
@@ -197,9 +192,8 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
           {mockVenues.map((venue) => (
             <div
               key={venue.id}
-              className={`map-widget__list-item ${
-                selectedVenue === venue.id ? 'map-widget__list-item--selected' : ''
-              }`}
+              className={`map-widget__list-item ${selectedVenue === venue.id ? 'map-widget__list-item--selected' : ''
+                }`}
               onClick={() => onVenueSelect?.(venue.id)}
             >
               <div className="map-widget__list-item-header">
@@ -208,7 +202,7 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
                   {venue.type}
                 </span>
               </div>
-              
+
               <div className="map-widget__list-item-info">
                 <div className="map-widget__list-item-location">
                   <MapPin size={10} className="map-widget__list-item-location-icon" />
