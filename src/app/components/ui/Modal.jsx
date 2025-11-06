@@ -36,7 +36,7 @@ export const Modal = ({
         onClick={onClose}
       />
       <div className={getModalClasses()}>
-        {title && (
+        {title ? (
           <div className="modal-header">
             <h2 className="modal-title">{title}</h2>
             <button
@@ -46,6 +46,13 @@ export const Modal = ({
               <X size={20} />
             </button>
           </div>
+        ) : (
+          <button
+            onClick={onClose}
+            className="modal-close-button modal-close-button--absolute"
+          >
+            <X size={24} />
+          </button>
         )}
         <div className="modal-body">
           {children}

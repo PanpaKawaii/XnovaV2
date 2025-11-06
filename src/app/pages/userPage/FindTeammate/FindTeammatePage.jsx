@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { Modal } from '../../../components/ui/Modal';
+import { AlertPopup } from '../../../components/ui/AlertPopup';
 import { CreateMatchModal } from './CreateMatchModal';
+import InvitationManagement from './InvitationManagement/InvitationManagement.jsx';
+import { fetchData, postData } from '../../../../mocks/CallingAPI.js';
+
 import { useScrollAnimation } from '../../../hooks/useAnimation';
 import { 
   MapPin, 
@@ -24,9 +28,17 @@ import {
   TrendingUp
 } from 'lucide-react';
 import FindTeammateGround from '../../../assets/FindTeammateGround.jpg';
+import { useAuth } from '../../../hooks/AuthContext/AuthContext';
+
 import './FindTeammatePage.css';
 
 export const FindTeammatePage = () => {
+  const { user } = useAuth();
+  
+  // determine if this is a regular user
+  const _role = String(user?.role || '').toLowerCase();
+  const isRegularUser = ['customer', 'user', 'player'].includes(_role);
+  const [activeTab, setActiveTab] = useState('find-matches'); // 'find-matches' or 'my-invitations'
   const [selectedSkillLevel, setSelectedSkillLevel] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -34,6 +46,20 @@ export const FindTeammatePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showPlayerProfile, setShowPlayerProfile] = useState(null);
   const [showCreateMatchModal, setShowCreateMatchModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [matches, setMatches] = useState([]);
+  // Pagination for matches list
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+
+  // Alert popup state
+  const [alertPopup, setAlertPopup] = useState({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: '',
+    onConfirm: null
+  });
 
   const heroRef = useScrollAnimation();
   const filtersRef = useScrollAnimation();
@@ -49,11 +75,11 @@ export const FindTeammatePage = () => {
   ];
 
   const locations = [
-    'Quận 1, TP. Hồ Chí Minh',
-    'Quận 3, TP. Hồ Chí Minh',
-    'Quận 7, TP. Hồ Chí Minh',
-    'Quận Bình Thạnh, TP. Hồ Chí Minh',
-    'TP. Thủ Đức, TP. Hồ Chí Minh'
+    'Quận 1, TP. HCM',
+    'Quận 3, TP. HCM',
+    'Quận 7, TP. HCM',
+    'Quận Bình Thạnh, TP. HCM',
+    'TP. Thủ Đức, TP. HCM'
   ];
 
   const timeSlots = [
@@ -62,68 +88,176 @@ export const FindTeammatePage = () => {
     'Buổi tối (18:00 - 22:00)'
   ];
 
-  const matches = [
-    {
-      id: '1',
-      title: 'Trận đấu Chủ Nhật',
-      date: '2025-01-15',
-      time: '16:00',
-      location: 'Quận 1, TP. Hồ Chí Minh',
-      playersNeeded: 3,
-      currentPlayers: 8,
-      skillLevel: 'intermediate',
-      price: 100000,
+  // Helper function to map Invitation API data to match card format
+  const mapInvitationToMatchCard = (invitation) => {
+    // Map standard to skill level
+    const standardToSkill = {
+      'Mới bắt đầu': 'beginner',
+      'Trung bình': 'intermediate',
+      'Nâng cao': 'advanced',
+      'Chuyên nghiệp': 'pro'
+    };
+
+    return {
+      id: invitation.id,
+      title: invitation.name || 'Trận đấu',
+      date: invitation.date,
+      time: invitation.startTime && invitation.endTime 
+        ? `${invitation.startTime.substring(0, 5)} - ${invitation.endTime.substring(0, 5)}`
+        : '',
+      location: invitation.location || '',
+      playersNeeded: invitation.availablePlayer || 0,
+      currentPlayers: (invitation.totalPlayer || 0) - (invitation.availablePlayer || 0),
+      skillLevel: standardToSkill[invitation.standard] || 'intermediate',
+      price: invitation.joiningCost || 0,
       organizer: {
-        id: '1',
-        name: 'Son Tung MTP',
+        id: invitation.userId || '',
+        name: 'Người tổ chức',
         avatar: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-        skillLevel: 'intermediate',
-        location: 'Quận 1',
-        bio: 'Đam mê bóng đá, chơi 8 năm',
-        rating: 4.8
-      }
-    },
-    {
-      id: '2',
-      title: 'Giao hữu 7v7',
-      date: '2025-01-16',
-      time: '18:30',
-      location: 'Quận 7, TP. Hồ Chí Minh',
-      playersNeeded: 2,
-      currentPlayers: 12,
-      skillLevel: 'beginner',
-      price: 75000,
-      organizer: {
-        id: '2',
-        name: 'Maria Santos',
-        avatar: 'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-        skillLevel: 'beginner',
-        location: 'Quận 7',
-        bio: 'Mới bắt đầu chơi, rất yêu bóng đá!',
+        skillLevel: standardToSkill[invitation.standard] || 'intermediate',
+        location: invitation.location?.split(',')[0] || '',
+        bio: 'Tổ chức trận đấu',
         rating: 4.5
       }
-    },
-    {
-      id: '3',
-      title: 'Trận đấu cạnh tranh',
-      date: '2025-01-17',
-      time: '20:00',
-      location: 'TP. Thủ Đức, TP. Hồ Chí Minh',
-      playersNeeded: 1,
-      currentPlayers: 21,
-      skillLevel: 'advanced',
-      price: 150000,
-      organizer: {
-        id: '3',
-        name: 'David Kim',
-        avatar: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-        skillLevel: 'advanced',
-        location: 'TP. Thủ Đức',
-        bio: 'Cựu cầu thủ bán chuyên, tư duy chiến thuật',
-        rating: 4.9
+    };
+  };
+
+  useEffect(() => {
+    // Helper to map UI filters -> API params
+    const levelToStandard = (lvl) => {
+      const m = {
+        beginner: 'Mới bắt đầu',
+        intermediate: 'Trung bình',
+        advanced: 'Nâng cao',
+        pro: 'Chuyên nghiệp',
+      };
+      return m[lvl] || '';
+    };
+
+    // Map time slot to start/end range (server expects HH:mm:ss)
+    const timeSlotToRange = (slot) => {
+      switch (slot) {
+        case 'Buổi sáng (6:00 - 12:00)':
+          return { startTimeFrom: '06:00:00', startTimeTo: '12:00:00' };
+        case 'Buổi chiều (12:00 - 18:00)':
+          return { startTimeFrom: '12:00:00', startTimeTo: '18:00:00' };
+        case 'Buổi tối (18:00 - 22:00)':
+          return { startTimeFrom: '18:00:00', startTimeTo: '22:00:00' };
+        default:
+          return {};
       }
+    };
+
+    let cancelled = false;
+    let timer;
+    const fetchWithFilters = async () => {
+      setLoading(true);
+      try {
+        // Fetch all invitations using CallingAPI (no token needed for GET)
+        // Token is optional for viewing invitations
+        const data = await fetchData('Invitation', user?.token);
+        
+        // Filter data on client side based on selected filters
+        let filteredData = Array.isArray(data) ? data : [];
+        
+        // Filter by search query (name)
+        if (searchQuery?.trim()) {
+          const query = searchQuery.toLowerCase();
+          filteredData = filteredData.filter(inv => 
+            inv.name?.toLowerCase().includes(query)
+          );
+        }
+        
+        // Filter by skill level (standard)
+        if (selectedSkillLevel) {
+          const standard = levelToStandard(selectedSkillLevel);
+          filteredData = filteredData.filter(inv => inv.standard === standard);
+        }
+        
+        // Filter by location
+        if (selectedLocation) {
+          filteredData = filteredData.filter(inv => 
+            inv.location?.includes(selectedLocation)
+          );
+        }
+        
+        // Filter by time slot
+        if (selectedTime) {
+          const timeRange = timeSlotToRange(selectedTime);
+          if (timeRange.startTimeFrom && timeRange.startTimeTo) {
+            filteredData = filteredData.filter(inv => {
+              if (!inv.startTime) return false;
+              return inv.startTime >= timeRange.startTimeFrom && 
+                     inv.startTime <= timeRange.startTimeTo;
+            });
+          }
+        }
+        
+        const mapped = filteredData.map(mapInvitationToMatchCard);
+        if (!cancelled) setMatches(mapped);
+      } catch (err) {
+        console.error('Failed to load invitations with filters', err);
+        if (!cancelled) setMatches([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    // Debounce to avoid spamming API when typing search
+    timer = setTimeout(fetchWithFilters, 300);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+    // Note: user?.token removed from dependencies since we don't need it for fetching
+  }, [selectedSkillLevel, selectedLocation, selectedTime, searchQuery]);
+
+  const handleJoinMatch = async (match) => {
+    if (!user?.id || !user?.token) {
+      setAlertPopup({
+        isOpen: true,
+        type: 'warning',
+        title: 'Yêu cầu đăng nhập',
+        message: 'Bạn cần đăng nhập để tham gia trận đấu',
+        onConfirm: null
+      });
+      return;
     }
-  ];
+    
+    try {
+      // Create UserInvitation using CallingAPI according to documentation
+      const userInvitationData = {
+        userId: user.id,
+        invitationId: Number(match.id),
+        status: 0, // 0 = pending (chờ duyệt), người tạo trận sẽ duyệt sau
+        joinDate: new Date().toISOString()
+      };
+
+      await postData('UserInvitation', userInvitationData, user.token);
+      
+      console.log('Joined match successfully - waiting for approval');
+      setAlertPopup({
+        isOpen: true,
+        type: 'success',
+        title: 'Đã gửi yêu cầu!',
+        message: 'Yêu cầu tham gia đã được gửi. Vui lòng chờ người tạo trận duyệt.',
+        onConfirm: null
+      });
+      
+      // Không cập nhật số lượng người chơi ngay vì chưa được duyệt
+      // Số lượng sẽ được cập nhật khi người tạo trận duyệt (status = 1)
+      setSelectedMatch(null);
+    } catch (err) {
+      console.error('Join failed', err);
+      setAlertPopup({
+        isOpen: true,
+        type: 'error',
+        title: 'Có lỗi xảy ra',
+        message: 'Không thể tham gia trận đấu. Vui lòng thử lại sau.',
+        onConfirm: null
+      });
+    }
+  };
 
   const players = [
     {
@@ -183,16 +317,64 @@ export const FindTeammatePage = () => {
   ];
 
   const filteredMatches = matches.filter(match => {
+    const icIncludes = (a = '', b = '') =>
+      String(a).toLowerCase().includes(String(b).toLowerCase());
+
+    const toSec = (t) => {
+      if (!t) return null;
+      const s = String(t).trim();
+      const parts = s.split(':');
+      if (parts.length < 2) return null;
+      const hh = Number(parts[0]);
+      const mm = Number(parts[1]);
+      const ss = parts.length >= 3 ? Number(parts[2]) : 0;
+      if ([hh, mm, ss].some((x) => Number.isNaN(x))) return null;
+      return hh * 3600 + mm * 60 + ss;
+    };
+
+    const timeRangeFromSlot = (slot) => {
+      switch (slot) {
+        case 'Buổi sáng (6:00 - 12:00)':
+          return { from: toSec('06:00:00'), to: toSec('12:00:00') };
+        case 'Buổi chiều (12:00 - 18:00)':
+          return { from: toSec('12:00:00'), to: toSec('18:00:00') };
+        case 'Buổi tối (18:00 - 22:00)':
+          return { from: toSec('18:00:00'), to: toSec('22:00:00') };
+        default:
+          return { from: null, to: null };
+      }
+    };
+
     const skillMatch = !selectedSkillLevel || match.skillLevel === selectedSkillLevel;
-    const locationMatch = !selectedLocation || match.location.includes(selectedLocation);
-    const searchMatch = !searchQuery || match.title.toLowerCase().includes(searchQuery.toLowerCase());
-    return skillMatch && locationMatch && searchMatch;
+    // Case-insensitive contains for location filter (dropdown)
+    const locationMatch = !selectedLocation || icIncludes(match.location, selectedLocation);
+    // Search by title OR location (case-insensitive contains)
+    const searchMatch = !searchQuery || icIncludes(match.title, searchQuery) || icIncludes(match.location, searchQuery);
+    // Time filter against Invitation.StartTime (normalized in raw.startTime)
+    const { from, to } = timeRangeFromSlot(selectedTime);
+    const matchStart = toSec(match.raw?.startTime || match.raw?.StartTime || null);
+    const timeMatch = !from || !to || (matchStart !== null && matchStart >= from && matchStart <= to);
+
+    return skillMatch && locationMatch && searchMatch && timeMatch;
   });
 
+  // Ensure current page stays valid when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedSkillLevel, selectedLocation, selectedTime, searchQuery, matches.length]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredMatches.length / pageSize));
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedMatches = filteredMatches.slice(startIndex, startIndex + pageSize);
+
   const filteredPlayers = players.filter(player => {
+    const icIncludes = (a = '', b = '') =>
+      String(a).toLowerCase().includes(String(b).toLowerCase());
     const skillMatch = !selectedSkillLevel || player.skillLevel === selectedSkillLevel;
-    const locationMatch = !selectedLocation || player.location.includes(selectedLocation);
-    const searchMatch = !searchQuery || player.name.toLowerCase().includes(searchQuery.toLowerCase());
+    // Case-insensitive contains for location filter (dropdown)
+    const locationMatch = !selectedLocation || icIncludes(player.location, selectedLocation);
+    // Search by name OR location (case-insensitive contains)
+    const searchMatch = !searchQuery || icIncludes(player.name, searchQuery) || icIncludes(player.location, searchQuery);
     return skillMatch && locationMatch && searchMatch;
   });
 
@@ -252,64 +434,87 @@ export const FindTeammatePage = () => {
       </section>
 
       <div className="find-teammate-page__container">
-        {/* Search and Filters */}
-        <Card ref={filtersRef} className="find-teammate-page__filters">
-          <div className="find-teammate-page__filters-header">
-            <div className="find-teammate-page__filters-icon-wrapper">
-              <Filter size={24} className="find-teammate-page__filters-icon" />
-            </div>
-            <h2 className="find-teammate-page__filters-title">Tìm trận đấu phù hợp</h2>
-          </div>
-
-          <div className="find-teammate-page__filters-grid">
-            {/* Search */}
-            <div className="find-teammate-page__search-wrapper">
-              <Search className="find-teammate-page__search-icon" size={20} />
-              <input
-                type="text"
-                placeholder="Tìm kiếm trận đấu hoặc cầu thủ..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="find-teammate-page__search-input"
-              />
-            </div>
-
-            {/* Skill Level */}
-            <select
-              value={selectedSkillLevel}
-              onChange={(e) => setSelectedSkillLevel(e.target.value)}
-              className="find-teammate-page__select"
+        {/* Tab Navigation */}
+        <div className="find-teammate-page__tabs">
+          <button
+            className={`find-teammate-page__tab ${activeTab === 'find-matches' ? 'find-teammate-page__tab--active' : ''}`}
+            onClick={() => setActiveTab('find-matches')}
+          >
+            <Search size={20} />
+            <span>Tìm Trận Đấu</span>
+          </button>
+          {user && (
+            <button
+              className={`find-teammate-page__tab ${activeTab === 'my-invitations' ? 'find-teammate-page__tab--active' : ''}`}
+              onClick={() => setActiveTab('my-invitations')}
             >
-              <option value="">Tất cả trình độ</option>
-              {skillLevels.map((level) => (
-                <option key={level.value} value={level.value}>
-                  {level.label}
-                </option>
-              ))}
-            </select>
+              <Trophy size={20} />
+              <span>Quản Lý Lời Mời</span>
+            </button>
+          )}
+        </div>
 
-            {/* Location */}
-            <select
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              className="find-teammate-page__select"
-            >
-              <option value="">Tất cả khu vực</option>
-              {locations.map((location) => (
-                <option key={location} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
+        {/* Conditional Content */}
+        {activeTab === 'find-matches' ? (
+          <>
+            {/* Search and Filters */}
+            <Card ref={filtersRef} className="find-teammate-page__filters">
+              <div className="find-teammate-page__filters-header">
+                <div className="find-teammate-page__filters-icon-wrapper">
+                  <Filter size={24} className="find-teammate-page__filters-icon" />
+                </div>
+                <h2 className="find-teammate-page__filters-title">Tìm trận đấu phù hợp</h2>
+              </div>
 
-            {/* Time */}
-            <select
-              value={selectedTime}
-              onChange={(e) => setSelectedTime(e.target.value)}
-              className="find-teammate-page__select"
-            >
-              <option value="">Mọi khung giờ</option>
-              {timeSlots.map((time) => (
+              <div className="find-teammate-page__filters-grid">
+                {/* Search */}
+                <div className="find-teammate-page__search-wrapper">
+                  <Search className="find-teammate-page__search-icon" size={20} />
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm trận đấu hoặc cầu thủ..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="find-teammate-page__search-input"
+                  />
+                </div>
+
+                {/* Skill Level */}
+                <select
+                  value={selectedSkillLevel}
+                  onChange={(e) => setSelectedSkillLevel(e.target.value)}
+                  className="find-teammate-page__select"
+                >
+                  <option value="">Tất cả trình độ</option>
+                  {skillLevels.map((level) => (
+                    <option key={level.value} value={level.value}>
+                      {level.label}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Location */}
+                <select
+                  value={selectedLocation}
+                  onChange={(e) => setSelectedLocation(e.target.value)}
+                  className="find-teammate-page__select"
+                >
+                  <option value="">Tất cả khu vực</option>
+                  {locations.map((location) => (
+                    <option key={location} value={location}>
+                      {location}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Time */}
+                <select
+                  value={selectedTime}
+                  onChange={(e) => setSelectedTime(e.target.value)}
+                  className="find-teammate-page__select"
+                >
+                  <option value="">Mọi khung giờ</option>
+                  {timeSlots.map((time) => (
                 <option key={time} value={time}>
                   {time}
                 </option>
@@ -334,7 +539,7 @@ export const FindTeammatePage = () => {
             </div>
 
             <div className="find-teammate-page__matches-list">
-              {filteredMatches.map((match, index) => {
+              {paginatedMatches.map((match, index) => {
                 const SkillIcon = getSkillIcon(match.skillLevel);
                 return (
                   <Card 
@@ -360,7 +565,7 @@ export const FindTeammatePage = () => {
                           </div>
                           <div className="find-teammate-page__match-detail">
                             <Users size={16} className="find-teammate-page__match-detail-icon" />
-                            <span>{match.currentPlayers}/22 cầu thủ</span>
+                            <span>{match.currentPlayers}/{match.totalPlayers} cầu thủ</span>
                           </div>
                         </div>
                       </div>
@@ -415,6 +620,36 @@ export const FindTeammatePage = () => {
                 );
               })}
             </div>
+            {/* Pagination Controls */}
+            {filteredMatches.length > pageSize && (
+              <div className="find-teammate-page__pagination">
+                <button
+                  className="find-teammate-page__pagination-button"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                >
+                  Trước
+                </button>
+                <div className="find-teammate-page__pagination-pages">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      className={`find-teammate-page__pagination-page ${page === currentPage ? 'is-active' : ''}`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="find-teammate-page__pagination-button"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                >
+                  Sau
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Players Section - Right Side */}
@@ -494,6 +729,13 @@ export const FindTeammatePage = () => {
             </div>
           </div>
         </section>
+          </>
+        ) : (
+          /* My Invitations Tab */
+          <div className="find-teammate-page__invitations-wrapper">
+            <InvitationManagement />
+          </div>
+        )}
       </div>
 
       {/* Match Details Modal */}
@@ -575,10 +817,7 @@ export const FindTeammatePage = () => {
                 size="lg" 
                 glow
                 disabled={selectedMatch.playersNeeded === 0}
-                onClick={() => {
-                  alert('Tham gia trận đấu thành công!');
-                  setSelectedMatch(null);
-                }}
+                onClick={() => handleJoinMatch(selectedMatch)}
               >
                 {selectedMatch.playersNeeded === 0 ? 'Đã đủ' : 'Tham gia trận đấu'}
               </Button>
@@ -636,7 +875,13 @@ export const FindTeammatePage = () => {
                 size="lg" 
                 glow
                 onClick={() => {
-                  alert('Đã gửi lời mời kết bạn!');
+                  setAlertPopup({
+                    isOpen: true,
+                    type: 'success',
+                    title: 'Thành công',
+                    message: 'Đã gửi lời mời kết bạn!',
+                    onConfirm: null
+                  });
                   setShowPlayerProfile(null);
                 }}
               >
@@ -657,9 +902,32 @@ export const FindTeammatePage = () => {
         onClose={() => setShowCreateMatchModal(false)}
         onSuccess={(newMatch) => {
           console.log('Match created successfully:', newMatch);
-          alert('Trận đấu đã được tạo thành công!');
-          // You can add logic here to refresh the matches list or navigate
+          setAlertPopup({
+            isOpen: true,
+            type: 'success',
+            title: 'Thành công',
+            message: 'Trận đấu đã được tạo thành công!',
+            onConfirm: null
+          });
+          
+          // Add new match to the list
+          if (newMatch) {
+            const mappedMatch = mapInvitationToMatchCard(newMatch);
+            setMatches((prev) => [mappedMatch, ...prev]);
+          }
         }}
+      />
+
+      {/* Alert Popup */}
+      <AlertPopup
+        isOpen={alertPopup.isOpen}
+        onClose={() => setAlertPopup({ ...alertPopup, isOpen: false })}
+        type={alertPopup.type}
+        title={alertPopup.title}
+        message={alertPopup.message}
+        onConfirm={alertPopup.onConfirm}
+        autoClose={alertPopup.type === 'success'}
+        autoCloseDelay={2000}
       />
     </div>
   );
