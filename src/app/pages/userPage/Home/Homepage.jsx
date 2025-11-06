@@ -14,14 +14,14 @@ const Homepage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
-    return () => {
-      clearTimeout(timer);
 
       const urlParams = new URLSearchParams(window.location.search);
       console.log('window.location.search', urlParams);
       const messageParam = urlParams.get('message');
       if (messageParam) navigate(`/payment-status/?${(window.location.search)?.split('?')[1]}`);
+    }, 3000);
+    return () => {
+      clearTimeout(timer);
     };
   }, []);
 
