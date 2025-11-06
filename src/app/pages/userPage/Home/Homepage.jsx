@@ -8,15 +8,7 @@ import Testimonials from '../../../components/Testimonials';
 import './Homepage.css';
 
 const Homepage = () => {
-
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   console.log('window.location.search', urlParams);
-  //   const messageParam = urlParams.get('message');
-  //   if (messageParam) navigate(`/payment-status/?${(window.location.search)?.split('?')[1]}`);
-  // }, []);
-
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
