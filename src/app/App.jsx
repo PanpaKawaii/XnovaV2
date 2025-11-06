@@ -33,6 +33,7 @@ import "./App.css";
 import { venues } from "../mocks/venueData";
 import RoleRoute from "./components/RoleRoute";
 import Reward from "./pages/userPage/Profile/Reward/Reward";
+import PaymentStatus from "./components/Payment/PaymentStatus";
 
 // Helper to transform venues to fields expected by ManageFields
 const fields = venues.map((venue, idx) => ({
@@ -159,6 +160,7 @@ function App() {
             <Route path="/reward" element={<Reward />} />
           </Route>
 
+          <Route path='/payment-status/?' element={<PaymentStatus />} />
           {/* Catch-all route for unknown paths */}
           <Route path="*" element={<OwnerRedirect />} />
         </Routes>

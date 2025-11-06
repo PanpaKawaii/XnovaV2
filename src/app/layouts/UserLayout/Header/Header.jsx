@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Zap, User, Calendar, Users } from "lucide-react";
-import ThemeToggle from "../../../components/ui/ThemeToggle.jsx";
-import LOGO from "../../../assets/LOGO.png";
-import VNFlag from "../../../assets/vn.jpg";
-import UKFlag from "../../../assets/uk.png";
+import { Calendar, Menu, User, Users, X, Zap } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../../../hooks/AuthContext/AuthContext.jsx";
+import { Link, useLocation } from "react-router-dom";
 import { fetchData } from "../../../../mocks/CallingAPI.js";
-import UserDropdown from "./UserDropdown.jsx"; // Import component mới
+import LOGO from "../../../assets/LOGO.png";
+import UKFlag from "../../../assets/uk.png";
+import VNFlag from "../../../assets/vn.jpg";
+import ThemeToggle from "../../../components/ui/ThemeToggle.jsx";
+import { useAuth } from "../../../hooks/AuthContext/AuthContext.jsx";
 import "./Header.css";
+import UserDropdown from "./UserDropdown.jsx"; // Import component mới
 
 const LANGUAGES = [
   { code: "vi", name: "Tiếng Việt", flag: VNFlag },
@@ -64,7 +64,7 @@ const Header = ({ onLoginClick }) => {
         setLoading(false);
       }
     };
-    
+
     fetchUserInfo();
   }, [user]);
 
@@ -107,7 +107,7 @@ const Header = ({ onLoginClick }) => {
 
           <div className="actions">
             <ThemeToggle />
-            
+
             {user ? (
               <UserDropdown
                 user={user}
@@ -125,17 +125,17 @@ const Header = ({ onLoginClick }) => {
                 <span>{t("Login")}</span>
               </button>
             )}
-            
+
             <div className="lang-dropdown" ref={langBtnRef}>
               <button
                 className={`lang-btn ${langDropdown ? "lang-btn--active" : ""}`}
                 onClick={() => setLangDropdown((v) => !v)}
                 aria-label="Change language"
               >
-                <img 
-                  src={currentLang.flag} 
-                  alt={currentLang.name} 
-                  className="lang-flag" 
+                <img
+                  src={currentLang.flag}
+                  alt={currentLang.name}
+                  className="lang-flag"
                 />
               </button>
               {langDropdown && (
@@ -150,10 +150,10 @@ const Header = ({ onLoginClick }) => {
                       disabled={i18n.language === lang.code}
                       className={`lang-item ${i18n.language === lang.code ? "lang-item--active" : ""}`}
                     >
-                      <img 
-                        src={lang.flag} 
-                        alt={lang.name} 
-                        className="lang-item-flag" 
+                      <img
+                        src={lang.flag}
+                        alt={lang.name}
+                        className="lang-item-flag"
                       />
                       <span className="lang-item-name">{lang.name}</span>
                     </button>
@@ -186,7 +186,7 @@ const Header = ({ onLoginClick }) => {
                 <span>{label}</span>
               </Link>
             ))}
-            
+
             {user ? (
               <UserDropdown
                 user={user}
@@ -210,7 +210,7 @@ const Header = ({ onLoginClick }) => {
                 <span>{t("Login")}</span>
               </button>
             )}
-            
+
             <div className="mobile-actions">
               <ThemeToggle />
               <div className="mobile-lang" ref={langBtnRef}>
@@ -219,10 +219,10 @@ const Header = ({ onLoginClick }) => {
                   onClick={() => setLangDropdown((v) => !v)}
                   aria-label="Change language"
                 >
-                  <img 
-                    src={currentLang.flag} 
-                    alt={currentLang.name} 
-                    className="mobile-lang-flag" 
+                  <img
+                    src={currentLang.flag}
+                    alt={currentLang.name}
+                    className="mobile-lang-flag"
                   />
                 </button>
                 {langDropdown && (
@@ -237,10 +237,10 @@ const Header = ({ onLoginClick }) => {
                         disabled={i18n.language === lang.code}
                         className={`mobile-lang-item ${i18n.language === lang.code ? "mobile-lang-item--active" : ""}`}
                       >
-                        <img 
-                          src={lang.flag} 
-                          alt={lang.name} 
-                          className="mobile-lang-item-flag" 
+                        <img
+                          src={lang.flag}
+                          alt={lang.name}
+                          className="mobile-lang-item-flag"
                         />
                         <span className="mobile-lang-item-name">{lang.name}</span>
                       </button>

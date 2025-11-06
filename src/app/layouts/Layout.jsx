@@ -1,8 +1,7 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import Header from './UserLayout/Header/Header';
-import Footer from './UserLayout/Footer/Footer';
+import { Outlet } from "react-router-dom";
 import './Layout.css';
+import Footer from './UserLayout/Footer/Footer';
+import Header from './UserLayout/Header/Header';
 
 const Layout = ({ children, onLoginClick }) => {
   return (

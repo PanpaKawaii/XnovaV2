@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+}
+
+.payment-status {
+    width: 100%;
+    background-color: #fdfdfd;
+    font-family: 'Quicksand', 'Arial', sans-serif;
+
+    .payment-status-content {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        h1 {
+            margin: 0 0 20px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .payment-status-card {
+            width: fit-content;
+            height: fit-content;
+            margin: 180px 0 220px;
+            padding: 60px 40px;
+            background-color: #ffffff;
+            border: none;
+            /* border: 1px solid #a7a4a4c5; */
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            i {
+                font-size: 50px;
+            }
+
+            .payment-active-button {
+                width: 100%;
+                margin: 20px 0 0;
+                display: flex;
+                justify-content: space-evenly;
+
+                .btn,
+                .btn:focus {
+                    color: #ffffff;
+                    background-color: #fb8b24;
+                    font-weight: bold;
+                    border: none;
+                    border-radius: 7px;
+                }
+    
+                .btn:hover {
+                    color: #ffffff;
+                    background-color: #d97720;
+                }
+            }
+        }
+    }
+}
