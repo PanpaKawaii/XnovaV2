@@ -86,6 +86,7 @@ const BookingHistory = () => {
     }
     return 0;
   });
+  console.log('sortedBookings', sortedBookings);
 
   return (
     <div className={`booking-history ${theme}`}>
