@@ -224,31 +224,19 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
         console.log('result', result);
 
         if (result.id) {
-          // for (let index = 0; index < slots.length; index++) {
-          //     const BookingSlotData = {
-          //         id: 0,
-          //         bookingId: result.id,
-          //         slotId: slots[index],
-          //     }
-          //     console.log('BookingSlotData:', BookingSlotData);
-
-          //     const resultBookingSlot = await postData('BookingSlot', BookingSlotData, token);
-          //     console.log('resultBookingSlot', resultBookingSlot);
-          // }
-
           const PaymentMethodData = {
-            id: 0,
+            // id: 0,
             orderId: result.id,
-            fullname: '',
-            description: '',
+            // fullname: '',
+            // description: '',
             amount: amount,
-            status: '',
-            method: '',
-            createdDate: new Date,
+            // status: '',
+            // method: '',
+            // createdDate: new Date,
           };
           console.log('PaymentMethodData:', PaymentMethodData);
 
-          const resultPaymentMethod = await postData('Payment/create', PaymentMethodData, token);
+          const resultPaymentMethod = await postData('Payment/create-payos-v2', PaymentMethodData, token);
           console.log('resultPaymentMethod', resultPaymentMethod);
           window.location.href = resultPaymentMethod.paymentUrl;
         }
