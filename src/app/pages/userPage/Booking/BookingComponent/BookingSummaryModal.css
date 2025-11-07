@@ -469,6 +469,14 @@
   margin: 0;
 }
 
+/* Guidance text in the progress box: use theme accent so it follows current theme */
+.booking-summary-modal__progress-guidance-text {
+  color: var(--accent-primary);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
 .booking-summary-modal__progress-steps {
   display: flex;
   flex-direction: column;

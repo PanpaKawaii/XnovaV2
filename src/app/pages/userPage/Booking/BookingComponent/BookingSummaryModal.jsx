@@ -94,9 +94,28 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
   }, [paymentMethod, selectedDate, selectedField, selectedTimes]);
 
   // Helper functions and calculations
+  // Calculate total price by summing selected slot prices. If a slot doesn't have a price,
+  // fallback to the selected field's basePrice, then to venue.basePrice, then 0.
   const calculateTotalPrice = () => {
-    const basePrice = venueSlots.find(slot => slot.time === selectedTimes[0])?.price || venue?.basePrice || 0;
-    return basePrice * selectedTimes.length;
+    if (!selectedTimes || selectedTimes.length === 0) return 0;
+
+    // Find base price for the selected field (if available)
+    const fieldBasePrice = venueFields.find(f => f.id == selectedField)?.basePrice || venue?.basePrice || 0;
+
+    // Collect slot objects that match selectedTimes
+    const selectedSlotObjects = (venueSlots || []).filter(s => selectedTimes.includes(s.id));
+
+    // If we have slot objects, sum their prices (with fallback to fieldBasePrice)
+    if (selectedSlotObjects.length > 0) {
+      return selectedSlotObjects.reduce((sum, s) => {
+        const price = Number(s.price ?? fieldBasePrice ?? 0);
+        return sum + (isNaN(price) ? 0 : price);
+      }, 0);
+    }
+
+    // Fallback: if no slot objects found (IDs might be strings/numbers mismatch),
+    // assume each selected time uses the field base price
+    return Number(fieldBasePrice) * selectedTimes.length;
   };
 
   const totalPrice = calculateTotalPrice();
