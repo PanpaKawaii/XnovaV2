@@ -78,8 +78,8 @@ export default function PaymentStatus() {
     return (
         <div className="payment-status">
             <div className="card">
-                {message && (
-                    message == 'Thanh toán thành công' ?
+                {message ?
+                    (message == 'Thanh toán thành công' ?
                         <>
                             <div className="icon">✓</div>
                             <div className="title success">{message}</div>
@@ -89,7 +89,10 @@ export default function PaymentStatus() {
                             <div className="icon">×</div>
                             <div className="title fail">{message}</div>
                         </>
-                )}
+                    )
+                    :
+                    <div className="icon"><i className='fa-solid fa-spinner' /></div>
+                }
                 <Link to='/'><button className="btn-continue">VỀ TRANG CHỦ</button></Link>
             </div>
         </div>

@@ -87,6 +87,10 @@
             font-size: 120px;
             font-weight: bold;
             align-content: center;
+
+            .fa-spinner {
+                animation: payment_loading 1.5s linear infinite;
+            }
         }
 
         .title {
@@ -128,5 +132,15 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes payment_loading {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }
