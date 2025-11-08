@@ -107,14 +107,7 @@ function App() {
         <ScrollToTop />
         <Routes>
           {/* Admin Layout*/}
-          <Route
-            path="/admin/*"
-            element={
-              <RoleRoute allowedRoles={["Admin"]}>
-                <AdminLayout />
-              </RoleRoute>
-            }
-          >
+          <Route path="/admin/*" element={<RoleRoute allowedRoles={["Admin"]}><AdminLayout /></RoleRoute>}>
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="" element={<Dashboard />} />
@@ -126,20 +119,10 @@ function App() {
             <Route path="settings" element={<Settings />} />
           </Route>
           {/* Owner Layout */}
-          <Route
-            path="/owner/*"
-            element={
-              <RoleRoute allowedRoles={["Owner"]}>
-                <OwnerLayout />
-              </RoleRoute>
-            }
-          >
+          <Route path="/owner/*" element={<RoleRoute allowedRoles={["Owner"]}><OwnerLayout /></RoleRoute>}>
             <Route index element={<DashboardOverview />} />
             <Route path="dashboard" element={<DashboardOverview />} />
-            <Route
-              path="manage-fields"
-              element={<ManageFields fields={fields} />}
-            />
+            <Route path="manage-fields" element={<ManageFields fields={fields} />} />
             <Route path="add-field" element={<AddEditField />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<SettingsPage />} />
@@ -147,9 +130,7 @@ function App() {
           </Route>
 
           {/* User Layout - Owner cũng có thể truy cập */}
-          <Route
-            element={<Layout onLoginClick={() => setIsLoginModalOpen(true)} />}
-          >
+          <Route element={<Layout onLoginClick={() => setIsLoginModalOpen(true)} />}>
             <Route path="/" element={<OwnerRedirect />} />
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/profile" element={<ProfileSettings />} />
@@ -158,15 +139,13 @@ function App() {
             <Route path="/team-management" element={<TeamManagement />} />
             <Route path="/find-teammates" element={<FindTeammatePage />} />
             <Route path="/reward" element={<Reward />} />
+            <Route path='/payment-status/?' element={<PaymentStatus />} />
           </Route>
 
-          <Route path='/payment-status/?' element={<PaymentStatus />} />
           {/* Catch-all route for unknown paths */}
           <Route path="*" element={<OwnerRedirect />} />
         </Routes>
-        {isLoginModalOpen && (
-          <LoginRegister setIsLoginModalOpen={setIsLoginModalOpen} />
-        )}
+        {isLoginModalOpen && <LoginRegister setIsLoginModalOpen={setIsLoginModalOpen} />}
       </Router>
       <ChatBoxV2 />
     </ThemeProvider>
