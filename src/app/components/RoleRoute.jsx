@@ -1,24 +1,13 @@
-import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/AuthContext/AuthContext';
+import LoadingAnimation from './LoadingAnimation/LoadingAnimation';
 
 export default function RoleRoute({ allowedRoles, children, redirectTo = "/" }) {
   const { user, isLoading } = useAuth();
   console.log('RoleRoute user:', user, 'isLoading:', isLoading);
   
   // Hiển thị loading khi đang kiểm tra user
-  if (isLoading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
-      }}>
-        Loading...
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingAnimation />
   
   // Nếu chưa đăng nhập, redirect về trang chủ
   if (!user) {
