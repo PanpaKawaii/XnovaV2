@@ -1,39 +1,34 @@
-import { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
-import { Layout, OwnerLayout } from "./layouts";
-import { AdminLayout } from "./layouts";
-import { useAuth } from "./hooks/AuthContext/AuthContext";
+import { useEffect, useState } from "react";
+import { Navigate, Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
+import { venues } from "../mocks/venueData";
 import ChatBoxV2 from "./components/ChatBoxV2/ChatBoxV2";
-import Homepage from "./pages/userPage/Home/Homepage";
-import BookingPage from "./pages/userPage/Booking/BookingPageV2";
-import FindTeammatePage from "./pages/userPage/FindTeammate/FindTeammatePage";
-import ProfileSettings from "./pages/userPage/Profile/ProfileSettings";
-import TeamManagement from "./pages/userPage/TeamManagement/TeamManagement";
-import LoginRegister from "./pages/userPage/LoginRegister/LoginRegister";
-import ManageFields from "./pages/ownerPage/ManageFields/ManageFields";
-import AddEditField from "./pages/ownerPage/AddEditField/AddEditField";
-import Reports from "./pages/ownerPage/Reports/Reports";
-import SettingsPage from "./pages/ownerPage/SettingsPage/SettingsPage";
-import DashboardOverview from "./pages/ownerPage/DashboardOverview/DashboardOverview";
+import LoadingAnimation from "./components/LoadingAnimation/LoadingAnimation.jsx";
+import PaymentStatus from "./components/Payment/PaymentStatus";
+import RoleRoute from "./components/RoleRoute";
+import { useAuth } from "./hooks/AuthContext/AuthContext";
+import { ThemeProvider } from "./hooks/ThemeContext";
+import { AdminLayout, Layout, OwnerLayout } from "./layouts";
 import { Dashboard } from "./pages/adminPage/AdminDashboard/Dashboard";
 import { BookingManagement } from "./pages/adminPage/BookingManagement/BookingManagement";
-import { FieldOwnerManagement } from "./pages/adminPage/FieldOwnerManagement.jsx";
-import { UserManagement } from "./pages/adminPage/UserManagement.jsx";
 import { FieldManagement } from "./pages/adminPage/FieldManagement.jsx";
+import { FieldOwnerManagement } from "./pages/adminPage/FieldOwnerManagement.jsx";
 import { RevenueAnalytics } from "./pages/adminPage/RevenueAnalytics.jsx";
 import { Settings } from "./pages/adminPage/Settings.jsx";
-import { ThemeProvider } from "./hooks/ThemeContext";
-import "./App.css";
-import { venues } from "../mocks/venueData";
-import RoleRoute from "./components/RoleRoute";
+import { UserManagement } from "./pages/adminPage/UserManagement.jsx";
+import AddEditField from "./pages/ownerPage/AddEditField/AddEditField";
+import DashboardOverview from "./pages/ownerPage/DashboardOverview/DashboardOverview";
+import ManageFields from "./pages/ownerPage/ManageFields/ManageFields";
+import Reports from "./pages/ownerPage/Reports/Reports";
+import SettingsPage from "./pages/ownerPage/SettingsPage/SettingsPage";
+import BookingPage from "./pages/userPage/Booking/BookingPageV2";
+import FindTeammatePage from "./pages/userPage/FindTeammate/FindTeammatePage";
+import Homepage from "./pages/userPage/Home/Homepage";
+import LoginRegister from "./pages/userPage/LoginRegister/LoginRegister";
+import ProfileSettings from "./pages/userPage/Profile/ProfileSettings";
 import Reward from "./pages/userPage/Profile/Reward/Reward";
-import PaymentStatus from "./components/Payment/PaymentStatus";
+import TeamManagement from "./pages/userPage/TeamManagement/TeamManagement";
+
+import "./App.css";
 
 // Helper to transform venues to fields expected by ManageFields
 const fields = venues.map((venue, idx) => ({
@@ -62,9 +57,7 @@ function OwnerRedirect() {
   const { user, isLoading } = useAuth();
 
   // Hiển thị loading khi đang kiểm tra user
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return <LoadingAnimation />
 
   // Redirect dựa trên role của user
   if (user) {
@@ -82,24 +75,11 @@ function OwnerRedirect() {
 }
 
 function App() {
-  const { user, isLoading } = useAuth();
+  const { isLoading } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Loading state toàn app
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        Loading...
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingAnimation />
 
   return (
     <ThemeProvider>
@@ -139,7 +119,7 @@ function App() {
             <Route path="/team-management" element={<TeamManagement />} />
             <Route path="/find-teammates" element={<FindTeammatePage />} />
             <Route path="/reward" element={<Reward />} />
-            <Route path='/payment-status/?' element={<PaymentStatus />} />
+            <Route path="/payment-status/?" element={<PaymentStatus />} />
           </Route>
 
           {/* Catch-all route for unknown paths */}

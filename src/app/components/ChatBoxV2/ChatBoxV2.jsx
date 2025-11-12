@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { postData } from '../../../mocks/CallingAPI.js';
 import { useAuth } from '../../hooks/AuthContext/AuthContext.jsx';
 import './ChatBoxV2.css';
+import MessagePreview from './MessagePreview.jsx';
 
 export default function ChatBoxV2() {
     const { user } = useAuth();
 
     const [Messages, setMessages] = useState([]);
+    const [NewResponse, setNewResponse] = useState(null);
     const [WidthFull, setWidthFull] = useState(false);
     const [HeightFull, setHeightFull] = useState(false);
     const [DisplayChat, setDisplayChat] = useState(false);
@@ -14,8 +16,18 @@ export default function ChatBoxV2() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        if (visible) {
+            const timer = setTimeout(() => setVisible(false), 5000); // 5s
+            return () => clearTimeout(timer);
+        }
+    }, [visible]);
+
     useEffect(() => {
         setMessages(['Xin chào! Tôi là trợ lý AI của bạn. Hãy đặt câu hỏi để tôi hỗ trợ nhé!']);
+        setNewResponse('Xin chào! Tôi là trợ lý AI của bạn. Hãy đặt câu hỏi để tôi hỗ trợ nhé!');
+        setVisible(true);
     }, [user]);
 
     const addMessage = async (newMessage) => {
@@ -26,10 +38,19 @@ export default function ChatBoxV2() {
         try {
             const result = await postData('Chat/ask', SendMessage, token);
             console.log('result', result);
-            if (result.reply?.includes('The model is overloaded. Please try again later.')) setMessages((prev) => [...prev, 'Kết nối không ổn định, bạn hãy thử lại sau nhé!']);
-            else setMessages((prev) => [...prev, result.reply]);
+            if (result.reply?.includes('The model is overloaded. Please try again later.')) {
+                setMessages((prev) => [...prev, 'Kết nối không ổn định, bạn hãy thử lại sau nhé!']);
+                setNewResponse('Kết nối không ổn định, bạn hãy thử lại sau nhé!');
+                setVisible(true);
+            } else {
+                setMessages((prev) => [...prev, result.reply]);
+                setNewResponse(result.reply);
+                setVisible(true);
+            }
         } catch (error) {
             setMessages((prev) => [...prev, 'Kết nối không ổn định, bạn hãy thử lại sau nhé!']);
+            setNewResponse('Kết nối không ổn định, bạn hãy thử lại sau nhé!');
+            setVisible(true);
             setError(error);
         } finally {
             setLoading(false);
@@ -41,7 +62,7 @@ export default function ChatBoxV2() {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
-    }, [Messages]);
+    }, [Messages, DisplayChat]);
 
     const addMyMessage = (newMessage) => {
         setMessages((prev) => [...prev, newMessage]);
@@ -101,9 +122,12 @@ export default function ChatBoxV2() {
     return (
         <div className='chat-box-v2-container'>
             {!DisplayChat &&
-                <div className='open-icon' onClick={() => setDisplayChat(true)}>
-                    Xnova
-                </div>
+                <>
+                    <MessagePreview visible={visible} message={NewResponse} />
+                    <div className='open-icon' onClick={() => setDisplayChat(true)}>
+                        Xnova
+                    </div>
+                </>
             }
             {DisplayChat &&
                 <div className='chat-box' style={chatStyle}>
@@ -122,18 +146,18 @@ export default function ChatBoxV2() {
                                 :
                                 <i className='fa-solid fa-arrows-alt-v' onClick={() => setHeightFull(true)} title='Mở rộng chiều cao'></i>
                             }
-                            <i className='fa-solid fa-times' onClick={() => setDisplayChat(false)} title='Đóng'></i>
+                            <i className='fa-solid fa-times' onClick={() => { setDisplayChat(false), setVisible(false) }} title='Đóng'></i>
                         </div>
                     </div>
                     <div ref={chatContainerRef} className='chat-content'>
                         {/* {Messages.length === 0 && !loading && ( */}
-                            <div className='welcome-message'>
-                                <i className='fa-solid fa-comments welcome-icon'></i>
-                                <div className='welcome-text'>
-                                    <h3>Chào mừng bạn đến với Xnova AI!</h3>
-                                    <p>Hãy bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới.</p>
-                                </div>
+                        <div className='welcome-message'>
+                            <i className='fa-solid fa-comments welcome-icon'></i>
+                            <div className='welcome-text'>
+                                <h3>Chào mừng bạn đến với Xnova AI!</h3>
+                                <p>Hãy bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới.</p>
                             </div>
+                        </div>
                         {/* )} */}
                         {Messages.map((msg, idx) => (
                             <div
