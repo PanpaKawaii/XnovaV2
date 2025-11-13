@@ -26,9 +26,12 @@
   flex-direction: column;
 
   @media (min-width: 1024px) {
-    position: relative;
-    transform: translateX(0);
+    position: sticky;
+    top: 0;
+    left: 0;
+    height: 100vh;
     z-index: auto;
+    transform: translateX(0);
   }
 
   &--open {

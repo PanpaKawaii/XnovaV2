@@ -9,7 +9,8 @@ import {
   Bell,
   Menu,
   X,
-  LogOut
+  LogOut,
+  Building2
 } from 'lucide-react';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
@@ -21,6 +22,7 @@ const menuItems = [
   { id: 'admin/bookings', icon: Calendar, label: 'Quản lý đặt sân' },
   { id: 'admin/fieldOwners', icon: Users, label: 'Quản lý chủ sân' },
   { id: 'admin/users', icon: Users, label: 'Quản lý khách hàng' },
+  { id: 'admin/venues', icon: Building2, label: 'Quản lý Venue' },
   { id: 'admin/fields', icon: MapPin, label: 'Quản lý sân' },
   { id: 'admin/revenue', icon: TrendingUp, label: 'Thống kê doanh thu' },
   { id: 'admin/settings', icon: Settings, label: 'Cài đặt' },
