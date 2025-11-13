@@ -40,11 +40,11 @@
 
 .ad-dashboard__revenue-section {
   display: grid;
-  grid-template-columns: 1fr;
+  
   gap: 1rem;
 
   @media (min-width: 1280px) {
-    grid-template-columns: 1fr 2fr;
+    
     gap: 1.5rem;
   }
 }
@@ -62,26 +62,17 @@
 }
 
 .ad-dashboard__overview-card {
-  background-color: var(--color-bg-primary, #ffffff);
+  background-color: var(--bg-primary);
   border-radius: 0.75rem;
   padding: 1.5rem;
-  border: 1px solid var(--color-border, #e5e7eb);
-
-  .dark & {
-    background-color: #1f2937;
-    border-color: var(--color-border-dark, #374151);
-  }
+  border: 1px solid var(--border-primary);
 }
 
 .ad-dashboard__overview-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0 0 1rem 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-dashboard__overview-grid {
@@ -156,11 +147,7 @@
 
 .ad-dashboard__metric-label {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 

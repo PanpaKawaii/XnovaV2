@@ -668,7 +668,7 @@
         color: #d1d5db;
 
         &.active {
-          color: #333;
+          color: var(--text-primary);
         }
 
         &:hover {

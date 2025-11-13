@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -23,8 +23,79 @@ export const Chart = ({
   xDataKey = 'date',
   yDataKey = 'amount',
   title,
-  color = '#3B82F6'
+  color = '#3B82F6',
+  showFilter = false,
+  fullData = [] // Dữ liệu đầy đủ để filter
 }) => {
+  const [timeFilter, setTimeFilter] = useState('day'); // 'day', 'month', 'year'
+
+  // Xử lý dữ liệu theo filter
+  const filteredData = useMemo(() => {
+    if (!showFilter || !fullData || fullData.length === 0) {
+      return data;
+    }
+
+    const now = new Date();
+    let result = [];
+
+    switch (timeFilter) {
+      case 'day':
+        // Lấy 7 ngày gần nhất
+        result = fullData.slice(-7).map(item => ({
+          ...item,
+          [xDataKey]: new Date(item.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })
+        }));
+        break;
+
+      case 'month':
+        // Lấy 7 tháng gần nhất, group theo tháng
+        const monthlyData = {};
+        fullData.forEach(item => {
+          const date = new Date(item.date);
+          const monthKey = `${date.getMonth() + 1}/${date.getFullYear()}`;
+          if (!monthlyData[monthKey]) {
+            monthlyData[monthKey] = { ...item, count: 1 };
+          } else {
+            monthlyData[monthKey][yDataKey] += item[yDataKey];
+            if (item.bookings) monthlyData[monthKey].bookings = (monthlyData[monthKey].bookings || 0) + item.bookings;
+            monthlyData[monthKey].count++;
+          }
+        });
+        result = Object.entries(monthlyData)
+          .slice(-7)
+          .map(([key, value]) => ({
+            ...value,
+            [xDataKey]: key
+          }));
+        break;
+
+      case 'year':
+        // Lấy 7 năm gần nhất, group theo năm
+        const yearlyData = {};
+        fullData.forEach(item => {
+          const year = new Date(item.date).getFullYear().toString();
+          if (!yearlyData[year]) {
+            yearlyData[year] = { ...item, count: 1 };
+          } else {
+            yearlyData[year][yDataKey] += item[yDataKey];
+            if (item.bookings) yearlyData[year].bookings = (yearlyData[year].bookings || 0) + item.bookings;
+            yearlyData[year].count++;
+          }
+        });
+        result = Object.entries(yearlyData)
+          .slice(-7)
+          .map(([key, value]) => ({
+            ...value,
+            [xDataKey]: key
+          }));
+        break;
+
+      default:
+        result = data;
+    }
+
+    return result;
+  }, [timeFilter, data, fullData, showFilter, xDataKey, yDataKey]);
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -59,7 +130,7 @@ export const Chart = ({
     switch (type) {
       case 'line':
         return (
-          <LineChart data={data}>
+          <LineChart data={filteredData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis 
               dataKey={xDataKey} 
@@ -85,7 +156,7 @@ export const Chart = ({
       
       case 'bar':
         return (
-          <BarChart data={data}>
+          <BarChart data={filteredData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis 
               dataKey={xDataKey} 
@@ -106,7 +177,7 @@ export const Chart = ({
         return (
           <PieChart>
             <Pie
-              data={data}
+              data={filteredData}
               cx="50%"
               cy="50%"
               labelLine={false}
@@ -118,7 +189,7 @@ export const Chart = ({
               fill="#8884d8"
               dataKey={yDataKey}
             >
-              {data.map((_, index) => (
+              {filteredData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
@@ -133,9 +204,33 @@ export const Chart = ({
 
   return (
     <div className="ad-chart">
-      <h3 className="ad-chart__title">
-        {title}
-      </h3>
+      <div className="ad-chart__header">
+        <h3 className="ad-chart__title">
+          {title}
+        </h3>
+        {showFilter && (
+          <div className="ad-chart__filter">
+            <button
+              className={`ad-chart__filter-btn ${timeFilter === 'day' ? 'ad-chart__filter-btn--active' : ''}`}
+              onClick={() => setTimeFilter('day')}
+            >
+              Ngày
+            </button>
+            <button
+              className={`ad-chart__filter-btn ${timeFilter === 'month' ? 'ad-chart__filter-btn--active' : ''}`}
+              onClick={() => setTimeFilter('month')}
+            >
+              Tháng
+            </button>
+            <button
+              className={`ad-chart__filter-btn ${timeFilter === 'year' ? 'ad-chart__filter-btn--active' : ''}`}
+              onClick={() => setTimeFilter('year')}
+            >
+              Năm
+            </button>
+          </div>
+        )}
+      </div>
       <div className="ad-chart__container">
         <ResponsiveContainer width="100%" height="100%">
           {renderChart()}
