@@ -80,18 +80,18 @@ const Hero = () => {
 
     const field = FIELDs.find(field => field.id == suggessBookingRaw.fieldId);
     const venue = VENUEs.find(venue => venue.id == field.venueId);
+    const totalAmount = updatedBookingSlots?.reduce((sum, item) => sum + (item.slot.price || 0), 0);
+    console.log('totalAmount', totalAmount);
 
     suggessBooking = {
       ...suggessBookingRaw,
       bookingSlots: updatedBookingSlots || [],
       field: field || null,
       venue: venue || null,
+      totalAmount: totalAmount,
     };
   }
   console.log('suggessBooking', suggessBooking);
-
-  const totalAmount = suggessBooking?.bookingSlots?.reduce((sum, item) => sum + (item.slot.price || 0), 0);
-  console.log('totalAmount', totalAmount);
 
   return (
     <section className="hero">
@@ -143,45 +143,46 @@ const Hero = () => {
           </div>
 
           {/* Right Column */}
-          <div className="card-wrap">
+          {suggessBooking &&
+            <div className="card-wrap">
 
-            {/* Floating Icons */}
-            <div className="float-item purple">
-              <Users className="float-icon" />
-            </div>
-            <div className="float-item green">
-              <PlayCircle className="float-icon" />
-            </div>
-
-            <div className="card">
-              <div className="badge">Live</div>
-
-              <div className="card-header">
-                <h3 className="card-title">Gợi ý sân quen thuộc</h3>
-                <div className="location">
-                  <MapPin className="loc-icon" />
-                  <span>{suggessBooking?.venue?.name}</span>
-                </div>
+              {/* Floating Icons */}
+              <div className="float-item purple">
+                <Users className="float-icon" />
+              </div>
+              <div className="float-item green">
+                <PlayCircle className="float-icon" />
               </div>
 
-              <div className="info">
-                <div className="box time">
-                  <div className="label green">Hôm nay</div>
-                  {suggessBooking?.bookingSlots?.map((slot, i) => (
-                    <div key={slot.slotId}>
-                      <div className="value">{slot.slot?.startTime?.slice(0, 5)} - {slot.slot?.endTime?.slice(0, 5)}</div>
-                    </div>
-                  ))}
-                  <div className="sub">{suggessBooking?.bookingSlots?.length / 2}h</div>
-                </div>
-                <div className="box price">
-                  <div className="label purple">Tổng</div>
-                  <div className="value">{totalAmount?.toLocaleString('vi-VN')} VND</div>
-                  {/* <div className="sub">mỗi giờ</div> */}
-                </div>
-              </div>
+              <div className="card">
+                <div className="badge">Live</div>
 
-              {/* <div className="progress">
+                <div className="card-header">
+                  <h3 className="card-title">Gợi ý sân quen thuộc</h3>
+                  <div className="location">
+                    <MapPin className="loc-icon" />
+                    <span>{suggessBooking?.venue?.name}</span>
+                  </div>
+                </div>
+
+                <div className="info">
+                  <div className="box time">
+                    <div className="label green">Hôm nay</div>
+                    {suggessBooking?.bookingSlots?.map((slot, i) => (
+                      <div key={slot.slotId}>
+                        <div className="value">{slot.slot?.startTime?.slice(0, 5)} - {slot.slot?.endTime?.slice(0, 5)}</div>
+                      </div>
+                    ))}
+                    <div className="sub">{suggessBooking?.bookingSlots?.length / 2}h</div>
+                  </div>
+                  <div className="box price">
+                    <div className="label purple">Tổng</div>
+                    <div className="value">{suggessBooking?.totalAmount?.toLocaleString('vi-VN')} VND</div>
+                    {/* <div className="sub">mỗi giờ</div> */}
+                  </div>
+                </div>
+
+                {/* <div className="progress">
                 <div className="progress-head">
                   <span className="label">Cần thêm cầu thủ</span>
                   <span className="status">Còn 3 chỗ</span>
@@ -191,14 +192,14 @@ const Hero = () => {
                 </div>
               </div> */}
 
-              <Link
-                to="/profile-settings"
-                state={{ user, userInfo, section: "bookingHistory" }}
-              >
-                <button className="join">Xem chi tiết</button>
-              </Link>
-            </div>
-          </div>
+                <Link
+                  to="/booking"
+                  state={{ user, userInfo, section: "bookingHistory" }}
+                >
+                  <button className="join">ĐẶT SÂN NGAY</button>
+                </Link>
+              </div>
+            </div>}
         </div>
       </div>
     </section >
