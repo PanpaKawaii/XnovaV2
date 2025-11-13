@@ -51,34 +51,6 @@ export const Settings = () => {
           </div>
         </div>
 
-        {/* Appearance Settings */}
-        <div className="ad-settings-section">
-          <div className="ad-settings-section__header">
-            <Sun className="ad-settings-section__icon" />
-            <h2 className="ad-settings-section__title">
-              Giao diện
-            </h2>
-          </div>
-          
-          <div className="ad-settings-section__content">
-            <div className="ad-settings-option">
-              <div className="ad-settings-option__info">
-                <p className="ad-settings-option__title">Chế độ hiển thị</p>
-                <p className="ad-settings-option__description">
-                  Chuyển đổi giữa chế độ sáng và tối
-                </p>
-              </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={toggleTheme}
-                icon={theme === 'light' ? Moon : Sun}
-              >
-                {theme === 'light' ? 'Chế độ tối' : 'Chế độ sáng'}
-              </Button>
-            </div>
-          </div>
-        </div>
 
         {/* Notification Settings */}
         <div className="ad-settings-section">
