@@ -96,10 +96,8 @@ export const Dashboard = () => {
       try {
         const token = user?.token;
         if (!token) {
-          // Không có token vẫn đảm bảo mặc định hôm nay bắt đầu từ 3 (booking)
-          setTodayBookings(3);
-          // Doanh thu hôm nay baseline 320000
-          setTodayRevenue(320000);
+          setTodayBookings(0);
+          setTodayRevenue(0);
           setLoadingBookings(false);
           setLoadingRevenue(false);
           return;
@@ -107,8 +105,7 @@ export const Dashboard = () => {
         const bookings = await fetchData('booking', token);
         const today = new Date();
         const todayStr = today.toISOString().slice(0, 10);
-  // Tổng số booking
-  setTotalBookings(Array.isArray(bookings) ? bookings.length : 0);
+        setTotalBookings(Array.isArray(bookings) ? bookings.length : 0);
         // Đếm số booking có date === todayStr
         const count = Array.isArray(bookings)
           ? bookings.filter(b => {
@@ -116,8 +113,7 @@ export const Dashboard = () => {
               return b.date.slice(0, 10) === todayStr;
             }).length
           : 0;
-        // Áp dụng baseline: todayBookings luôn bắt đầu từ 3
-        setTodayBookings(count + 3);
+        setTodayBookings(count);
 
         // Tính tổng amount của payments có date === todayStr
         let revenue = 0;
@@ -126,11 +122,9 @@ export const Dashboard = () => {
           bookings.forEach(b => {
             if (Array.isArray(b.payments)) {
               b.payments.forEach(p => {
-                // Doanh thu hôm nay
                 if (p.date && p.date.slice(0, 10) === todayStr && typeof p.amount === 'number') {
                   revenue += p.amount;
                 }
-                // Tổng doanh thu
                 if (typeof p.amount === 'number') {
                   totalRevenueSum += p.amount;
                 }
@@ -138,8 +132,7 @@ export const Dashboard = () => {
             }
           });
         }
-  // Áp dụng baseline 320000 cho doanh thu hôm nay
-  setTodayRevenue(revenue + 320000);
+        setTodayRevenue(revenue);
         setTotalRevenue(totalRevenueSum);
 
         // Chuẩn hóa dữ liệu biểu đồ booking theo ngày từ API
@@ -151,14 +144,10 @@ export const Dashboard = () => {
             countsByDay.set(dayKey, (countsByDay.get(dayKey) || 0) + 1);
           });
         }
-        // Đảm bảo ngày hiện tại tồn tại và bắt đầu từ 3
-        const currentTodayCount = countsByDay.get(todayStr) || 0;
-        countsByDay.set(todayStr, currentTodayCount + 3);
         // Sắp xếp theo ngày tăng dần và tạo mảng fullData
         const sortedDays = Array.from(countsByDay.keys()).sort();
         const fullDataFromApi = sortedDays.map(d => ({ date: d, bookings: countsByDay.get(d) }));
         setBookingFullData(fullDataFromApi);
-        // Lấy 7 ngày gần nhất cho hiển thị mặc định
         setBookingChartData(fullDataFromApi.slice(-7));
 
         // Chuẩn hóa dữ liệu biểu đồ doanh thu theo ngày từ API (tổng amount theo từng ngày payments)
@@ -174,18 +163,14 @@ export const Dashboard = () => {
             }
           });
         }
-        // Đảm bảo ngày hiện tại tồn tại và bắt đầu từ 320000
-        const currentTodayAmount = amountsByDay.get(todayStr) || 0;
-        amountsByDay.set(todayStr, currentTodayAmount + 320000);
         const sortedRevenueDays = Array.from(amountsByDay.keys()).sort();
         const revenueFull = sortedRevenueDays.map(d => ({ date: d, amount: amountsByDay.get(d) }));
         setRevenueFullData(revenueFull);
         setRevenueChartData(revenueFull.slice(-7));
       } catch (err) {
         setBookingError('Lỗi khi tải dữ liệu booking');
-  // Trong trường hợp lỗi, vẫn hiển thị baseline 3 cho hôm nay (booking) và 320000 cho doanh thu hôm nay
-  setTodayBookings(3);
-  setTodayRevenue(320000);
+        setTodayBookings(0);
+        setTodayRevenue(0);
       } finally {
         setLoadingBookings(false);
         setLoadingRevenue(false);
