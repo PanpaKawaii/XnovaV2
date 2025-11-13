@@ -22,12 +22,8 @@
 .ad-field-page__title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-field-page__filters {
@@ -56,17 +52,12 @@
 }
 
 .ad-field-page__stat-card {
-  background-color: var(--color-bg-primary, #ffffff);
+  background-color: var(--bg-primary);
   border-radius: 0.5rem;
   padding: 1rem;
-  border: 1px solid var(--color-border, #e5e7eb);
+  border: 1px solid var(--border-primary);
   display: flex;
   align-items: center;
-
-  .dark & {
-    background-color: #1f2937;
-    border-color: var(--color-border-dark, #374151);
-  }
 }
 
 .ad-field-page__stat-icon {
@@ -150,23 +141,15 @@
 
 .ad-field-page__stat-label {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 
 .ad-field-page__stat-value {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 /* Fields Grid */
@@ -186,20 +169,15 @@
 
 /* Field Card */
 .ad-field-card {
-  background-color: var(--color-bg-primary, #ffffff);
+  background-color: var(--bg-primary);
   border-radius: 0.75rem;
-  border: 1px solid var(--color-border, #e5e7eb);
+  border: 1px solid var(--border-primary);
   padding: 1.5rem;
   transition: box-shadow 0.2s ease;
 
   &:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-                0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
-
-  .dark & {
-    background-color: #1f2937;
-    border-color: var(--color-border-dark, #374151);
+    box-shadow: 0 10px 15px -3px var(--shadow-primary),
+                0 4px 6px -2px var(--shadow-secondary);
   }
 }
 
@@ -217,22 +195,14 @@
 .ad-field-card__name {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0 0 0.25rem 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-field-card__location {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0 0 0.5rem 0;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 
 .ad-field-card__details {
@@ -250,20 +220,12 @@
 
 .ad-field-card__detail-label {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
+  color: var(--text-secondary);
 }
 
 .ad-field-card__detail-value {
   font-weight: 500;
-  color: var(--color-text-primary, #111827);
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
+  color: var(--text-primary);
 }
 
 .ad-field-card__progress-wrapper {
@@ -272,14 +234,10 @@
 
 .ad-field-card__progress-bar {
   width: 100%;
-  background-color: #e5e7eb;
+  background-color: var(--bg-tertiary);
   border-radius: 9999px;
   height: 0.5rem;
   overflow: hidden;
-
-  .dark & {
-    background-color: #374151;
-  }
 }
 
 .ad-field-card__progress-fill {
@@ -291,12 +249,8 @@
 
 .ad-field-card__description {
   font-size: 0.75rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0 0 1rem 0;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 
 .ad-field-card__actions {

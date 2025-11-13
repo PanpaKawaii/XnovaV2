@@ -1,25 +1,20 @@
 ﻿/* StatsCard Component - BEM Style with Nested CSS */
 
 .ad-stats-card {
-  background-color: var(--color-bg-primary, #ffffff);
+  background-color: var(--bg-primary);
   border-radius: 0.75rem;
   padding: 1rem;
-  border: 1px solid var(--color-border, #e5e7eb);
+  border: 1px solid var(--border-primary);
   transition: box-shadow 0.2s ease;
   height: 100%;
 
   &:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 15px -3px var(--shadow-primary),
+                0 4px 6px -2px var(--shadow-secondary);
   }
 
   @media (min-width: 1024px) {
     padding: 1.5rem;
-  }
-
-  .dark & {
-    background-color: #1f2937;
-    border-color: var(--color-border-dark, #374151);
   }
 }
 
@@ -38,27 +33,19 @@
 
 .ad-stats-card__title {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0 0 0.25rem 0;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 
 .ad-stats-card__value {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0;
   word-break: break-word;
 
   @media (min-width: 1024px) {
     font-size: 1.5rem;
-  }
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
   }
 }
 
@@ -67,27 +54,15 @@
   margin: 0.25rem 0 0 0;
 
   &--positive {
-    color: #16a34a;
-
-    .dark & {
-      color: #4ade80;
-    }
+    color: var(--success);
   }
 
   &--negative {
-    color: #dc2626;
-
-    .dark & {
-      color: #f87171;
-    }
+    color: var(--error);
   }
 
   &--neutral {
-    color: var(--color-text-secondary, #6b7280);
-
-    .dark & {
-      color: var(--color-text-secondary-dark, #9ca3af);
-    }
+    color: var(--text-secondary);
   }
 }
 
@@ -101,12 +76,13 @@
   }
 
   &--blue {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
+    /* Use theme info color and its RGB for translucent background */
+    background-color: rgba(var(--info-rgb), 0.08);
+    color: var(--info);
 
+    /* Slightly stronger background in dark mode */
     .dark & {
-      background-color: rgba(59, 130, 246, 0.2);
-      color: #60a5fa;
+      background-color: rgba(var(--info-rgb), 0.16);
     }
   }
 

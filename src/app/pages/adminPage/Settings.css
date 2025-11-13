@@ -10,12 +10,8 @@
 .ad-settings-page__title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-settings-page__grid {
@@ -30,15 +26,10 @@
 
 /* Settings Section */
 .ad-settings-section {
-  background-color: var(--color-bg-primary, #ffffff);
+  background-color: var(--bg-primary);
   border-radius: 0.75rem;
   padding: 1.5rem;
-  border: 1px solid var(--color-border, #e5e7eb);
-
-  .dark & {
-    background-color: #1f2937;
-    border-color: var(--color-border-dark, #374151);
-  }
+  border: 1px solid var(--border-primary);
 
   &--wide {
     @media (min-width: 1024px) {
@@ -56,23 +47,15 @@
 .ad-settings-section__icon {
   width: 1.25rem;
   height: 1.25rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin-right: 0.5rem;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 
 .ad-settings-section__title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-settings-section__content {
@@ -91,21 +74,17 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-text-secondary, #374151);
+  color: var(--text-secondary);
   margin-bottom: 0.25rem;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #d1d5db);
-  }
 }
 
 .ad-settings-input-group__input {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-border, #d1d5db);
+  border: 1px solid var(--border-secondary);
   border-radius: 0.5rem;
-  background-color: var(--color-bg-primary, #ffffff);
-  color: var(--color-text-primary, #111827);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-size: 0.875rem;
   transition: all 0.2s ease;
 
@@ -113,17 +92,6 @@
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  .dark & {
-    background-color: #374151;
-    border-color: var(--color-border-dark, #4b5563);
-    color: var(--color-text-primary-dark, #ffffff);
-
-    &:focus {
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
-    }
   }
 }
 
@@ -140,22 +108,14 @@
 
 .ad-settings-option__title {
   font-weight: 500;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0 0 0.25rem 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-settings-option__description {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 
 /* Toggle Switch */
@@ -171,22 +131,14 @@
 
 .ad-settings-toggle__title {
   font-weight: 500;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0 0 0.25rem 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-settings-toggle__description {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 
 .ad-settings-toggle__switch {

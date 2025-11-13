@@ -22,12 +22,8 @@
 .ad-revenue-page__title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-revenue-page__header-actions {
@@ -51,17 +47,12 @@
 }
 
 .ad-revenue-stat-card {
-  background-color: var(--color-bg-primary, #ffffff);
+  background-color: var(--bg-primary);
   border-radius: 0.75rem;
   padding: 1.5rem;
-  border: 1px solid var(--color-border, #e5e7eb);
+  border: 1px solid var(--border-primary);
   display: flex;
   justify-content: space-between;
-
-  .dark & {
-    background-color: #1f2937;
-    border-color: var(--color-border-dark, #374151);
-  }
 }
 
 .ad-revenue-stat-card__content {
@@ -70,23 +61,15 @@
 
 .ad-revenue-stat-card__label {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0 0 0.25rem 0;
-
-  .dark & {
-    color: var(--color-text-secondary-dark, #9ca3af);
-  }
 }
 
 .ad-revenue-stat-card__value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0;
-
-  .dark & {
-    color: var(--color-text-primary-dark, #ffffff);
-  }
 }
 
 .ad-revenue-stat-card__change {
@@ -173,30 +156,21 @@
 
 /* Transactions Table */
 .ad-revenue-transactions {
-  background-color: var(--color-bg-primary, #ffffff);
+  background-color: var(--bg-primary);
   border-radius: 0.75rem;
-  border: 1px solid var(--color-border, #e5e7eb);
+  border: 1px solid var(--border-primary);
   overflow: hidden;
-
-  .dark & {
-    background-color: #1f2937;
-    border-color: var(--color-border-dark, #374151);
-  }
 }
 
 .ad-revenue-transactions__header {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--color-border, #e5e7eb);
-
-  .dark & {
-    border-bottom-color: var(--color-border-dark, #374151);
-  }
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .ad-revenue-transactions__title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary, #111827);
+  color: var(--text-primary);
   margin: 0;
 
   .dark & {

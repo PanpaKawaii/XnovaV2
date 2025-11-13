@@ -3,12 +3,8 @@
 .ad-admin-layout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--color-bg-secondary, #f9fafb);
+  background-color: var(--bg-secondary);
   transition: background-color 0.2s ease;
-
-  .dark & {
-    background-color: var(--color-bg-secondary, #111827);
-  }
 }
 
 .ad-admin-layout__content {

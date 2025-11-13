@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sun, Moon, Bell } from 'lucide-react';
-import { useTheme } from '../../../hooks/useTheme';
+import { useTheme } from '../../../hooks/ThemeContext';
 import './Header.css';
 
 export const Header = () => {
