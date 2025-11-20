@@ -220,16 +220,15 @@ export const VenueManagement = () => {
     label: owner.name || owner.email
   }));
 
-  if (loading) {
-    return <div className="ad-venue-page__loading">Đang tải dữ liệu...</div>;
-  }
-
-  if (error) {
-    return <div className="ad-venue-page__error">Lỗi: {error}</div>;
-  }
-
   return (
     <div className="ad-venue-page">
+      {loading && (
+        <div className="ad-owner-page__loading">Đang tải dữ liệu...</div>
+      )}
+      {error && (
+        <div className="ad-venue-page__error">Lỗi: {error}</div>
+      )}
+
       {/* Header */}
       <div className="ad-venue-page__header">
         <h1 className="ad-venue-page__title">
@@ -358,7 +357,7 @@ export const VenueManagement = () => {
                 <div className="ad-venue-card__detail-row">
                   <span className="ad-venue-card__detail-label">Số điện thoại:</span>
                   <span className="ad-venue-card__detail-value">
-                    {venue.phone || 'N/A'}
+                    {venue.contact || 'N/A'}
                   </span>
                 </div>
                 <div className="ad-venue-card__detail-row">
@@ -367,12 +366,7 @@ export const VenueManagement = () => {
                     {venueFields.length} sân
                   </span>
                 </div>
-                <div className="ad-venue-card__detail-row">
-                  <span className="ad-venue-card__detail-label">Ngày tạo:</span>
-                  <span className="ad-venue-card__detail-value">
-                    {venue.currentDate ? new Date(venue.currentDate).toLocaleDateString('vi-VN') : 'N/A'}
-                  </span>
-                </div>
+                {/* Ngày tạo removed */}
               </div>
 
               {venue.description && (

@@ -650,6 +650,12 @@
   }
 }
 
+.venues-list-section {
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
 .booking-page__venues-header {
   margin-bottom: 1.5rem;
 }
@@ -801,6 +807,9 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 @media (min-width: 1280px) {
@@ -811,6 +820,9 @@
 
 .booking-page__venue-card {
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .booking-page__no-results {

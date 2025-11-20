@@ -190,24 +190,15 @@ export const BookingManagement = () => {
     { value: 'completed', label: 'Hoàn tất' }
   ];
 
-  if (loading) {
-    return (
-      <div className="ad-booking-page ad-booking-page--loading">
-        <p>Đang tải dữ liệu đặt sân...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="ad-booking-page ad-booking-page--error">
-        <p>Lỗi: {error}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="ad-booking-page">
+      {loading && (
+        <div className="ad-owner-page__loading">Đang tải dữ liệu...</div>
+      )}
+      {error && (
+        <div className="ad-booking-page__error">Lỗi: {error}</div>
+      )}
+
       {/* Header */}
       <div className="ad-booking-page__header">
         <h1 className="ad-booking-page__title">
