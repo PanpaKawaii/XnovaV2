@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../../../hooks/ThemeContext';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext';
+import { ConfirmModal } from '../../../components/ui/ConfirmModal';
 import './Sidebar.css';
 import LOGO from "../../../assets/LOGO.png";
 
@@ -30,6 +31,7 @@ const Sidebar = ({
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+  const [showConfirmModal, setShowConfirmModal] = React.useState(false);
 
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: Home, path: '/owner/dashboard' },
@@ -47,30 +49,30 @@ const Sidebar = ({
     }
   };
 
-  const handleLogout = async () => {
-    // Hiển thị confirmation dialog
-    const confirmLogout = window.confirm('Bạn có chắc chắn muốn đăng xuất?');
-    
-    if (confirmLogout) {
-      setIsLoggingOut(true);
-      try {
-        logout(); // Gọi logout từ AuthContext
-        console.log('User logged out successfully');
-        
-        // Đóng sidebar nếu đang mở (mobile)
-        if (sidebarOpen) {
-          onSidebarClose();
-        }
-        
-        // Delay nhỏ để user thấy được feedback
-        setTimeout(() => {
-          navigate('/'); // Redirect về trang chủ
-        }, 500);
-      } catch (error) {
-        console.error('Error during logout:', error);
-        alert('Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại.');
-        setIsLoggingOut(false);
+  const handleLogout = () => {
+    setShowConfirmModal(true);
+  };
+
+  const handleLogoutConfirm = async () => {
+    setIsLoggingOut(true);
+    setShowConfirmModal(false);
+    try {
+      logout(); // Gọi logout từ AuthContext
+      console.log('User logged out successfully');
+      
+      // Đóng sidebar nếu đang mở (mobile)
+      if (sidebarOpen) {
+        onSidebarClose();
       }
+      
+      // Delay nhỏ để user thấy được feedback
+      setTimeout(() => {
+        navigate('/'); // Redirect về trang chủ
+      }, 500);
+    } catch (error) {
+      console.error('Error during logout:', error);
+      alert('Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại.');
+      setIsLoggingOut(false);
     }
   };
 
@@ -204,6 +206,13 @@ const Sidebar = ({
           </div>
         </div>
       </aside>
+
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        message="Bạn có chắc chắn muốn đăng xuất?"
+        onConfirm={handleLogoutConfirm}
+        onCancel={() => setShowConfirmModal(false)}
+      />
     </>
   );
 };

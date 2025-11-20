@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Plus, Edit, ToggleLeft, ToggleRight, Activity, MapPin, Building2, ChevronDown, ChevronUp, Clock, DollarSign, Settings } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { SearchInput } from '../../components/admincomponents/UI/SearchInput';
-import { FilterSelect } from '../../components/admincomponents/UI/FilterSelect';
-import { StatusBadge } from '../../components/admincomponents/UI/StatusBadge';
-import { Button } from '../../components/admincomponents/UI/Button';
-import { fetchData, putData, postData, deleteData } from '../../../mocks/CallingAPI';
-import { useAuth } from '../../hooks/AuthContext/AuthContext';
-import { FieldEditModal } from './FieldManagement/FieldEditModal';
-import { SlotManagementModal } from './FieldManagement/SlotManagementModal';
+import { SearchInput } from '../../../components/admincomponents/UI/SearchInput';
+import { FilterSelect } from '../../../components/admincomponents/UI/FilterSelect';
+import { StatusBadge } from '../../../components/admincomponents/UI/StatusBadge';
+import { Button } from '../../../components/admincomponents/UI/Button';
+import { fetchData, putData, postData, deleteData } from '../../../../mocks/CallingAPI';
+import { useAuth } from '../../../hooks/AuthContext/AuthContext';
+import { FieldEditModal } from './FieldEditModal';
+import { SlotManagementModal } from './SlotManagementModal';
+import { ConfirmModal } from '../../../components/ui/ConfirmModal';
 import './FieldManagement.css';
 
 export const FieldManagement = () => {
@@ -33,6 +34,8 @@ export const FieldManagement = () => {
   const [highlightedFieldId, setHighlightedFieldId] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showSlotModal, setShowSlotModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
   const [selectedField, setSelectedField] = useState(null);
 
   // Set venue filter and field highlight from URL query parameters
@@ -122,13 +125,15 @@ export const FieldManagement = () => {
   };
 
   // Toggle field status
-  const handleToggleStatus = async (fieldId, currentStatus) => {
+  const handleToggleStatus = (fieldId, currentStatus) => {
+    setConfirmAction(() => () => handleToggleStatusInternal(fieldId, currentStatus));
+    setShowConfirmModal(true);
+  };
+
+  const handleToggleStatusInternal = async (fieldId, currentStatus) => {
     const token = user?.token || null;
     
     try {
-      if (typeof window !== 'undefined' && !window.confirm('Bạn có chắc muốn thay đổi trạng thái sân này?')) {
-        return;
-      }
       const field = fields.find(f => f.id === fieldId);
       const updatedField = {
         ...field,
@@ -137,9 +142,10 @@ export const FieldManagement = () => {
       
       await putData(`Field/${fieldId}`, updatedField, token);
       await fetchAllData();
+      setShowConfirmModal(false);
     } catch (err) {
       console.error('Error toggling field status:', err);
-      alert('Không thể thay đổi trạng thái sân');
+      setShowConfirmModal(false);
     }
   };
 
@@ -479,19 +485,19 @@ export const FieldManagement = () => {
               )}
 
               {/* Slots Section - Expandable */}
-              {fieldSlots.length > 0 && (
+              {getAllFieldSlots(field.id).length > 0 && (
                 <div className="ad-field-card__slots">
                   <button 
                     className="ad-field-card__expand-button"
                     onClick={() => toggleExpanded(field.id)}
                   >
-                    <span>Xem chi tiết slots ({fieldSlots.length})</span>
+                    <span>Xem chi tiết slots ({getAllFieldSlots(field.id).length})</span>
                     {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                   </button>
 
                   {isExpanded && (
                     <div className="ad-field-card__slots-list">
-                      {fieldSlots.map(slot => {
+                      {getAllFieldSlots(field.id).map(slot => {
                         const slotBookings = getSlotBookings(slot.id);
                         // Slot status: 1 = available, 0 = locked/disabled
                         const isAvailable = slot.status === 1;
@@ -504,7 +510,7 @@ export const FieldManagement = () => {
                                 <span>{formatTime(slot.startTime)} - {formatTime(slot.endTime)}</span>
                               </div>
                               <div className={`ad-slot-item__status ${isAvailable ? 'available' : 'locked'}`}>
-                                {isAvailable ? 'Đang hoạt động' : 'Đã khóa'}
+                                {isAvailable ? 'Hoạt động' : 'Đã khóa'}
                               </div>
                             </div>
                             <div className="ad-slot-item__details">
@@ -589,6 +595,13 @@ export const FieldManagement = () => {
           onDelete={handleDeleteSlot}
         />
       )}
+
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        message="Bạn có chắc muốn thay đổi trạng thái sân này?"
+        onConfirm={confirmAction}
+        onCancel={() => setShowConfirmModal(false)}
+      />
     </div>
   );
 };

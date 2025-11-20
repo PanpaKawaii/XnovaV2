@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Plus, Edit, ToggleLeft, ToggleRight, MapPin, Building2, User, ChevronDown, ChevronUp } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { Plus, Edit, ToggleLeft, ToggleRight, MapPin, Building2, User, ChevronDown, ChevronUp, Eye } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { SearchInput } from '../../components/admincomponents/UI/SearchInput';
 import { FilterSelect } from '../../components/admincomponents/UI/FilterSelect';
 import { StatusBadge } from '../../components/admincomponents/UI/StatusBadge';
 import { Button } from '../../components/admincomponents/UI/Button';
 import { fetchData, postData, putData, deleteData } from '../../../mocks/CallingAPI';
 import { useAuth } from '../../hooks/AuthContext/AuthContext';
+import { ConfirmModal } from '../../components/ui/ConfirmModal';
+import { AlertModal } from '../../components/ui/AlertModal';
 import './VenueManagement.css';
 
 export const VenueManagement = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [venues, setVenues] = useState([]);
   const [fields, setFields] = useState([]);
@@ -26,6 +29,11 @@ export const VenueManagement = () => {
   const [error, setError] = useState(null);
   const [expandedVenue, setExpandedVenue] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [confirmMessage, setConfirmMessage] = useState('');
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
   // Set owner filter from URL query parameter
   useEffect(() => {
@@ -81,13 +89,17 @@ export const VenueManagement = () => {
   };
 
   // Toggle venue status
-  const handleToggleStatus = async (venueId, currentStatus) => {
+  const handleToggleStatus = (venueId, currentStatus) => {
+    setConfirmMessage('Bạn có chắc muốn thay đổi trạng thái venue này?');
+    setConfirmAction(() => () => handleToggleStatusInternal(venueId, currentStatus));
+    setShowConfirmModal(true);
+  };
+
+  const handleToggleStatusInternal = async (venueId, currentStatus) => {
     const token = user?.token || null;
     
     try {
-      if (typeof window !== 'undefined' && !window.confirm('Bạn có chắc muốn thay đổi trạng thái venue này?')) {
-        return;
-      }
+      setShowConfirmModal(false);
       const venue = venues.find(v => v.id === venueId);
       const updatedVenue = {
         ...venue,
@@ -98,7 +110,8 @@ export const VenueManagement = () => {
       await fetchAllData(); // Refresh data
     } catch (err) {
       console.error('Error toggling venue status:', err);
-      alert('Không thể thay đổi trạng thái venue');
+      setAlertMessage('Không thể thay đổi trạng thái venue');
+      setShowAlertModal(true);
     }
   };
 
@@ -171,6 +184,14 @@ export const VenueManagement = () => {
 
   const handleRefresh = () => setRefreshKey(k => k + 1);
 
+  const handleViewFields = (venueId) => {
+    navigate(`/admin/fields?venueId=${venueId}`);
+  };
+
+  const handleViewFieldDetail = (fieldId, venueId) => {
+    navigate(`/admin/fields?venueId=${venueId}&fieldId=${fieldId}`);
+  };
+
   const handleExportCsv = useCallback(() => {
     // Build CSV rows
     const header = ['VenueId','VenueName','Location','Owner','Phone','FieldsCount','ActiveFields','CreatedAt'];
@@ -238,7 +259,14 @@ export const VenueManagement = () => {
           <Button variant="secondary" onClick={handleRefresh}>
             Làm mới
           </Button>
-          <Button variant="primary" icon={Plus} onClick={() => alert('Form thêm Venue sẽ được triển khai sau') }>
+          <Button 
+            variant="primary" 
+            icon={Plus} 
+            onClick={() => {
+              setAlertMessage('Form thêm Venue sẽ được triển khai sau');
+              setShowAlertModal(true);
+            }}
+          >
             Thêm Venue mới
           </Button>
         </div>
@@ -422,6 +450,16 @@ export const VenueManagement = () => {
                                 {field.description}
                               </p>
                             )}
+                            <div className="ad-field-item__actions">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                icon={Eye}
+                                onClick={() => handleViewFieldDetail(field.id, venue.id)}
+                              >
+                                Xem chi tiết
+                              </Button>
+                            </div>
                           </div>
                         );
                       })}
@@ -436,7 +474,12 @@ export const VenueManagement = () => {
                   <Button variant="ghost" size="sm" icon={Edit}>
                     Sửa
                   </Button>
-                  <Button variant="ghost" size="sm" icon={MapPin}>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    icon={MapPin}
+                    onClick={() => handleViewFields(venue.id)}
+                  >
                     Xem sân
                   </Button>
                 </div>
@@ -459,6 +502,19 @@ export const VenueManagement = () => {
           <p>Không tìm thấy venue nào</p>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        message={confirmMessage}
+        onConfirm={confirmAction}
+        onCancel={() => setShowConfirmModal(false)}
+      />
+
+      <AlertModal
+        isOpen={showAlertModal}
+        message={alertMessage}
+        onClose={() => setShowAlertModal(false)}
+      />
     </div>
   );
 };
