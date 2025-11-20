@@ -14,7 +14,7 @@ import { FieldManagement } from "./pages/adminPage/FieldManagement.jsx";
 import { FieldOwnerManagement } from "./pages/adminPage/FieldOwnerManagement/FieldOwnerManagement.jsx";
 import { RevenueAnalytics } from "./pages/adminPage/RevenueAnalytics.jsx";
 import { Settings } from "./pages/adminPage/Settings.jsx";
-import { UserManagement } from "./pages/adminPage/UserManagement.jsx";
+import { UserManagement } from "./pages/adminPage/UserManagement/UserManagement.jsx";
 import { VenueManagement } from "./pages/adminPage/VenueManagement.jsx";
 import AddEditField from "./pages/ownerPage/AddEditField/AddEditField";
 import DashboardOverview from "./pages/ownerPage/DashboardOverview/DashboardOverview";

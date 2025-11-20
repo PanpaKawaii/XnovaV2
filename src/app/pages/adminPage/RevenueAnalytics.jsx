@@ -197,16 +197,23 @@ export const RevenueAnalytics = () => {
   // recentTransactions được xây từ API ở trên
 
   // Pagination logic
+  // Pagination logic
   const totalPages = Math.ceil(recentTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
   const paginatedTransactions = recentTransactions.slice(startIndex, startIndex + itemsPerPage);
 
-  const handlePreviousPage = () => {
+  // Pagination handlers
+  const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -354,24 +361,37 @@ export const RevenueAnalytics = () => {
           </table>
         </div>
         {/* Pagination Controls */}
-        <div className="ad-revenue-transactions__pagination">
-          <button 
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-            className="ad-revenue-transactions__btn-prev"
-          >
-            ← Trang trước
-          </button>
-          <span className="ad-revenue-transactions__page-info">
-            Trang {currentPage} / {totalPages}
-          </span>
-          <button 
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className="ad-revenue-transactions__btn-next"
-          >
-            Trang sau →
-          </button>
+        <div className="ad-revenue-pagination">
+          <div className="ad-revenue-pagination__info">
+            Hiển thị {startIndex + 1}-{Math.min(endIndex, recentTransactions.length)} trong tổng số {recentTransactions.length} giao dịch
+          </div>
+          <div className="ad-revenue-pagination__controls">
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className="ad-revenue-pagination__button"
+            >
+              Trước
+            </button>
+            <div className="ad-revenue-pagination__pages">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`ad-revenue-pagination__page ${currentPage === page ? 'ad-revenue-pagination__page--active' : ''}`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="ad-revenue-pagination__button"
+            >
+              Sau
+            </button>
+          </div>
         </div>
       </div>
     </div>

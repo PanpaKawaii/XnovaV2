@@ -31,7 +31,7 @@ export const FieldOwnerManagement = () => {
     email: '',
     phone: '',
     businessName: '',
-    commissionRate: '',
+    // commissionRate removed
     status: ''
   });
   const [originalForm, setOriginalForm] = useState(null); // Store original values for comparison
@@ -175,7 +175,7 @@ export const FieldOwnerManagement = () => {
         businessName,
         venueCount: ownerVenues.length,
         fieldsCount: allFields.length,
-        commissionRate: commissionRate != null ? Number(commissionRate) : null,
+        // commissionRate removed
         totalRevenue: revenue,
         status
       };
@@ -203,6 +203,23 @@ export const FieldOwnerManagement = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedFieldOwners = filteredFieldOwners.slice(startIndex, endIndex);
+
+  // Pagination handlers
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   // Reset to page 1 when filters change
   useEffect(() => {
@@ -238,7 +255,7 @@ export const FieldOwnerManagement = () => {
         email: ownerDetail?.email || '',
         phone: phoneFromVenues || ownerDetail?.phone || ownerDetail?.phoneNumber || ownerDetail?.contactPhone || '',
         businessName: businessNameFromVenues || ownerDetail?.businessName || ownerDetail?.companyName || ownerDetail?.orgName || '',
-        commissionRate: ownerDetail?.commissionRate != null ? ownerDetail.commissionRate : '',
+        // commissionRate removed
         status: owner.status
       };
       
@@ -258,7 +275,7 @@ export const FieldOwnerManagement = () => {
         email: rawUser?.email || '',
         phone: phoneFromVenues || rawUser?.phone || rawUser?.phoneNumber || rawUser?.contactPhone || '',
         businessName: businessNameFromVenues || rawUser?.businessName || rawUser?.companyName || rawUser?.orgName || '',
-        commissionRate: owner.commissionRate != null ? owner.commissionRate : '',
+        // commissionRate removed
         status: owner.status
       };
       
@@ -287,7 +304,7 @@ export const FieldOwnerManagement = () => {
       const userFieldsChanged = 
         editForm.name !== originalForm.name || 
         editForm.email !== originalForm.email ||
-        editForm.commissionRate !== originalForm.commissionRate ||
+        // commissionRate removed
         editForm.status !== originalForm.status;
       
       // Check if Venue fields (phone, businessName) changed
@@ -295,12 +312,12 @@ export const FieldOwnerManagement = () => {
         editForm.phone !== originalForm.phone || 
         editForm.businessName !== originalForm.businessName;
       
-      // Update User info only if name, email, commissionRate, or status changed
+      // Update User info only if name, email, or status changed
       if (userFieldsChanged) {
         const userPayload = {
           name: editForm.name,
           email: editForm.email,
-          commissionRate: editForm.commissionRate !== '' ? Number(editForm.commissionRate) : null,
+          // commissionRate removed
           status: editForm.status
         };
         await putData(`User/${selectedOwner.id}`, userPayload, token);
@@ -504,7 +521,7 @@ export const FieldOwnerManagement = () => {
                 <th className="ad-owner-table__th">Liên hệ</th>
                   <th className="ad-owner-table__th">Số địa điểm</th>
                   <th className="ad-owner-table__th">Số sân</th>
-                <th className="ad-owner-table__th">Hoa hồng</th>
+                {/* <th className="ad-owner-table__th">Hoa hồng</th> */}
                 <th className="ad-owner-table__th">Doanh thu</th>
                 <th className="ad-owner-table__th">Trạng thái</th>
                 <th className="ad-owner-table__th">Hành động</th>
@@ -550,9 +567,9 @@ export const FieldOwnerManagement = () => {
                       {owner.fieldsCount} sân
                     </span>
                   </td>
-                  <td className="ad-owner-table__td">
+                  {/* <td className="ad-owner-table__td">
                     {owner.commissionRate != null ? `${owner.commissionRate}%` : '-'}
-                  </td>
+                  </td> */}
                   <td className="ad-owner-table__td ad-owner-table__td--price">
                     {formatCurrency(owner.totalRevenue)}
                   </td>
@@ -587,41 +604,42 @@ export const FieldOwnerManagement = () => {
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="ad-owner-pagination">
-          <div className="ad-owner-pagination__info">
-            Hiển thị {startIndex + 1}-{Math.min(endIndex, filteredFieldOwners.length)} của {filteredFieldOwners.length} kết quả
-          </div>
-          <div className="ad-owner-pagination__controls">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-            >
-              Trước
-            </Button>
-            
-            <div className="ad-owner-pagination__pages">
-              <span className="ad-owner-pagination__page-info">
-                Trang {currentPage} / {totalPages}
-              </span>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="ad-owner-pagination">
+            <div className="ad-owner-pagination__info">
+              Hiển thị {startIndex + 1}-{Math.min(endIndex, filteredFieldOwners.length)} trong tổng số {filteredFieldOwners.length} chủ sân
             </div>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Sau
-            </Button>
+            <div className="ad-owner-pagination__controls">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="ad-owner-pagination__button"
+              >
+                Trước
+              </button>
+              <div className="ad-owner-pagination__pages">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`ad-owner-pagination__page ${currentPage === page ? 'ad-owner-pagination__page--active' : ''}`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="ad-owner-pagination__button"
+              >
+                Sau
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Edit Owner Modal */}
       {editModalOpen && selectedOwner && (
@@ -698,18 +716,7 @@ export const FieldOwnerManagement = () => {
                   />
                 </div>
 
-                <div className="ad-owner-modal__field">
-                  <label className="ad-owner-modal__label">Hoa hồng (%):</label>
-                  <input
-                    type="number"
-                    className="ad-owner-modal__input"
-                    value={editForm.commissionRate}
-                    onChange={(e) => handleEditFormChange('commissionRate', e.target.value)}
-                    min="0"
-                    max="100"
-                    step="0.1"
-                  />
-                </div>
+                {/* Hoa hồng input removed */}
 
                 <div className="ad-owner-modal__field">
                   <label className="ad-owner-modal__label">Trạng thái:</label>
