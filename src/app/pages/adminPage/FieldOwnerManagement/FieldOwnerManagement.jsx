@@ -7,6 +7,8 @@ import { Button } from '../../../components/admincomponents/UI/Button';
 import { fetchData, putData } from '../../../../mocks/CallingAPI.js';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import { ConfirmModal } from '../../../components/ui/ConfirmModal';
+import { AlertModal } from '../../../components/ui/AlertModal';
 import './FieldOwnerManagement.css';
 
 // Note: Replaced mock data with real API fetching (User, Field, Booking, BookingSlot, Slot)
@@ -23,9 +25,14 @@ export const FieldOwnerManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Edit modal state
+  // Modal states
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [confirmMessage, setConfirmMessage] = useState('');
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const [editForm, setEditForm] = useState({
     name: '',
     email: '',
@@ -388,10 +395,17 @@ export const FieldOwnerManagement = () => {
     setEditModalOpen(false);
   };
 
-  const handleToggleStatus = async (ownerId, currentStatus) => {
+  const handleToggleStatus = (ownerId, currentStatus) => {
+    setConfirmMessage(`Bạn có chắc muốn ${currentStatus === 'active' ? 'khóa' : 'mở khóa'} owner này?`);
+    setConfirmAction(() => () => handleToggleStatusInternal(ownerId, currentStatus));
+    setShowConfirmModal(true);
+  };
+
+  const handleToggleStatusInternal = async (ownerId, currentStatus) => {
     if (!user?.token) return;
     
     try {
+      setShowConfirmModal(false);
       const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
       await putData(`User/${ownerId}`, { status: newStatus }, user.token);
       
@@ -401,14 +415,22 @@ export const FieldOwnerManagement = () => {
       setUsers(Array.isArray(usersResp) ? usersResp : (usersResp ? [usersResp] : []));
     } catch (err) {
       console.error('Error toggling owner status:', err);
-      alert('Lỗi thay đổi trạng thái owner');
+      setAlertMessage('Lỗi thay đổi trạng thái owner');
+      setShowAlertModal(true);
     }
   };
 
-  const handleApproveOwner = async (ownerId) => {
+  const handleApproveOwner = (ownerId) => {
+    setConfirmMessage('Bạn có chắc muốn duyệt owner này?');
+    setConfirmAction(() => () => handleApproveOwnerInternal(ownerId));
+    setShowConfirmModal(true);
+  };
+
+  const handleApproveOwnerInternal = async (ownerId) => {
     if (!user?.token) return;
     
     try {
+      setShowConfirmModal(false);
       await putData(`User/${ownerId}`, { status: 'active' }, user.token);
       
       // Reload users
@@ -417,7 +439,8 @@ export const FieldOwnerManagement = () => {
       setUsers(Array.isArray(usersResp) ? usersResp : (usersResp ? [usersResp] : []));
     } catch (err) {
       console.error('Error approving owner:', err);
-      alert('Lỗi duyệt owner');
+      setAlertMessage('Lỗi duyệt owner');
+      setShowAlertModal(true);
     }
   };
 
@@ -716,8 +739,6 @@ export const FieldOwnerManagement = () => {
                   />
                 </div>
 
-                {/* Hoa hồng input removed */}
-
                 <div className="ad-owner-modal__field">
                   <label className="ad-owner-modal__label">Trạng thái:</label>
                   <select
@@ -761,6 +782,19 @@ export const FieldOwnerManagement = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        message={confirmMessage}
+        onConfirm={confirmAction}
+        onCancel={() => setShowConfirmModal(false)}
+      />
+
+      <AlertModal
+        isOpen={showAlertModal}
+        message={alertMessage}
+        onClose={() => setShowAlertModal(false)}
+      />
     </div>
   );
 };
