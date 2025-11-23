@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { X, MapPin, Calendar, Clock, Users, CreditCard, Check, Plus, Minus, Target, Settings } from 'lucide-react';
-import { fetchData, postData } from '../../../../../mocks/CallingAPI.js';
+import { Calendar, Check, Clock, CreditCard, MapPin, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { deleteData, fetchData } from '../../../../../mocks/CallingAPI.js';
 import { useAuth } from '../../../../hooks/AuthContext/AuthContext.jsx';
 import './BookingSummaryModal.css';
 
@@ -11,6 +11,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [selectedField, setSelectedField] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [selectedVoucher, setSelectedVoucher] = useState('');
   const [showBookingSummary, setShowBookingSummary] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
@@ -22,6 +23,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
   const [venueSlots, setVenueSlots] = useState([]);
   const [bookingSlots, setBookingSlots] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [myVouchers, setMyVouchers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingBooking, setLoadingBooking] = useState(false);
   const [error, setError] = useState(null);
@@ -69,10 +71,35 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
         const bookingSlotsResponse = await fetchData('BookingSlot', token);
         const bookingSlotsData = Array.isArray(bookingSlotsResponse) ? bookingSlotsResponse : [bookingSlotsResponse];
 
+        const vouchersData = await fetchData('Voucher', token);
+        // console.log('vouchersData', vouchersData);
+        const userVouchersData = await fetchData('UserVoucher', token);
+        // console.log('userVouchersData', userVouchersData);
+        // const MyVoucher = userVouchersData.filter(v => v.userId == user?.id);
+        // // console.log('MyVoucher', MyVoucher);
+        // const MyVoucherInformation = vouchersData.filter(v => MyVoucher.some(uv => uv.voucherId == v.id));
+        // // console.log('MyVoucherInformation', MyVoucherInformation);
+
+        const MyVoucher = userVouchersData
+          .filter(uv => uv.userId == user?.id)
+          .map(uv => {
+            const thisVoucher = vouchersData.find(v => v.id == uv.voucherId);
+            return {
+              ...uv,
+              name: thisVoucher.name,
+              type: thisVoucher.type,
+              amount: thisVoucher.amount,
+              minEffect: thisVoucher.minEffect,
+              maxEffect: thisVoucher.maxEffect,
+              status: thisVoucher.status,
+            }
+          });
+
         setVenueFields(venueFieldsData);
         setVenueSlots(venueSlotsData);
         setBookings(bookingsData);
         setBookingSlots(bookingSlotsData);
+        setMyVouchers(MyVoucher);
       } catch (err) {
         setError(err.message);
         console.error('Error fetching venue data:', err);
@@ -118,7 +145,15 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
     return Number(fieldBasePrice) * selectedTimes.length;
   };
 
-  const totalPrice = calculateTotalPrice();
+  const initialTotalPrice = calculateTotalPrice();
+  const UsedVoucher = myVouchers?.find(v => v.id == selectedVoucher);
+  console.log('UsedVoucher', UsedVoucher);
+  const totalPrice = UsedVoucher?.type == 'Percent' ?
+    Math.max(initialTotalPrice * (1 - UsedVoucher?.amount / 100), 0)
+    : (UsedVoucher?.type == 'Value' ?
+      Math.max(initialTotalPrice - UsedVoucher?.amount, 0)
+      : (Math.max(initialTotalPrice, 0) || initialTotalPrice)
+    );
 
   const handleFieldChange = (FieldId) => {
     setSelectedField(FieldId);
@@ -239,29 +274,36 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
       setLoadingBooking(true);
       const token = user?.token;
       try {
-        const result = await postData('Booking', BookingData, token);
-        console.log('result', result);
+        console.log('Ready');
+        if (selectedVoucher) {
+          const resultDeleteUserVoucher = await deleteData(`UserVoucher/${selectedVoucher}`, token);
+          console.log('Delete success');
+        } else console.log('No selectedVoucher');
 
-        if (result.id) {
-          const PaymentMethodData = {
-            // id: 0,
-            orderId: result.id,
-            // fullname: '',
-            // description: '',
-            amount: amount,
-            // status: '',
-            // method: '',
-            // createdDate: new Date,
-          };
-          console.log('PaymentMethodData:', PaymentMethodData);
+        // const result = await postData('Booking', BookingData, token);
+        // console.log('result', result);
 
-          const resultPaymentMethod = await postData('Payment/create-payos-v2', PaymentMethodData, token);
-          console.log('resultPaymentMethod', resultPaymentMethod);
-          window.location.href = resultPaymentMethod.paymentUrl;
-        }
+        // if (result.id) {
+        //   const PaymentMethodData = {
+        //     // id: 0,
+        //     orderId: result.id,
+        //     // fullname: '',
+        //     // description: '',
+        //     amount: amount,
+        //     // status: '',
+        //     // method: '',
+        //     // createdDate: new Date,
+        //   };
+        //   console.log('PaymentMethodData:', PaymentMethodData);
+
+        //   const resultPaymentMethod = await postData('Payment/create-payos-v2', PaymentMethodData, token);
+        //   console.log('resultPaymentMethod', resultPaymentMethod);
+        //   window.location.href = resultPaymentMethod.paymentUrl;
+        // }
       } catch (error) {
-        setLoadingBooking(false);
         setError(error);
+      } finally {
+        setLoadingBooking(false);
       }
     }
 
@@ -380,6 +422,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
   console.log('selectedDate', selectedDate);
   const SameDateBooking = bookings?.filter(bk => bk.date == selectedDate);
   console.log('SameDateBooking', SameDateBooking);
+  console.log('selectedVoucher', selectedVoucher);
 
 
   // Reset modal state when it closes
@@ -621,6 +664,33 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
                 </div>
               </div>
             )}
+
+            <div
+              className={`booking-summary-modal__step active`}
+              ref={el => stepRefs.current[3] = el}
+            >
+              <div className={`booking-summary-modal__step-content ${selectedVoucher ? 'completed' : 'pending'}`}>
+                <div className="booking-summary-modal__step-header">
+                  <div className={`booking-summary-modal__step-number ${selectedVoucher ? 'completed' : 'current'}`}>
+                    {selectedVoucher ? '✓' : '+'}
+                  </div>
+                  <div className="booking-summary-modal__step-info">
+                    <h3 className="booking-summary-modal__step-title">Chọn mã giảm giá</h3>
+                    <p className="booking-summary-modal__step-subtitle">{myVouchers?.length} mã giảm giá có sẵn</p>
+                  </div>
+                </div>
+                <select className="booking-summary-modal__voucher-grid" onChange={(e) => setSelectedVoucher(e.target.value)} value={selectedVoucher}>
+                  <option value={''}>-- Voucher --</option>
+                  {myVouchers?.map((mv, i) => (
+                    <option key={i} value={mv.id}>{mv.name}</option>
+                  ))}
+                </select>
+                <div className="booking-summary-modal__step-tip">
+                  <p>💡 Chọn mã giảm giá của bạn.</p>
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <div className="booking-summary-modal__sidebar">
