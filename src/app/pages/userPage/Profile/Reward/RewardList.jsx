@@ -1,13 +1,36 @@
+import { Gift } from 'lucide-react';
 import { useState } from 'react';
 import { postData } from '../../../../../mocks/CallingAPI';
 import { useAuth } from '../../../../hooks/AuthContext/AuthContext.jsx';
 import './RewardList.css';
 
-export default function RewardList({ vouchers }) {
+export default function RewardList({ vouchers, setThisUser }) {
     const { user } = useAuth();
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // const receiveVoucher = async (voucherId, cost) => {
+    //     setLoading(true);
+    //     const token = user?.token || null;
+    //     const UserVoucherData = {
+    //         userId: user?.id,
+    //         voucherId: voucherId,
+    //         voucherPoint: cost,
+    //         receiveDate: new Date(),
+    //     }
+    //     console.error('UserVoucherData', UserVoucherData);
+    //     try {
+    //         const postDataResponse = await postData('UserVoucher/create', UserVoucherData, token);
+    //         console.error('postDataResponse', postDataResponse);
+    //         setUserPoint({ point: postDataResponse?.remainingPoint });
+    //     } catch (err) {
+    //         setError(err.message);
+    //         console.error('Error posting voucher data:', JSON.stringify(err));
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const receiveVoucher = async (voucherId, cost) => {
         setLoading(true);
@@ -18,13 +41,13 @@ export default function RewardList({ vouchers }) {
             voucherPoint: cost,
             receiveDate: new Date(),
         }
-        console.error('UserVoucherData', UserVoucherData);
+        console.log('UserVoucherData', UserVoucherData);
         try {
             const postDataResponse = await postData('UserVoucher/create', UserVoucherData, token);
-            console.error('postDataResponse', postDataResponse);
-            setUserPoint({ point: postDataResponse?.remainingPoint });
+            console.log('postDataResponse', postDataResponse);
+            setThisUser(prevUser => ({ ...prevUser, point: postDataResponse?.remainingPoint }));
         } catch (err) {
-            setError(err.message);
+            setError(err && JSON.stringify(err));
             console.error('Error posting voucher data:', JSON.stringify(err));
         } finally {
             setLoading(false);
@@ -48,7 +71,8 @@ export default function RewardList({ vouchers }) {
                     return (
                         <div key={v.id} className={itemClasses}>
                             <div className='info'>
-                                <i className='fa-solid fa-location-dot'></i>
+                                <Gift />
+                                {/* <i className='fa-solid fa-location-dot'></i> */}
                                 <p className='description'>{v.name}</p>
                             </div>
                             <p className='min'>Đơn tối thiểu {v.minEffect?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>

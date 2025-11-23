@@ -1,34 +1,31 @@
-import { useState } from 'react';
-import { postData } from '../../../../../mocks/CallingAPI';
+import { useEffect, useState } from 'react';
+import { fetchData, patchData, postData } from '../../../../../mocks/CallingAPI';
 import { useAuth } from '../../../../hooks/AuthContext/AuthContext.jsx';
 import './Spinner.css';
 
-export default function Spinner({ items, passedUserInfo, setResult, setPopupOpen }) {
+export default function Spinner({ items, setResult, setPopupOpen, thisUser, setThisUser }) {
     const { user } = useAuth();
 
     const [randomDegree, setRandomDegree] = useState(0);
-    const [userPoint, setUserPoint] = useState(passedUserInfo);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    console.log('userPoint', userPoint);
 
-
-    const receiveVoucher = async (voucherId) => {
+    const receiveVoucher = async (voucherId, point) => {
         setLoading(true);
         const token = user?.token || null;
         const UserVoucherData = {
             userId: user?.id,
             voucherId: voucherId,
-            voucherPoint: 100,
+            voucherPoint: point,
             receiveDate: new Date(),
         }
-        console.error('UserVoucherData', UserVoucherData);
+        console.log('UserVoucherData', UserVoucherData);
         try {
             const postDataResponse = await postData('UserVoucher/create', UserVoucherData, token);
-            console.error('postDataResponse', postDataResponse);
-            setUserPoint({ point: postDataResponse?.remainingPoint });
+            console.log('postDataResponse', postDataResponse);
+            setThisUser(prevUser => ({ ...prevUser, point: postDataResponse?.remainingPoint }));
         } catch (err) {
-            setError(err.message);
+            setError(err && JSON.stringify(err));
             console.error('Error posting voucher data:', JSON.stringify(err));
         } finally {
             setLoading(false);
@@ -49,7 +46,11 @@ export default function Spinner({ items, passedUserInfo, setResult, setPopupOpen
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     const getRandomDegree = async () => {
-
+        setError(null);
+        if (thisUser?.point < 100) {
+            setError('Not enough points to spin the wheel!');
+            return;
+        }
         const spinnerWheel = document.getElementsByClassName('spinner-wheel');
         Array.from(spinnerWheel).forEach(w => {
             w.style.animation = 'none';
@@ -62,7 +63,24 @@ export default function Spinner({ items, passedUserInfo, setResult, setPopupOpen
 
         setResult(items[Math.floor((NewRandomDegree) % 360 / anglePerItem)]);
         setPopupOpen(true);
-        receiveVoucher(items[Math.floor((NewRandomDegree) % 360 / anglePerItem)]?.id);
+        receiveVoucher(items[Math.floor((NewRandomDegree) % 360 / anglePerItem)]?.id, 100);
+    }
+
+    const addPoint = async () => {
+        setLoading(true);
+        const token = user?.token || null;
+        const UserData = { name: thisUser?.name, point: (thisUser?.point || 0) + 100 };
+        console.log('UserData', UserData);
+        try {
+            const postDataResponse = await patchData(`User/${user?.id}`, UserData, token);
+            console.log('postDataResponse', postDataResponse);
+            setThisUser({ ...thisUser, point: UserData?.point });
+        } catch (err) {
+            setError(err && JSON.stringify(err));
+            console.error('Error adding point data:', JSON.stringify(err));
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -84,10 +102,12 @@ export default function Spinner({ items, passedUserInfo, setResult, setPopupOpen
                     })}
                 </div>
                 <div className='spinner-pointer'></div>
-                <div className='spinner-center' onClick={() => getRandomDegree()}></div>
+                <div className='spinner-center' onClick={() => getRandomDegree()}>ROLL</div>
             </div>
-            <div className='point'>Balance: {userPoint.point} Nova</div>
+            <div className='point'>Balance: {thisUser?.point || '0'} Nova</div>
+            {/* <button className='btn' onClick={() => addPoint()}>Add Point</button> */}
             <div className='cost'>Cost: 100 Nova / Roll</div>
+            {error && <div className='error'>{error}</div>}
         </div>
     )
 }
