@@ -24,6 +24,7 @@
         width: fit-content;
         box-sizing: border-box;
         border-radius: 20px;
+        color: #000;
         background-color: #fff3af;
         border: 4px solid #FFD900;
         display: flex;

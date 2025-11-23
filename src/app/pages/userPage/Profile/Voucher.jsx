@@ -14,11 +14,13 @@ const Voucher = () => {
   const [sortBy, setSortBy] = useState('name');
 
   const [userVouchers, setUserVouchers] = useState([]);
+  const [refresh, setRefresh] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserVoucherData = async () => {
+      setLoading(true);
       const token = user?.token || null;
       try {
         const vouchersResponse = await fetchData('Voucher', token);
@@ -43,7 +45,7 @@ const Voucher = () => {
     };
 
     fetchUserVoucherData();
-  }, [user?.token]);
+  }, [user?.token, refresh]);
 
   const filteredVouchers = userVouchers.filter(v => {
     if (filter === 'all') return true;
@@ -96,6 +98,7 @@ const Voucher = () => {
             <option value="receive">Receive</option>
           </select>
         </div>
+        <button className='btn' onClick={() => setRefresh(p => p + 1)}>Refresh</button>
       </div>
 
       <div className="voucher-list-container">

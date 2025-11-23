@@ -29,11 +29,11 @@ const FavoriteFields = () => {
         const imagesResponse = await fetchData('Image', token);
 
         // Map cho tra cứu nhanh
-        const fieldMap = Object.fromEntries(fieldsResponse.map(f => [f.id, f]));
-        const venueMap = Object.fromEntries(venuesResponse.map(v => [v.id, v]));
+        const fieldMap = Object.fromEntries(fieldsResponse?.map(f => [f.id, f]));
+        const venueMap = Object.fromEntries(venuesResponse?.map(v => [v.id, v]));
 
         // Gom images theo venueId
-        const imagesByVenue = imagesResponse.reduce((acc, img) => {
+        const imagesByVenue = imagesResponse?.reduce((acc, img) => {
           if (!acc[img.venueId]) acc[img.venueId] = [];
           acc[img.venueId].push(img);
           return acc;
@@ -41,8 +41,8 @@ const FavoriteFields = () => {
 
         // Gộp tất cả
         const newFavoriteField = favoriteFieldsResponse
-          .filter(ff => ff.userId === user?.id)
-          .map(ff => {
+          ?.filter(ff => ff.userId === user?.id)
+          ?.map(ff => {
             const field = fieldMap[ff.fieldId];
             const venue = field ? venueMap[field.venueId] : null;
             const venueWithImages = venue
@@ -85,11 +85,11 @@ const FavoriteFields = () => {
   }
 
   const filteredFavorites = favoriteFields
-    .filter(f =>
-      f.field?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      f.field?.venue?.address?.toLowerCase().includes(searchTerm.toLowerCase())
+    ?.filter(f =>
+      f.field?.name?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
+      f.field?.venue?.address?.toLowerCase()?.includes(searchTerm?.toLowerCase())
     )
-    .sort((a, b) => {
+    ?.sort((a, b) => {
       const dateA = new Date(a.setDate);
       const dateB = new Date(b.setDate);
 
@@ -152,15 +152,15 @@ const FavoriteFields = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredFavorites.map(f => (
+              {filteredFavorites?.map(f => (
                 <tr key={f.id}>
-                  <td><img src={f.field.venue.images[0].link} alt={f.field.venue.name} className="table-image" /></td>
-                  <td>{f.field.venue.name}</td>
-                  <td>{f.field.name}</td>
-                  <td>{f.field.venue.address}</td>
-                  {/* <td>{f.field.rating} / 5</td> */}
-                  {/* <td>${f.field.pricePerHour}/hour</td> */}
-                  <td>{(new Date(f.setDate)).toLocaleDateString()}</td>
+                  <td><img src={f.field?.venue?.images?.[0]?.link} alt={f.field?.venue?.name} className="table-image" /></td>
+                  <td>{f.field?.venue?.name}</td>
+                  <td>{f.field?.name}</td>
+                  <td>{f.field?.venue?.address}</td>
+                  {/* <td>{f.field?.rating} / 5</td> */}
+                  {/* <td>${f.field?.pricePerHour}/hour</td> */}
+                  <td>{(new Date(f.setDate))?.toLocaleDateString()}</td>
                   <td><button className="remove-button" onClick={() => deleteFavoriteField(f.id)}><Trash2 className="remove-icon" /></button></td>
                 </tr>
               ))}
@@ -168,22 +168,22 @@ const FavoriteFields = () => {
           </table>
         ) : (
           <div className="grid-view">
-            {filteredFavorites.map(f => (
+            {filteredFavorites?.map(f => (
               <div key={f.id} className="grid-card">
-                <img src={f.field.venue.images[0].link} alt={f.field.venue.name} className="grid-image" />
+                <img src={f.field?.venue?.images?.[0]?.link} alt={f.field?.venue?.name} className="grid-image" />
                 <div className="grid-info">
-                  <h4 className="grid-name">{f.field.venue.name}</h4>
-                  <h5 className="grid-name">{f.field.name}</h5>
+                  <h4 className="grid-name">{f.field?.venue?.name}</h4>
+                  <h5 className="grid-name">{f.field?.name}</h5>
                   <div className="grid-details">
                     <MapPin className="detail-icon" />
-                    <span>{f.field.venue.address}</span>
+                    <span>{f.field?.venue?.address}</span>
                   </div>
                   <div className="grid-details">
                     <Star className="detail-icon" />
-                    {/* <span>{f.field.rating} / 5</span> */}
+                    {/* <span>{f.field?.rating} / 5</span> */}
                   </div>
-                  {/* <p className="grid-price">${f.field.pricePerHour}/hour</p> */}
-                  <p className="grid-added">Added: {(new Date(f.setDate)).toLocaleDateString()}</p>
+                  {/* <p className="grid-price">${f.field?.pricePerHour}/hour</p> */}
+                  <p className="grid-added">Added: {(new Date(f.setDate))?.toLocaleDateString()}</p>
                 </div>
                 <button className="remove-button" onClick={() => deleteFavoriteField(f.id)}><Trash2 className="remove-icon" /></button>
               </div>
@@ -192,7 +192,7 @@ const FavoriteFields = () => {
         )}
       </div>
 
-      {filteredFavorites.length === 0 && (
+      {filteredFavorites?.length === 0 && (
         <div className="no-favorites">
           <Heart className="no-favorites-icon" />
           <p>No favorite fields found for the selected filter.</p>
