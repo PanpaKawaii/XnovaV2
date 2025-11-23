@@ -61,6 +61,7 @@ const BookingPage = () => {
         // Filter venues by badminton type
         const badmintonVenues = venues.filter(venue =>
           venue.fields?.some(field => field.typeId === badmintonType.id)
+          && venue.status === 1
         );
 
         // Fetch Images
