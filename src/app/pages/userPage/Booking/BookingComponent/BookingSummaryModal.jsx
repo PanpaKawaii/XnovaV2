@@ -6,6 +6,7 @@ import './BookingSummaryModal.css';
 
 const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelectedTimeSlot }) => {
   const { user } = useAuth();
+  const [thisUser, setThisUser] = useState(null);
 
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTimes, setSelectedTimes] = useState([]);
@@ -16,12 +17,10 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
   const [showWarning, setShowWarning] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [bookingId, setBookingId] = useState('');
 
   // API data states
   const [venueFields, setVenueFields] = useState([]);
   const [venueSlots, setVenueSlots] = useState([]);
-  const [bookingSlots, setBookingSlots] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [myVouchers, setMyVouchers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -53,6 +52,9 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
       const token = user?.token || null;
 
       try {
+        const thisUserData = await fetchData(`User/${user?.id}`, token);
+        console.log('thisUserData', thisUserData);
+
         const fieldsResponse = await fetchData('Field', token);
         // const fields = Array.isArray(fieldsResponse) ? fieldsResponse : [fieldsResponse];
         const venueFieldsData = fieldsResponse.filter(field => field.venueId == venue.id);
@@ -68,17 +70,8 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
         // const bookingsData = Array.isArray(bookingsResponse) ? bookingsResponse : [bookingsResponse];
         console.log('bookingsData', bookingsData);
 
-        const bookingSlotsResponse = await fetchData('BookingSlot', token);
-        const bookingSlotsData = Array.isArray(bookingSlotsResponse) ? bookingSlotsResponse : [bookingSlotsResponse];
-
         const vouchersData = await fetchData('Voucher', token);
-        // console.log('vouchersData', vouchersData);
         const userVouchersData = await fetchData('UserVoucher', token);
-        // console.log('userVouchersData', userVouchersData);
-        // const MyVoucher = userVouchersData.filter(v => v.userId == user?.id);
-        // // console.log('MyVoucher', MyVoucher);
-        // const MyVoucherInformation = vouchersData.filter(v => MyVoucher.some(uv => uv.voucherId == v.id));
-        // // console.log('MyVoucherInformation', MyVoucherInformation);
 
         const MyVoucher = userVouchersData
           .filter(uv => uv.userId == user?.id)
@@ -95,10 +88,10 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
             }
           });
 
+        setThisUser(thisUserData);
         setVenueFields(venueFieldsData);
         setVenueSlots(venueSlotsData);
         setBookings(bookingsData);
-        setBookingSlots(bookingSlotsData);
         setMyVouchers(MyVoucher);
       } catch (err) {
         setError(err.message);
@@ -226,10 +219,10 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
 
   // Payment methods
   const paymentMethods = [
-    { id: 'cash', name: 'Tiền mặt', icon: '💵', description: 'Thanh toán tại sân' },
-    { id: 'card', name: 'Thẻ tín dụng', icon: '💳', description: 'Visa, MasterCard' },
-    { id: 'momo', name: 'MoMo', icon: '🟣', description: 'Ví điện tử MoMo' },
-    { id: 'banking', name: 'Chuyển khoản', icon: '🏦', description: 'Internet Banking' }
+    { id: 'cash', name: 'Tiền mặt', icon: '💵', description: 'Thanh toán tại sân', available: thisUser?.type == 'VIP' ? true : false },
+    { id: 'banking', name: 'Chuyển khoản', icon: '🏦', description: 'Internet Banking', available: true },
+    { id: 'card', name: 'Thẻ tín dụng', icon: '💳', description: 'Visa, MasterCard', available: false },
+    // { id: 'momo', name: 'MoMo', icon: '🟣', description: 'Ví điện tử MoMo' },
   ];
 
   // Calculate current step based on completed information
@@ -240,16 +233,6 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
     if (!paymentMethod) return 4;
     return 5;
   }, [selectedDate, selectedField, selectedTimes, paymentMethod]);
-
-  // Generate booking ID
-  const generateBookingId = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
 
   const BookField = async (payment, field, date, slots, amount) => {
 
@@ -274,93 +257,75 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
       setLoadingBooking(true);
       const token = user?.token;
       try {
-        console.log('Ready');
         if (selectedVoucher) {
-          const resultDeleteUserVoucher = await deleteData(`UserVoucher/${selectedVoucher}`, token);
-          console.log('Delete success');
-        } else console.log('No selectedVoucher');
+          await deleteData(`UserVoucher/${selectedVoucher}`, token);
+          console.log('Delete selectedVoucher success');
+        } else console.log('No selectedVoucher to delete');
 
-        // const result = await postData('Booking', BookingData, token);
-        // console.log('result', result);
+        const result = await postData('Booking', BookingData, token);
+        console.log('result', result);
 
-        // if (result.id) {
-        //   const PaymentMethodData = {
-        //     // id: 0,
-        //     orderId: result.id,
-        //     // fullname: '',
-        //     // description: '',
-        //     amount: amount,
-        //     // status: '',
-        //     // method: '',
-        //     // createdDate: new Date,
-        //   };
-        //   console.log('PaymentMethodData:', PaymentMethodData);
+        if (result.id) {
+          const PaymentData = {
+            orderId: result.id,
+            amount: amount,
+          };
+          console.log('PaymentData:', PaymentData);
 
-        //   const resultPaymentMethod = await postData('Payment/create-payos-v2', PaymentMethodData, token);
-        //   console.log('resultPaymentMethod', resultPaymentMethod);
-        //   window.location.href = resultPaymentMethod.paymentUrl;
-        // }
+          const resultPaymentData = await postData('Payment/create-payos-v2', PaymentData, token);
+          console.log('resultPaymentData', resultPaymentData);
+          window.location.href = resultPaymentData.paymentUrl;
+        }
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoadingBooking(false);
+      }
+    } else if (payment == 'cash') {
+      setLoadingBooking(true);
+      const token = user?.token;
+      try {
+        if (selectedVoucher) {
+          await deleteData(`UserVoucher/${selectedVoucher}`, token);
+          console.log('Delete selectedVoucher success');
+        } else console.log('No selectedVoucher to delete');
+
+        const result = await postData('Booking', BookingData, token);
+        console.log('result', result);
+
+        if (result.id) {
+          const CashPaymentData = {
+            orderId: result.id,
+            amount: amount,
+          };
+
+          // const CashPaymentData = {
+          //     id: 0,
+          //     method: payment,
+          //     amount: Amount,
+          //     date: new Date(),
+          //     status: 2,
+          //     bookingId: 0,
+          // };
+          // console.log('CashPaymentData:', CashPaymentData);
+
+          console.log('CashPaymentData:', CashPaymentData);
+
+          // const resultCashPaymentData = await postData('Payment/create-payos-v2', CashPaymentData, token);
+          // console.log('resultCashPaymentData', resultCashPaymentData);
+          // window.location.href = resultCashPaymentData.paymentUrl;
+        }
       } catch (error) {
         setError(error);
       } finally {
         setLoadingBooking(false);
       }
     }
-
-    // const CashPaymentData = {
-    //     id: 0,
-    //     method: payment,
-    //     amount: Amount,
-    //     date: new Date(),
-    //     status: 2,
-    //     bookingId: 0,
-    // };
-    // console.log('CashPaymentData:', CashPaymentData);
-
-    // if (payment === 'cash' || payment === 'card' || payment === 'momo') {
-    //     try {
-    //         const response = await fetch('https://localhost:7166/api/Payment', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    //             },
-    //             body: JSON.stringify(paymentData),
-    //         });
-
-    //         if (!response.ok) throw new Error('Network response was not ok');
-    //         const result = await response.json();
-    //         console.log('Creating Payment successful:', result);
-    //     } catch (error) {
-    //         console.error('Error during booking:', error);
-    //     }
-    // } else {
-    //     try {
-    //         const response = await fetch('https://localhost:7166/api/Payment/create', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    //             },
-    //             body: JSON.stringify(paymentMethodData),
-    //         });
-
-    //         if (!response.ok) throw new Error('Network response was not ok');
-    //         const result = await response.json();
-    //         console.log('Creating PaymentMethod successful:', result);
-    //         window.location.href = result.paymentUrl;
-    //     } catch (error) {
-    //         console.error('Error during booking:', error);
-    //     }
-    // }
   };
 
-  // Handle booking confirmation
   const handleConfirmBooking = () => {
-    // const newBookingId = generateBookingId();
     console.log(paymentMethod, selectedField, selectedDate, selectedTimes, totalPrice);
     BookField(paymentMethod, selectedField, selectedDate, selectedTimes, totalPrice);
-    // setBookingId(newBookingId);
     // setShowSuccessPopup(true);
   };
 
@@ -436,7 +401,6 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
       setShowWarning(false);
       setWarningMessage('');
       setShowSuccessPopup(false);
-      setBookingId('');
       setError(null);
     }
   }, [isOpen]);
@@ -643,8 +607,8 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
                       <button
                         key={method.id}
                         onClick={() => setPaymentMethod(method.id)}
-                        className={`booking-summary-modal__payment-option ${paymentMethod === method.id ? 'selected' : ''
-                          }`}
+                        className={`booking-summary-modal__payment-option ${paymentMethod === method.id ? 'selected' : ''} ${method.available ? '' : 'disabled'}`}
+                        disabled={!method.available}
                       >
                         <div className="booking-summary-modal__payment-info">
                           <span className="booking-summary-modal__payment-icon">{method.icon}</span>
@@ -854,11 +818,6 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
               </div>
 
               <div className="booking-success-popup__details">
-                <div className="booking-success-popup__booking-id">
-                  <span className="booking-success-popup__id-label">Mã đặt sân</span>
-                  <span className="booking-success-popup__id-value">{bookingId}</span>
-                </div>
-
                 <div className="booking-success-popup__summary">
                   <p>{venue?.name}</p>
                   <p>{selectedTimes.join(', ')} • {new Date(selectedDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric' })}</p>

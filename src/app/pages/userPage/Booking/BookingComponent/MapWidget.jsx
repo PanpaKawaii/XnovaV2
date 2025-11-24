@@ -178,14 +178,14 @@ const MapWidget = ({ venues = [], selectedVenue, onVenueSelect }) => {
           <SimpleMap venues={venues} />
 
           {/* Legend */}
-          <div className="map-widget__legend">
+          {/* <div className="map-widget__legend">
             {['Badminton', 'Football', 'Tennis', 'Basketball'].map((type) => (
               <div key={type} className="map-widget__legend-item">
                 <div className="map-widget__legend-dot" style={getLegendDotColor(type)}></div>
                 <span className="map-widget__legend-text">{type}</span>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       ) : (
         <div className="map-widget__list">

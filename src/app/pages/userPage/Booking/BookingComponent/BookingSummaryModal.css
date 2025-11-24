@@ -380,6 +380,10 @@
   box-shadow: 0 0 0 1px var(--purple);
 }
 
+.booking-summary-modal__payment-option.disabled {
+  opacity: 0.5;
+}
+
 .booking-summary-modal__payment-info {
   display: flex;
   align-items: center;
