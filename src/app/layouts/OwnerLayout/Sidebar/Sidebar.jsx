@@ -12,7 +12,10 @@ import {
   X,
   User,
   Bell,
-  ChevronRight
+  ChevronRight,
+  Building2,
+  Calendar,
+  ClipboardList
 } from 'lucide-react';
 import { useTheme } from '../../../hooks/ThemeContext';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext';
@@ -35,8 +38,11 @@ const Sidebar = ({
 
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: Home, path: '/owner/dashboard' },
+    { id: 'manage-venues', name: 'Manage Venues', icon: Building2, path: '/owner/manage-venues' },
     { id: 'manage-fields', name: 'Manage Fields', icon: Grid3x3, path: '/owner/manage-fields' },
     { id: 'add-field', name: 'Add Field', icon: Plus, path: '/owner/add-field' },
+    { id: 'booking-schedule', name: 'Booking Schedule', icon: Calendar, path: '/owner/booking-schedule' },
+    { id: 'booking-management', name: 'Booking Management', icon: ClipboardList, path: '/owner/booking-management' },
     { id: 'reports', name: 'Reports', icon: BarChart3, path: '/owner/reports' },
     { id: 'settings', name: 'Settings', icon: Settings, path: '/owner/settings' },
   ];
@@ -181,9 +187,6 @@ const Sidebar = ({
                 <p className="user-name">{user?.name || user?.username || 'Venue Owner'}</p>
                 <p className="user-email">{user?.email || 'owner@xnova.com'}</p>
               </div>
-              <button className="notification-button">
-                <Bell className="bell-icon" />
-              </button>
             </div>
             <div className="footer-actions">
               <button 

@@ -1,0 +1,422 @@
+.owner-slot-mgmt-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.owner-slot-mgmt-modal {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.dark .owner-slot-mgmt-modal {
+  background-color: #1f2937;
+}
+
+.owner-slot-mgmt-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .owner-slot-mgmt-modal__header {
+  border-bottom-color: #374151;
+}
+
+.owner-slot-mgmt-modal__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.dark .owner-slot-mgmt-modal__title {
+  color: #ffffff;
+}
+
+.owner-slot-mgmt-modal__subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.dark .owner-slot-mgmt-modal__subtitle {
+  color: #9ca3af;
+}
+
+.owner-slot-mgmt-modal__close {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.owner-slot-mgmt-modal__close:hover {
+  background-color: #f3f4f6;
+}
+
+.dark .owner-slot-mgmt-modal__close {
+  color: #9ca3af;
+}
+
+.dark .owner-slot-mgmt-modal__close:hover {
+  background-color: #374151;
+}
+
+.owner-slot-mgmt-modal__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.owner-slot-mgmt-modal__error {
+  padding: 0.75rem 1rem;
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.dark .owner-slot-mgmt-modal__error {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #fca5a5;
+}
+
+/* Slot Form */
+.owner-slot-form {
+  background-color: #f9fafb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.dark .owner-slot-form {
+  background-color: #111827;
+  border-color: #374151;
+}
+
+.owner-slot-form__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.owner-slot-form__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.dark .owner-slot-form__title {
+  color: #ffffff;
+}
+
+.owner-slot-form__cancel {
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.owner-slot-form__cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.dark .owner-slot-form__cancel:hover {
+  background-color: #374151;
+}
+
+.owner-slot-form__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .owner-slot-form__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.owner-slot-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.owner-slot-form__label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.dark .owner-slot-form__label {
+  color: #e5e7eb;
+}
+
+.owner-slot-form__input,
+.owner-slot-form__select {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #1f2937;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.dark .owner-slot-form__input,
+.dark .owner-slot-form__select {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.owner-slot-form__input:focus,
+.owner-slot-form__select:focus {
+  outline: none;
+  border-color: #a8ff00;
+  box-shadow: 0 0 0 3px rgba(168, 255, 0, 0.1);
+}
+
+.owner-slot-form__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.dark .owner-slot-form__actions {
+  border-top-color: #374151;
+}
+
+/* Add Section */
+.owner-slot-mgmt-modal__add-section {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Slots List */
+.owner-slots-list__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.dark .owner-slots-list__title {
+  color: #ffffff;
+}
+
+.owner-slots-list__empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.dark .owner-slots-list__empty {
+  color: #9ca3af;
+}
+
+.owner-slots-list__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .owner-slots-list__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Slot Card */
+.owner-slot-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  transition: all 0.2s;
+}
+
+.dark .owner-slot-card {
+  background-color: #111827;
+  border-color: #374151;
+}
+
+.owner-slot-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.owner-slot-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.owner-slot-card__name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.dark .owner-slot-card__name {
+  color: #ffffff;
+}
+
+.owner-slot-card__status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.owner-slot-card__status.active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.owner-slot-card__status.inactive {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.owner-slot-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.owner-slot-card__detail {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.owner-slot-card__label {
+  color: #6b7280;
+  margin-right: 0.5rem;
+}
+
+.dark .owner-slot-card__label {
+  color: #9ca3af;
+}
+
+.owner-slot-card__value {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.dark .owner-slot-card__value {
+  color: #ffffff;
+}
+
+.owner-slot-card__price {
+  color: #a8ff00;
+  font-weight: 600;
+}
+
+.owner-slot-card__actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.dark .owner-slot-card__actions {
+  border-top-color: #374151;
+}
+
+/* Footer */
+.owner-slot-mgmt-modal__footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dark .owner-slot-mgmt-modal__footer {
+  border-top-color: #374151;
+}
+
+/* Button Styles */
+.btn-primary,
+.btn-secondary,
+.btn-ghost-sm {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-ghost-sm {
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid transparent;
+}
+
+.btn-ghost-sm:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.dark .btn-ghost-sm {
+  color: #9ca3af;
+}
+
+.dark .btn-ghost-sm:hover:not(:disabled) {
+  background-color: #374151;
+  color: #ffffff;
+}
+
+.btn-ghost-sm.btn-danger:hover:not(:disabled) {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.dark .btn-ghost-sm.btn-danger:hover:not(:disabled) {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #fca5a5;
+}
+
+.btn-ghost-sm:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

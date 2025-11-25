@@ -67,7 +67,9 @@ export const putData = async (endpoint, data, token) => {
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);
         }
-        return await response.json();
+        // Check if response has content before parsing JSON
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
     } catch (error) {
         console.error('Error putting data:', error);
         throw error;
@@ -94,7 +96,7 @@ export const deleteData = async (endpoint, token) => {
     }
 };
 
-// Hàm gọi API PUT
+// Hàm gọi API PATCH
 export const patchData = async (endpoint, data, token) => {
     try {
         const response = await fetch(`${apiUrl}${endpoint}`, {

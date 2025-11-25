@@ -15,10 +15,15 @@ import { FieldOwnerManagement } from "./pages/adminPage/FieldOwnerManagement/Fie
 import { RevenueAnalytics } from "./pages/adminPage/RevenueAnalytics.jsx";
 import { Settings } from "./pages/adminPage/Settings.jsx";
 import { UserManagement } from "./pages/adminPage/UserManagement/UserManagement.jsx";
-import { VenueManagement } from "./pages/adminPage/VenueManagement.jsx";
-import AddEditField from "./pages/ownerPage/AddEditField/AddEditField";
+import { VenueManagement } from "./pages/adminPage/VenueManagement/VenueManagement.jsx";
+import AddField from "./pages/ownerPage/AddField/AddField";
+import AddVenue from "./pages/ownerPage/AddVenue/AddVenue";
+import OwnerBookingManagement from "./pages/ownerPage/BookingManagement/BookingManagement";
+import BookingSchedule from "./pages/ownerPage/BookingSchedule/BookingSchedule";
+import EditVenue from "./pages/ownerPage/ManageVenue/EditVenue";
 import DashboardOverview from "./pages/ownerPage/DashboardOverview/DashboardOverview";
 import ManageFields from "./pages/ownerPage/ManageFields/ManageFields";
+import ManageVenue from "./pages/ownerPage/ManageVenue/ManageVenue";
 import Reports from "./pages/ownerPage/Reports/Reports";
 import SettingsPage from "./pages/ownerPage/SettingsPage/SettingsPage";
 import BookingPage from "./pages/userPage/Booking/BookingPageV2";
@@ -105,8 +110,13 @@ function App() {
           <Route path="/owner/*" element={<RoleRoute allowedRoles={["Owner"]}><OwnerLayout /></RoleRoute>}>
             <Route index element={<DashboardOverview />} />
             <Route path="dashboard" element={<DashboardOverview />} />
-            <Route path="manage-fields" element={<ManageFields fields={fields} />} />
-            <Route path="add-field" element={<AddEditField />} />
+            <Route path="manage-venues" element={<ManageVenue />} />
+            <Route path="add-venue" element={<AddVenue />} />
+            <Route path="edit-venue/:venueId" element={<EditVenue />} />
+            <Route path="manage-fields" element={<ManageFields />} />
+            <Route path="add-field" element={<AddField />} />
+            <Route path="booking-schedule" element={<BookingSchedule />} />
+            <Route path="booking-management" element={<OwnerBookingManagement />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="" element={<DashboardOverview />} />
