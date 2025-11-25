@@ -1,6 +1,6 @@
 import { Calendar, Check, Clock, CreditCard, MapPin, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { deleteData, fetchData } from '../../../../../mocks/CallingAPI.js';
+import { deleteData, fetchData, postData } from '../../../../../mocks/CallingAPI.js';
 import { useAuth } from '../../../../hooks/AuthContext/AuthContext.jsx';
 import './BookingSummaryModal.css';
 
@@ -56,30 +56,28 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
         console.log('thisUserData', thisUserData);
 
         const fieldsResponse = await fetchData('Field', token);
-        // const fields = Array.isArray(fieldsResponse) ? fieldsResponse : [fieldsResponse];
         const venueFieldsData = fieldsResponse.filter(field => field.venueId == venue.id);
-        // console.log('venueFieldsData', venueFieldsData);
-
-
         const slotsResponse = await fetchData('Slot', token);
-        // const slots = Array.isArray(slotsResponse) ? slotsResponse : [slotsResponse];
         const venueSlotsData = slotsResponse.filter(slot => venueFieldsData.some(field => field.id == slot.fieldId) && slot.status == 1);
-        // console.log('venueSlotsData', venueSlotsData);
-
         const bookingsData = await fetchData('Booking', token);
-        // const bookingsData = Array.isArray(bookingsResponse) ? bookingsResponse : [bookingsResponse];
-        console.log('bookingsData', bookingsData);
 
+        const additionalRegularVouchers = [
+          { id: -1, receiveDate: null, userId: user?.id, voucherId: 1, },
+          { id: -2, receiveDate: null, userId: user?.id, voucherId: 5, },
+        ];
+        const additionalVipVouchers = [
+          { id: -1, receiveDate: null, userId: user?.id, voucherId: 4, },
+          { id: -2, receiveDate: null, userId: user?.id, voucherId: 8, },
+        ];
         const vouchersData = await fetchData('Voucher', token);
         const userVouchersData = await fetchData('UserVoucher', token);
-
-        const MyVoucher = userVouchersData
+        const MyVoucher = [...userVouchersData, ...(thisUserData?.type == 'VIP' ? additionalVipVouchers : additionalRegularVouchers)]
           .filter(uv => uv.userId == user?.id)
           .map(uv => {
             const thisVoucher = vouchersData.find(v => v.id == uv.voucherId);
             return {
               ...uv,
-              name: thisVoucher.name,
+              name: thisVoucher.name + (uv.id < 0 ? (thisUserData?.type == 'VIP' ? ' cho khách hàng VIP' : ' cho khách hàng thường') : ''),
               type: thisVoucher.type,
               amount: thisVoucher.amount,
               minEffect: thisVoucher.minEffect,
@@ -87,6 +85,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
               status: thisVoucher.status,
             }
           });
+        console.log('MyVoucher', MyVoucher);
 
         setThisUser(thisUserData);
         setVenueFields(venueFieldsData);
@@ -236,7 +235,9 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
 
   const BookField = async (payment, field, date, slots, amount) => {
 
-    if (!payment || !field || !date || !slots || !amount) {
+    if (!payment || !field || !date || !slots || (payment == 'banking' && amount < 10000) || (payment == 'cash' && amount < 0)) {
+      console.error('Error');
+      console.log('Missing required booking information:', { payment, field, date, slots, amount });
       return;
     }
 
@@ -257,7 +258,8 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
       setLoadingBooking(true);
       const token = user?.token;
       try {
-        if (selectedVoucher) {
+        console.log('selectedVoucher to delete', selectedVoucher);
+        if (selectedVoucher && selectedVoucher > 0) {
           await deleteData(`UserVoucher/${selectedVoucher}`, token);
           console.log('Delete selectedVoucher success');
         } else console.log('No selectedVoucher to delete');
@@ -277,6 +279,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
           window.location.href = resultPaymentData.paymentUrl;
         }
       } catch (error) {
+        console.error('Error', error);
         setError(error);
       } finally {
         setLoadingBooking(false);
@@ -285,7 +288,8 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
       setLoadingBooking(true);
       const token = user?.token;
       try {
-        if (selectedVoucher) {
+        console.log('selectedVoucher to delete', selectedVoucher);
+        if (selectedVoucher && selectedVoucher > 0) {
           await deleteData(`UserVoucher/${selectedVoucher}`, token);
           console.log('Delete selectedVoucher success');
         } else console.log('No selectedVoucher to delete');
@@ -316,6 +320,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
           // window.location.href = resultCashPaymentData.paymentUrl;
         }
       } catch (error) {
+        console.error('Error', error);
         setError(error);
       } finally {
         setLoadingBooking(false);
@@ -643,10 +648,10 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
                     <p className="booking-summary-modal__step-subtitle">{myVouchers?.length} mã giảm giá có sẵn</p>
                   </div>
                 </div>
-                <select className="booking-summary-modal__voucher-grid" onChange={(e) => setSelectedVoucher(e.target.value)} value={selectedVoucher}>
-                  <option value={''}>-- Voucher --</option>
+                <select className="booking-summary-modal__voucher" onChange={(e) => setSelectedVoucher(e.target.value)} value={selectedVoucher}>
+                  <option className={`voucher_option ${selectedVoucher == '' ? 'selected' : ''}`} value={''}>-- Voucher --</option>
                   {myVouchers?.map((mv, i) => (
-                    <option key={i} value={mv.id}>{mv.name}</option>
+                    <option className={`voucher_option ${selectedVoucher == mv.id ? 'selected' : ''}`} key={i} value={mv.id}>{mv.name}</option>
                   ))}
                 </select>
                 <div className="booking-summary-modal__step-tip">
