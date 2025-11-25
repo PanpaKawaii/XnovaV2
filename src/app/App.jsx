@@ -25,6 +25,7 @@ import BookingPage from "./pages/userPage/Booking/BookingPageV2";
 import FindTeammatePage from "./pages/userPage/FindTeammate/FindTeammatePage";
 import Homepage from "./pages/userPage/Home/Homepage";
 import LoginRegister from "./pages/userPage/LoginRegister/LoginRegister";
+import Membership from "./pages/userPage/Membership/Membership";
 import ProfileSettings from "./pages/userPage/Profile/ProfileSettings";
 import Reward from "./pages/userPage/Profile/Reward/Reward";
 import TeamManagement from "./pages/userPage/TeamManagement/TeamManagement";
@@ -121,6 +122,7 @@ function App() {
             <Route path="/team-management" element={<TeamManagement />} />
             <Route path="/find-teammates" element={<FindTeammatePage />} />
             <Route path="/reward" element={<Reward />} />
+            <Route path="/membership" element={<Membership />} />
             <Route path="/payment-status/?" element={<PaymentStatus />} />
           </Route>
 
