@@ -1,17 +1,37 @@
-import { useState } from 'react';
-import { postData } from '../../../../mocks/CallingAPI';
+import { useEffect, useState } from 'react';
+import { fetchData, postData } from '../../../../mocks/CallingAPI';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext';
 import './Membership.css';
 
 export default function Membership() {
     const { user } = useAuth();
+
+    const [thisUser, setThisUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const amount = 79000;
 
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            setError(null);
+            const token = user?.token || null;
+            try {
+                const thisUserData = await fetchData(`User/${user?.id}`, token);
+                console.log('thisUserData', thisUserData);
+                setThisUser(thisUserData);
+            } catch (err) {
+                setError(err.message);
+                console.error('Error fetching user data:', err);
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, [user?.id]);
+
     const Purchase = async () => {
         setLoading(true);
-        const token = user?.token;
+        const token = user?.token || null;
         try {
             const BookingData = {
                 id: 0,
@@ -20,7 +40,7 @@ export default function Membership() {
                 feedback: '',
                 currentDate: new Date(),
                 status: 2,
-                userId: user.id,
+                userId: user?.id,
                 fieldId: 45,
                 slotIds: [508],
             };
@@ -40,9 +60,9 @@ export default function Membership() {
                 console.log('resultPaymentData', resultPaymentData);
                 window.location.href = resultPaymentData.paymentUrl;
             }
-        } catch (error) {
-            console.error('Error', error);
-            setError(error);
+        } catch (err) {
+            console.error('Error', err);
+            setError(err.message);
         } finally {
             setLoading(false);
         }
@@ -101,8 +121,15 @@ export default function Membership() {
                                 </li>
                             ))}
                         </ul>
-                        <button className='btn' onClick={() => Purchase()} disabled={loading}>
-                            {loading ? 'ĐANG XỬ LÝ...' : `ĐĂNG KÝ NGAY ${amount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}` }
+                        <button
+                            className='btn'
+                            onClick={() => Purchase()}
+                            disabled={
+                                loading
+                                // || thisUser?.type == 'VIP'
+                            }
+                        >
+                            {loading ? 'ĐANG XỬ LÝ...' : (thisUser?.type == 'VIP' ? 'BẠN ĐANG SỬ DỤNG GÓI VIP' : `ĐĂNG KÝ NGAY ${amount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`)}
                         </button>
                     </div>
                 </div>

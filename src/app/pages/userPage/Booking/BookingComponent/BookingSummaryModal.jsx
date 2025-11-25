@@ -94,7 +94,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
         setMyVouchers(MyVoucher);
       } catch (err) {
         setError(err.message);
-        console.error('Error fetching venue data:', err);
+        console.error('Error fetching data:', err);
       } finally {
         setLoading(false);
       }
@@ -248,7 +248,7 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
       feedback: '',
       currentDate: new Date(),
       status: 2,
-      userId: user.id,
+      userId: user?.id,
       fieldId: field,
       slotIds: slots,
     };
