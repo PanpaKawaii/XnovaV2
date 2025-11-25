@@ -1,9 +1,13 @@
 /* BookingSummaryModal.css */
 :root {
-  --purple: #7C3AED; /* Primary purple color */
-  --purple-dark: #6B21A8; /* Darker shade for gradients and hover */
-  --purple-light: #A78BFA; /* Lighter shade for subtle effects */
-  --purple-rgb: 124, 58, 237; /* RGB for rgba usage */
+  --purple: #7C3AED;
+  /* Primary purple color */
+  --purple-dark: #6B21A8;
+  /* Darker shade for gradients and hover */
+  --purple-light: #A78BFA;
+  /* Lighter shade for subtle effects */
+  --purple-rgb: 124, 58, 237;
+  /* RGB for rgba usage */
 }
 
 .booking-summary-modal {
@@ -40,6 +44,7 @@
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -173,6 +178,26 @@
   border: 2px solid var(--border-secondary);
   background: var(--bg-secondary);
   transition: all 0.3s ease;
+
+  select {
+    outline: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid var(--border-secondary);
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+
+    .voucher_option {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+
+      &.selected {
+        font-weight: 700;
+        color: var(--purple);
+      }
+    }
+  }
 }
 
 .booking-summary-modal__step-content.current {
@@ -183,6 +208,11 @@
 .booking-summary-modal__step-content.completed {
   border-color: var(--purple);
   background: rgba(var(--purple-rgb), 0.1);
+
+  select {
+    border-color: var(--purple);
+    background: rgba(var(--purple-rgb), 0.1);
+  }
 }
 
 .booking-summary-modal__step-header {
@@ -653,9 +683,12 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
@@ -714,13 +747,18 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Step prompt for user guidance */
@@ -788,6 +826,7 @@
     opacity: 0;
     transform: translateX(-50%) translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
@@ -961,8 +1000,13 @@
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInScale {
@@ -970,6 +1014,7 @@
     opacity: 0;
     transform: scale(0.95) translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -977,9 +1022,17 @@
 }
 
 @keyframes checkBounce {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Extended Booking & Multi-Field Booking Styles */
@@ -1187,12 +1240,12 @@
   .booking-summary-modal__main {
     flex-direction: column;
   }
-  
+
   .booking-summary-modal__sidebar {
     width: 100%;
     order: -1;
   }
-  
+
   .booking-summary-modal__steps {
     flex: 1;
     overflow-y: visible;
@@ -1207,56 +1260,56 @@
     padding: 16px;
     max-height: 95vh;
   }
-  
+
   .booking-summary-modal__main {
     gap: 16px;
     flex: 1;
     min-height: 0;
     overflow-y: auto;
   }
-  
+
   .booking-summary-modal__steps {
     flex: none;
     overflow-y: visible;
     padding-right: 0;
     min-height: auto;
   }
-  
+
   .booking-summary-modal__step {
     margin-bottom: 16px;
   }
-  
+
   .booking-summary-modal__time-grid {
     grid-template-columns: repeat(4, minmax(80px, 1fr));
   }
-  
+
   .booking-summary-modal__field-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .booking-summary-modal__payment-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .booking-summary-modal__step-content {
     padding: 16px;
   }
-  
+
   .booking-summary-modal__sidebar {
     flex-shrink: 0;
   }
-  
+
   /* Ensure proper spacing on mobile */
   .booking-summary-modal__step-header {
     margin-bottom: 12px;
   }
-  
+
   .booking-summary-modal__step-number {
     width: 28px;
     height: 28px;
     font-size: 12px;
   }
-  
+
   .booking-summary-modal__step-title {
     font-size: 16px;
   }
@@ -1268,7 +1321,7 @@
     align-items: flex-start;
     padding-top: 20px;
   }
-  
+
   .booking-summary-modal__content {
     margin: 0;
     padding: 12px;
@@ -1276,58 +1329,58 @@
     max-height: calc(100vh - 40px);
     min-height: auto;
   }
-  
+
   .booking-summary-modal__main {
     gap: 12px;
     flex: 1;
     overflow-y: auto;
   }
-  
+
   .booking-summary-modal__steps {
     flex: none;
     overflow-y: visible;
     padding-right: 0;
     max-height: none;
   }
-  
+
   .booking-summary-modal__step-content {
     padding: 12px;
   }
-  
+
   .booking-summary-modal__time-grid {
     grid-template-columns: repeat(3, minmax(70px, 1fr));
     gap: 8px;
   }
-  
+
   .booking-summary-modal__time-slot {
     padding: 12px 8px;
   }
-  
+
   .booking-summary-modal__field-option,
   .booking-summary-modal__payment-option {
     padding: 12px;
   }
-  
+
   .booking-summary-modal__sidebar {
     order: -1;
     margin-bottom: 8px;
   }
-  
+
   /* Compact progress section on mobile */
   .booking-summary-modal__progress {
     padding: 12px;
   }
-  
+
   .booking-summary-modal__progress-steps {
     gap: 12px;
   }
-  
+
   .booking-summary-modal__progress-step-icon {
     width: 28px;
     height: 28px;
     font-size: 12px;
   }
-  
+
   .booking-summary-modal__summary {
     padding: 12px;
   }
@@ -1338,13 +1391,13 @@
   .booking-summary-modal__content {
     max-height: 95vh;
   }
-  
+
   .booking-summary-modal__main {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
   }
-  
+
   .booking-summary-modal__steps {
     flex: none;
     overflow-y: visible;
@@ -1359,23 +1412,23 @@
     align-items: flex-start;
     padding-top: 10px;
   }
-  
+
   .booking-summary-modal__content {
     max-height: calc(100vh - 20px);
     padding: 16px;
   }
-  
+
   .booking-summary-modal__main {
     flex-direction: row;
     gap: 16px;
   }
-  
+
   .booking-summary-modal__sidebar {
     width: 300px;
     order: 1;
     flex-shrink: 0;
   }
-  
+
   .booking-summary-modal__steps {
     flex: 1;
     overflow-y: auto;
@@ -1385,13 +1438,14 @@
 
 /* Touch-friendly interactions */
 @media (pointer: coarse) {
+
   .booking-summary-modal__time-slot,
   .booking-summary-modal__field-option,
   .booking-summary-modal__payment-option {
     min-height: 44px;
     padding: 16px;
   }
-  
+
   .booking-summary-modal__progress-step-item.clickable {
     min-height: 44px;
     padding: 8px 0;
@@ -1418,8 +1472,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .booking-summary-modal__error {

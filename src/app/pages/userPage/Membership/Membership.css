@@ -1,0 +1,121 @@
+.membership {
+    padding: 40px;
+    font-family: sans-serif;
+    max-width: 1000px;
+    margin: auto;
+
+    .title {
+        text-align: center;
+        margin: 0 0 32px;
+        font-size: 40px;
+        font-weight: 700;
+    }
+
+    .plans {
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        align-items: center;
+
+        .card-border,
+        .card-normal {
+            position: relative;
+            width: 420px;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 2px solid #a8ff00;
+            background-color: var(--bg-primary);
+
+            &.card-border::before {
+                content: '';
+                position: absolute;
+                width: 200px;
+                height: 130%;
+                background-image: linear-gradient(180deg, #a8ff00, #a259ff);
+                animation: card-border 3s linear infinite;
+                transition: all 0.3s linear;
+            }
+
+            &.card-border::after {
+                content: '';
+                position: absolute;
+                inset: 6px;
+                background: linear-gradient(135deg, #a8ff00, #a259ff);
+                border-radius: 16px;
+            }
+
+            .content {
+                z-index: 1;
+                /* padding: 0 0 0 20px; */
+                width: 100%;
+                padding: 20px 40px;
+                color: var(--text-primary);
+                box-sizing: border-box;
+
+                .plan-title {
+                    font-size: 32px;
+                    font-weight: 700;
+                    margin-bottom: 16px;
+                    text-align: center;
+                }
+
+                .feature {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 16px;
+                    margin-bottom: 8px;
+
+                    i {
+                        width: 20px;
+                        text-align: center;
+
+                        &.fa-check {
+                            color: #a8ff00;
+                        }
+
+                        &.fa-xmark {
+                            color: #a259ff;
+                        }
+                    }
+                }
+
+                .btn {
+                    margin: 24px 0 0 0;
+                    width: 100%;
+                    padding: 8px 12px;
+                    background: linear-gradient(135deg, #a259ff, #a8ff00);
+                    color: var(--text-primary);
+                    font-weight: 700;
+                    border: 2px solid #ffffff;
+                    box-sizing: border-box;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        background: linear-gradient(135deg, #8247ce, #8acf00);
+                    }
+
+                    &:disabled {
+                        opacity: 0.7;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes card-border {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -302,7 +302,7 @@ const VenueCard = ({ venue, selectedDate, selectedTimeSlot, onBook }) => {
         {/* Image Section */}
         <div className="venue-card__image-container">
           <img
-            src={venue.images[0] || "https://i.pinimg.com/736x/30/e8/00/30e8005d937ed7f5eefd42a31761860e.jpg"}
+            src={venue.images?.[0] || "https://i.pinimg.com/736x/30/e8/00/30e8005d937ed7f5eefd42a31761860e.jpg"}
             alt={venue.name}
             className="venue-card__image"
           />
