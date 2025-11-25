@@ -1,10 +1,51 @@
-import React from 'react';
+import { useState } from 'react';
+import { postData } from '../../../../mocks/CallingAPI';
+import { useAuth } from '../../../hooks/AuthContext/AuthContext';
 import './Membership.css';
 
 export default function Membership() {
+    const { user } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const amount = 79000;
 
     const Purchase = async () => {
-        window.location.href = '/payment-status/?membership=vip';
+        setLoading(true);
+        const token = user?.token;
+        try {
+            const BookingData = {
+                id: 0,
+                date: new Date().toLocaleDateString('en-CA'),
+                rating: 0,
+                feedback: '',
+                currentDate: new Date(),
+                status: 2,
+                userId: user.id,
+                fieldId: 45,
+                slotIds: [508],
+            };
+            console.log('BookingData:', BookingData);
+
+            const result = await postData('Booking', BookingData, token);
+            console.log('result', result);
+
+            if (result.id) {
+                const PaymentData = {
+                    orderId: result.id,
+                    amount: amount,
+                };
+                console.log('PaymentData:', PaymentData);
+
+                const resultPaymentData = await postData('Payment/create-payos-voucher', PaymentData, token);
+                console.log('resultPaymentData', resultPaymentData);
+                window.location.href = resultPaymentData.paymentUrl;
+            }
+        } catch (error) {
+            console.error('Error', error);
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const features = [
@@ -60,7 +101,9 @@ export default function Membership() {
                                 </li>
                             ))}
                         </ul>
-                        <button className='btn' onClick={() => Purchase()}>ĐĂNG KÝ NGAY</button>
+                        <button className='btn' onClick={() => Purchase()} disabled={loading}>
+                            {loading ? 'ĐANG XỬ LÝ...' : `ĐĂNG KÝ NGAY ${amount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}` }
+                        </button>
                     </div>
                 </div>
             </div>
