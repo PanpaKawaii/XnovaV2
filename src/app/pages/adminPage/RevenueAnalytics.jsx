@@ -124,7 +124,7 @@ export const RevenueAnalytics = () => {
           // Giả định: 1=completed, 0=pending, 2=failed (có thể điều chỉnh theo backend)
           if (s === 1) return 'completed';
           if (s === 2) return 'failed';
-          return 'pending';
+          return 'completed';
         };
 
         let txns = [];

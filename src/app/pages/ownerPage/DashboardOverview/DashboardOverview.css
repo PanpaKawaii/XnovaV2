@@ -486,6 +486,31 @@
   }
 }
 
+.reports-loading,
+.reports-error {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.125rem;
+  color: #4b5563;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark .reports-loading,
+.dark .reports-error {
+  background-color: #1f2937;
+  color: #9ca3af;
+}
+
+.reports-error {
+  color: #ef4444;
+}
+
+.dark .reports-error {
+  color: #fca5a5;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

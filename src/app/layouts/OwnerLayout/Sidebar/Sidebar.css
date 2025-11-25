@@ -154,10 +154,13 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .avatar {
   width: 2.25rem;
+  min-width: 2.25rem;
   height: 2.25rem;
   background: linear-gradient(135deg, #A8FF00 0%, #A259FF 100%);
   border-radius: 9999px;
@@ -257,7 +260,7 @@
 }
 
 .sidebar-footer {
-  padding: 1rem;
+  padding: 1.25rem 1rem 1.25rem 1rem;
   border-top: 1px solid rgba(226, 232, 240, 0.5);
   margin-top: auto;
 }
@@ -336,6 +339,7 @@
   border: 1px solid rgba(148, 163, 184, 0.15);
   transition: all 0.2s ease;
   margin-left: auto;
+  min-width: 2.25rem;
 }
 
 .notification-button:hover {

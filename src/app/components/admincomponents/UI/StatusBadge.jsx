@@ -8,6 +8,7 @@ export const StatusBadge = ({ status, type = 'booking' }) => {
       case 'confirmed': return 'Đã xác nhận';
       case 'pending': return 'Đang chờ';
       case 'cancelled': return 'Đã hủy';
+      case 'completed': return 'Hoàn tất';
       case 'active': return 'Hoạt động';
       case 'inactive': return 'Không hoạt động';
       case 'paid': return 'Đã thanh toán';

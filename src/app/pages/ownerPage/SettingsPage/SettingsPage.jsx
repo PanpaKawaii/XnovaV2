@@ -9,7 +9,9 @@ import {
   Database,
   Download,
   Upload,
-  AlertCircle
+  AlertCircle,
+  Clock,
+  Calendar
 } from 'lucide-react';
 import { useTheme } from '../../../hooks/ThemeContext';
 import './SettingsPage.css';
@@ -18,15 +20,30 @@ const SettingsPage = () => {
   const { isDark, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('profile');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [pendingExpireMinutes, setPendingExpireMinutes] = useState(15);
+  const [autoExpireEnabled, setAutoExpireEnabled] = useState(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const settingsTabs = [
     { id: 'profile', name: 'Profile', icon: User },
+    { id: 'booking', name: 'Booking Settings', icon: Calendar },
     { id: 'security', name: 'Security', icon: Lock },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'appearance', name: 'Appearance', icon: Palette },
     { id: 'language', name: 'Language', icon: Globe },
     { id: 'data', name: 'Data & Backup', icon: Database }
   ];
+
+  const handleSaveBookingSettings = () => {
+    // Save to localStorage or API
+    localStorage.setItem('bookingSettings', JSON.stringify({
+      autoExpireEnabled,
+      pendingExpireMinutes
+    }));
+    
+    setShowSuccessMessage(true);
+    setTimeout(() => setShowSuccessMessage(false), 3000);
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -77,6 +94,106 @@ const SettingsPage = () => {
               </div>
             </div>
             <button className="save-button">Save Changes</button>
+          </div>
+        );
+
+      case 'booking':
+        return (
+          <div className="booking-settings-content">
+            {showSuccessMessage && (
+              <div className="success-message">
+                <AlertCircle size={20} />
+                <span>Booking settings saved successfully!</span>
+              </div>
+            )}
+
+            <div className="settings-section">
+              <div className="section-header">
+                <Clock className="section-icon" />
+                <div>
+                  <h3 className="section-title">Auto-Expire Pending Bookings</h3>
+                  <p className="section-description">
+                    Automatically cancel unpaid bookings after a specified time
+                  </p>
+                </div>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label className="setting-label">Enable Auto-Expire</label>
+                  <p className="setting-description">
+                    Pending bookings will be automatically cancelled if not paid within the time limit
+                  </p>
+                </div>
+                <label className="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    checked={autoExpireEnabled}
+                    onChange={(e) => setAutoExpireEnabled(e.target.checked)}
+                    className="sr-only" 
+                  />
+                  <div className="toggle-slider"></div>
+                </label>
+              </div>
+
+              {autoExpireEnabled && (
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <label className="setting-label">Expiration Time (minutes)</label>
+                    <p className="setting-description">
+                      Time before pending bookings are automatically cancelled
+                    </p>
+                  </div>
+                  <div className="time-input-group">
+                    <input
+                      type="number"
+                      min="5"
+                      max="120"
+                      value={pendingExpireMinutes}
+                      onChange={(e) => setPendingExpireMinutes(parseInt(e.target.value) || 15)}
+                      className="time-input"
+                    />
+                    <span className="time-unit">minutes</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="predefined-times">
+                <p className="predefined-label">Quick Select:</p>
+                <div className="time-buttons">
+                  <button 
+                    onClick={() => setPendingExpireMinutes(10)}
+                    className={`time-button ${pendingExpireMinutes === 10 ? 'active' : ''}`}
+                  >
+                    10 min
+                  </button>
+                  <button 
+                    onClick={() => setPendingExpireMinutes(15)}
+                    className={`time-button ${pendingExpireMinutes === 15 ? 'active' : ''}`}
+                  >
+                    15 min
+                  </button>
+                  <button 
+                    onClick={() => setPendingExpireMinutes(30)}
+                    className={`time-button ${pendingExpireMinutes === 30 ? 'active' : ''}`}
+                  >
+                    30 min
+                  </button>
+                  <button 
+                    onClick={() => setPendingExpireMinutes(60)}
+                    className={`time-button ${pendingExpireMinutes === 60 ? 'active' : ''}`}
+                  >
+                    60 min
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="settings-actions">
+              <button onClick={handleSaveBookingSettings} className="save-button">
+                Save Changes
+              </button>
+            </div>
           </div>
         );
 

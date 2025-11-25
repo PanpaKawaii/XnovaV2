@@ -4,7 +4,7 @@ import { SearchInput } from '../../../components/admincomponents/UI/SearchInput'
 import { FilterSelect } from '../../../components/admincomponents/UI/FilterSelect';
 import { StatusBadge } from '../../../components/admincomponents/UI/StatusBadge';
 import { Button } from '../../../components/admincomponents/UI/Button';
-import { fetchData, putData } from '../../../../mocks/CallingAPI.js';
+import { fetchData, putData, patchData } from '../../../../mocks/CallingAPI.js';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { ConfirmModal } from '../../../components/ui/ConfirmModal';
@@ -167,7 +167,12 @@ export const FieldOwnerManagement = () => {
   // Deduplicate venue contact phones
   const venuePhonesRaw = ownerVenues.map(v => v.phone || v.contactPhone || v.contact || null).filter(Boolean);
   const venuePhones = Array.from(new Set(venuePhonesRaw));
-  const phone = venuePhones.length > 0 ? venuePhones.join(', ') : (u.phone || u.phoneNumber || u.contactPhone || '-');
+  const venueContact = venuePhones.length > 0 ? venuePhones.join(', ') : '';
+  
+  // Owner's personal contact info
+  const ownerEmail = u.email || '-';
+  const ownerPhone = u.phone || u.phoneNumber || u.contactPhone || '-';
+  
   // Business name: show venue names joined by comma, fallback to user businessName
   const venueNames = ownerVenues.map(v => v.name).filter(Boolean);
   const businessName = venueNames.length > 0 ? venueNames.join(', ') : (u.businessName || u.companyName || u.orgName || '-');
@@ -177,9 +182,10 @@ export const FieldOwnerManagement = () => {
       return {
         id: u.id,
         name: u.name || u.fullName || u.username || `User ${u.id}`,
-        email: u.email || '-',
-        phone,
+        email: ownerEmail,
+        phone: ownerPhone,
         businessName,
+        venueContact,
         venueCount: ownerVenues.length,
         fieldsCount: allFields.length,
         // commissionRate removed
@@ -260,7 +266,7 @@ export const FieldOwnerManagement = () => {
       const formData = {
         name: ownerDetail?.name || ownerDetail?.fullName || ownerDetail?.username || '',
         email: ownerDetail?.email || '',
-        phone: phoneFromVenues || ownerDetail?.phone || ownerDetail?.phoneNumber || ownerDetail?.contactPhone || '',
+        phone: ownerDetail?.phone || ownerDetail?.phoneNumber || ownerDetail?.contactPhone || '',
         businessName: businessNameFromVenues || ownerDetail?.businessName || ownerDetail?.companyName || ownerDetail?.orgName || '',
         // commissionRate removed
         status: owner.status
@@ -280,7 +286,7 @@ export const FieldOwnerManagement = () => {
       const formData = {
         name: rawUser?.name || rawUser?.fullName || rawUser?.username || '',
         email: rawUser?.email || '',
-        phone: phoneFromVenues || rawUser?.phone || rawUser?.phoneNumber || rawUser?.contactPhone || '',
+        phone: rawUser?.phone || rawUser?.phoneNumber || rawUser?.contactPhone || '',
         businessName: businessNameFromVenues || rawUser?.businessName || rawUser?.companyName || rawUser?.orgName || '',
         // commissionRate removed
         status: owner.status
@@ -307,39 +313,37 @@ export const FieldOwnerManagement = () => {
     try {
       const token = user.token;
       
-      // Check if User fields (name, email) changed
+      // Check if User fields (name, phone) changed
       const userFieldsChanged = 
         editForm.name !== originalForm.name || 
-        editForm.email !== originalForm.email ||
+        editForm.phone !== originalForm.phone ||
         // commissionRate removed
         editForm.status !== originalForm.status;
       
-      // Check if Venue fields (phone, businessName) changed
+      // Check if Venue fields (businessName) changed
       const venueFieldsChanged = 
-        editForm.phone !== originalForm.phone || 
         editForm.businessName !== originalForm.businessName;
       
-      // Update User info only if name, email, or status changed
+      // Update User info only if name, phone, or status changed (using PATCH)
       if (userFieldsChanged) {
         const userPayload = {
           name: editForm.name,
-          email: editForm.email,
+          phoneNumber: editForm.phone,
           // commissionRate removed
           status: editForm.status
         };
-        await putData(`User/${selectedOwner.id}`, userPayload, token);
+        await patchData(`User/${selectedOwner.id}`, userPayload, token);
         console.log('✅ Updated User fields:', userPayload);
       } else {
         console.log('⏭️ Skipped User API - no changes detected');
       }
 
-      // Update Venue info only if phone or businessName changed
+      // Update Venue info only if businessName changed
       if (venueFieldsChanged) {
         const ownerVenues = venuesByOwner.get(selectedOwner.id) || [];
         
         if (ownerVenues.length > 0) {
-          // Split phone and businessName by comma if multiple venues
-          const phones = editForm.phone.split(',').map(p => p.trim()).filter(Boolean);
+          // Split businessName by comma if multiple venues
           const businessNames = editForm.businessName.split(',').map(b => b.trim()).filter(Boolean);
           
           // Update each venue
@@ -350,7 +354,7 @@ export const FieldOwnerManagement = () => {
               address: venue.address || '',
               longitude: venue.longitude || '',
               latitude: venue.latitude || '',
-              contact: phones[index] || phones[0] || editForm.phone, // Số điện thoại
+              contact: venue.contact || '', // Keep existing contact
               status: venue.status || 0,
               userId: venue.userId || selectedOwner.id
             };
@@ -571,6 +575,11 @@ export const FieldOwnerManagement = () => {
                     <div className="ad-owner-table__business-name">
                       {owner.businessName}
                     </div>
+                    {owner.venueContact && (
+                      <div className="ad-owner-table__contact-phone">
+                        {owner.venueContact}
+                      </div>
+                    )}
                   </td>
                   <td className="ad-owner-table__td">
                     <div className="ad-owner-table__contact-email">
@@ -715,7 +724,9 @@ export const FieldOwnerManagement = () => {
                     type="email"
                     className="ad-owner-modal__input"
                     value={editForm.email}
-                    onChange={(e) => handleEditFormChange('email', e.target.value)}
+                    readOnly
+                    disabled
+                    style={{ cursor: 'not-allowed' }}
                   />
                 </div>
 
