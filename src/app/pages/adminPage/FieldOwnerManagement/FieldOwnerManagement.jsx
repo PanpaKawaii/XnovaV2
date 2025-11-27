@@ -313,27 +313,60 @@ export const FieldOwnerManagement = () => {
     try {
       const token = user.token;
       
-      // Check if User fields (name, phone) changed
-      const userFieldsChanged = 
-        editForm.name !== originalForm.name || 
-        editForm.phone !== originalForm.phone ||
-        // commissionRate removed
-        editForm.status !== originalForm.status;
+      // Build payload with only changed fields for User
+      const changedFields = {};
+      
+      if (editForm.name !== originalForm.name) {
+        changedFields.name = editForm.name;
+      }
+      
+      if (editForm.phone !== originalForm.phone) {
+        changedFields.phoneNumber = editForm.phone;
+      }
+      
+      if (editForm.status !== originalForm.status) {
+        changedFields.status = editForm.status;
+      }
       
       // Check if Venue fields (businessName) changed
       const venueFieldsChanged = 
         editForm.businessName !== originalForm.businessName;
       
-      // Update User info only if name, phone, or status changed (using PATCH)
-      if (userFieldsChanged) {
+      // Update User info only if there are changes (using PATCH)
+      if (Object.keys(changedFields).length > 0) {
+        // Fetch current user data to get required fields
+        const currentUser = await fetchData(`User/${selectedOwner.id}`, token);
+        
+        // Convert status string to number if changed
+        let statusValue = currentUser.status;
+        if (changedFields.status) {
+          statusValue = changedFields.status === 'active' ? 1 : 
+                       changedFields.status === 'pending' ? 2 : 0;
+        }
+        
+        // Build complete payload with all required fields
         const userPayload = {
-          name: editForm.name,
-          phoneNumber: editForm.phone,
-          // commissionRate removed
-          status: editForm.status
+          id: currentUser.id || selectedOwner.id,
+          name: changedFields.name || currentUser.name || '',
+          email: currentUser.email || editForm.email || '',
+          password: currentUser.password || '',
+          image: currentUser.image || '',
+          role: currentUser.role || 'owner',
+          description: currentUser.description || '',
+          phoneNumber: changedFields.phoneNumber || currentUser.phoneNumber || currentUser.phone || '',
+          point: currentUser.point || 0,
+          type: currentUser.type || 'owner',
+          status: statusValue
         };
+        
+        console.log('🔍 Sending PATCH request to User API:', {
+          endpoint: `User/${selectedOwner.id}`,
+          changedFields: changedFields,
+          fullPayload: userPayload
+        });
+        
         await patchData(`User/${selectedOwner.id}`, userPayload, token);
-        console.log('✅ Updated User fields:', userPayload);
+        console.log('✅ Updated User successfully');
       } else {
         console.log('⏭️ Skipped User API - no changes detected');
       }
@@ -372,6 +405,7 @@ export const FieldOwnerManagement = () => {
       }
 
       // Reload data only if something was updated
+      const userFieldsChanged = Object.keys(changedFields).length > 0;
       if (userFieldsChanged || venueFieldsChanged) {
         const [usersResp, venuesResp] = await Promise.all([
           fetchData('User', token).catch(() => []),
@@ -380,6 +414,12 @@ export const FieldOwnerManagement = () => {
         
         setUsers(Array.isArray(usersResp) ? usersResp : (usersResp ? [usersResp] : []));
         setVenues(Array.isArray(venuesResp) ? venuesResp : (venuesResp ? [venuesResp] : []));
+        
+        setAlertMessage('Cập nhật thông tin owner thành công!');
+        setShowAlertModal(true);
+      } else {
+        setAlertMessage('Không có thay đổi nào để cập nhật.');
+        setShowAlertModal(true);
       }
 
       setEditModalOpen(false);
