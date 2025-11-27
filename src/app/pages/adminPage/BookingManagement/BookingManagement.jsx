@@ -7,6 +7,7 @@ import { Button } from '../../../components/admincomponents/UI/Button';
 import { fetchData } from '../../../../mocks/CallingAPI.js';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
 import BookingDetailModal from './BookingDetailModal.jsx';
+import { generatePagination } from '../../../utils/pagination.js';
 import './BookingManagement.css';
 
 export const BookingManagement = () => {
@@ -330,14 +331,20 @@ export const BookingManagement = () => {
                   Trước
                 </button>
                 <div className="ad-booking-pagination__pages">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <button
-                      key={page}
-                      onClick={() => handlePageChange(page)}
-                      className={`ad-booking-pagination__page ${currentPage === page ? 'ad-booking-pagination__page--active' : ''}`}
-                    >
-                      {page}
-                    </button>
+                  {generatePagination(currentPage, totalPages).map((page, index) => (
+                    page === '...' ? (
+                      <span key={`ellipsis-${index}`} className="ad-booking-pagination__ellipsis">
+                        ...
+                      </span>
+                    ) : (
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={`ad-booking-pagination__page ${currentPage === page ? 'ad-booking-pagination__page--active' : ''}`}
+                      >
+                        {page}
+                      </button>
+                    )
                   ))}
                 </div>
                 <button

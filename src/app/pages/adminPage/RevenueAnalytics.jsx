@@ -5,6 +5,7 @@ import { Button } from '../../components/admincomponents/UI/Button';
 import { FilterSelect } from '../../components/admincomponents/UI/FilterSelect';
 import { fetchData } from '../../../mocks/CallingAPI.js';
 import { useAuth } from '../../hooks/AuthContext/AuthContext.jsx';
+import { generatePagination } from '../../utils/pagination.js';
 import './RevenueAnalytics.css';
 
 // Dữ liệu sẽ lấy từ API Payment
@@ -20,8 +21,10 @@ export const RevenueAnalytics = () => {
   const [weekRevenue, setWeekRevenue] = useState(0);
   const [monthRevenue, setMonthRevenue] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState([]);
+  const [allTransactions, setAllTransactions] = useState([]);
+  const [transactionFilter, setTransactionFilter] = useState('day');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -155,10 +158,10 @@ export const RevenueAnalytics = () => {
           );
         }
 
-        // Sắp xếp mới nhất trước và giới hạn 10 giao dịch gần nhất
+        // Sắp xếp mới nhất trước
         txns.sort((a, b) => new Date(b.date) - new Date(a.date));
-        setRecentTransactions(txns.slice(0, 10));
-        setCurrentPage(1); // Reset to first page when data refreshes
+        setAllTransactions(txns);
+        setRecentTransactions(txns); // Will be filtered by transactionFilter
       } catch (e) {
         setError('Lỗi khi tải dữ liệu doanh thu');
         setRevenueChartData([]);
@@ -172,6 +175,63 @@ export const RevenueAnalytics = () => {
     };
     fetchPayments();
   }, [user]);
+
+  // Filter transactions based on selected time period
+  useEffect(() => {
+    if (allTransactions.length === 0) {
+      setRecentTransactions([]);
+      return;
+    }
+
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    let filtered = [];
+
+    switch (transactionFilter) {
+      case 'day':
+        // Today's transactions
+        filtered = allTransactions.filter(t => {
+          const txDate = t.date.slice(0, 10);
+          return txDate === todayStr;
+        });
+        break;
+
+      case 'week':
+        // This week's transactions (from Monday to today)
+        const startOfWeek = new Date(now);
+        const day = startOfWeek.getDay();
+        const diffToMonday = (day + 6) % 7;
+        startOfWeek.setDate(startOfWeek.getDate() - diffToMonday);
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        filtered = allTransactions.filter(t => {
+          const txDate = new Date(t.date);
+          return txDate >= startOfWeek && txDate <= now;
+        });
+        break;
+
+      case 'month':
+        // This month's transactions
+        filtered = allTransactions.filter(t => {
+          const txDate = new Date(t.date);
+          return txDate.getMonth() === now.getMonth() && 
+                 txDate.getFullYear() === now.getFullYear();
+        });
+        break;
+
+      case 'all':
+        // All transactions
+        filtered = allTransactions;
+        break;
+
+      default:
+        filtered = allTransactions;
+    }
+
+    setRecentTransactions(filtered);
+    setCurrentPage(1); // Reset to first page when filter changes
+  }, [transactionFilter, allTransactions]);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -194,9 +254,13 @@ export const RevenueAnalytics = () => {
     { name: 'Tennis', amount: 12000000 }
   ];
 
-  // recentTransactions được xây từ API ở trên
+  const transactionFilterOptions = [
+    { value: 'day', label: 'Hôm nay' },
+    { value: 'week', label: 'Tuần này' },
+    { value: 'month', label: 'Tháng này' },
+    { value: 'all', label: 'Tất cả' }
+  ];
 
-  // Pagination logic
   // Pagination logic
   const totalPages = Math.ceil(recentTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -215,6 +279,8 @@ export const RevenueAnalytics = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  // recentTransactions được xây từ API ở trên
 
   return (
     <div className="ad-revenue-page">
@@ -326,6 +392,12 @@ export const RevenueAnalytics = () => {
           <h3 className="ad-revenue-transactions__title">
             Giao dịch gần đây
           </h3>
+          <FilterSelect
+            options={transactionFilterOptions}
+            value={transactionFilter}
+            onChange={setTransactionFilter}
+            placeholder="Lọc theo thời gian"
+          />
         </div>
         <div className="ad-revenue-transactions__table-wrapper">
           <table className="ad-revenue-transactions__table">
@@ -338,61 +410,77 @@ export const RevenueAnalytics = () => {
               </tr>
             </thead>
             <tbody className="ad-revenue-transactions__tbody">
-              {paginatedTransactions.map((transaction) => (
-                <tr key={transaction.id} className="ad-revenue-transactions__row">
-                  <td className="ad-revenue-transactions__td">
-                    {transaction.user}
-                  </td>
-                  <td className="ad-revenue-transactions__td ad-revenue-transactions__td--amount">
-                    {formatCurrency(transaction.amount)}
-                  </td>
-                  <td className="ad-revenue-transactions__td">
-                    {new Date(transaction.date).toLocaleDateString('vi-VN')}
-                  </td>
-                  <td className="ad-revenue-transactions__td">
-                    <span className={`ad-revenue-transactions__badge ad-revenue-transactions__badge--${transaction.status}`}>
-                      {transaction.status === 'completed' ? 'Hoàn thành' : 
-                       transaction.status === 'pending' ? 'Đang xử lý' : 'Thất bại'}
-                    </span>
+              {paginatedTransactions.length === 0 ? (
+                <tr className="ad-revenue-transactions__row">
+                  <td colSpan="4" className="ad-revenue-transactions__td" style={{ textAlign: 'center' }}>
+                    Không có giao dịch trong thời gian này
                   </td>
                 </tr>
-              ))}
+              ) : (
+                paginatedTransactions.map((transaction) => (
+                  <tr key={transaction.id} className="ad-revenue-transactions__row">
+                    <td className="ad-revenue-transactions__td">
+                      {transaction.user}
+                    </td>
+                    <td className="ad-revenue-transactions__td ad-revenue-transactions__td--amount">
+                      {formatCurrency(transaction.amount)}
+                    </td>
+                    <td className="ad-revenue-transactions__td">
+                      {new Date(transaction.date).toLocaleDateString('vi-VN')}
+                    </td>
+                    <td className="ad-revenue-transactions__td">
+                      <span className={`ad-revenue-transactions__badge ad-revenue-transactions__badge--${transaction.status}`}>
+                        {transaction.status === 'completed' ? 'Hoàn thành' : 
+                         transaction.status === 'pending' ? 'Đang xử lý' : 'Thất bại'}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
         {/* Pagination Controls */}
-        <div className="ad-revenue-pagination">
-          <div className="ad-revenue-pagination__info">
-            Hiển thị {startIndex + 1}-{Math.min(endIndex, recentTransactions.length)} trong tổng số {recentTransactions.length} giao dịch
-          </div>
-          <div className="ad-revenue-pagination__controls">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className="ad-revenue-pagination__button"
-            >
-              Trước
-            </button>
-            <div className="ad-revenue-pagination__pages">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`ad-revenue-pagination__page ${currentPage === page ? 'ad-revenue-pagination__page--active' : ''}`}
-                >
-                  {page}
-                </button>
-              ))}
+        {recentTransactions.length > itemsPerPage && (
+          <div className="ad-revenue-pagination">
+            <div className="ad-revenue-pagination__info">
+              Hiển thị {startIndex + 1}-{Math.min(endIndex, recentTransactions.length)} trong tổng số {recentTransactions.length} giao dịch
             </div>
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className="ad-revenue-pagination__button"
-            >
-              Sau
-            </button>
+            <div className="ad-revenue-pagination__controls">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="ad-revenue-pagination__button"
+              >
+                Trước
+              </button>
+              <div className="ad-revenue-pagination__pages">
+                {generatePagination(currentPage, totalPages).map((page, index) => (
+                  page === '...' ? (
+                    <span key={`ellipsis-${index}`} className="ad-revenue-pagination__ellipsis">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`ad-revenue-pagination__page ${currentPage === page ? 'ad-revenue-pagination__page--active' : ''}`}
+                    >
+                      {page}
+                    </button>
+                  )
+                ))}
+              </div>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="ad-revenue-pagination__button"
+              >
+                Sau
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

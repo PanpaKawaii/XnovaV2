@@ -16,6 +16,13 @@ export default defineConfig(({ command, mode }) => {
     server: {
       port: 3000,
       open: true,
+      proxy: {
+        '/api': {
+          target: 'https://xnovaapi20251024123055.azurewebsites.net',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
     build: {
       outDir: 'dist',

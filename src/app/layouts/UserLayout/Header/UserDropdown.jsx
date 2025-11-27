@@ -113,7 +113,7 @@ const UserDropdown = ({ user, userInfo, handleLogout, t, isMobile }) => {
       
       {userDropdown && (
         <div className="header__user-menu">
-          <div className="header__user-info">
+          <div className="header__user-info" style={{ cursor: 'pointer' }} onClick={handleProfileSettings}>
             <div className="header__user-info-avatar">
               {userInfo?.image ? (
                 <img src={userInfo.image} alt={userInfo.name} className="header__user-info-avatar-img" />

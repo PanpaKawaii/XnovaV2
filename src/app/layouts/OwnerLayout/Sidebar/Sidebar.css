@@ -168,6 +168,14 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 8px rgba(168, 255, 0, 0.2);
+  overflow: hidden;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9999px;
 }
 
 .avatar-icon {
