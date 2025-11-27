@@ -3,6 +3,15 @@
   100% { opacity: 1; }
 }
 
+@keyframes highlightPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 3px #a8ff00, 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(168, 255, 0, 0.5), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+}
+
 .manage-fields-wrapper {
   padding: 1.5rem;
   display: flex;
@@ -212,8 +221,17 @@
         transform: translateY(-0.5rem);
       }
 
+      &.highlighted {
+        animation: highlightPulse 2s ease-in-out;
+        box-shadow: 0 0 0 3px #a8ff00, 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+
       .dark & {
         background-color: #1f2937;
+
+        &.highlighted {
+          box-shadow: 0 0 0 3px #a8ff00, 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
       }
 
       .field-header {
@@ -317,9 +335,11 @@
       .action-buttons {
         display: flex;
         gap: 0.5rem;
+        flex-wrap: wrap;
 
         .visibility-button {
           flex: 1;
+          min-width: 80px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -350,6 +370,7 @@
 
         .edit-button {
           flex: 1;
+          min-width: 80px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -366,8 +387,28 @@
           }
         }
 
+        .settings-button {
+          flex: 1;
+          min-width: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.5rem 0.75rem;
+          border-radius: 0.5rem;
+          font-size: 0.875rem;
+          font-weight: 500;
+          background-color: #e0e7ff;
+          color: #3730a3;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: #c7d2fe;
+          }
+        }
+
         .delete-button {
           flex: 1;
+          min-width: 80px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -433,4 +474,29 @@
       }
     }
   }
+}
+
+.reports-loading,
+.reports-error {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.125rem;
+  color: #4b5563;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark .reports-loading,
+.dark .reports-error {
+  background-color: #1f2937;
+  color: #9ca3af;
+}
+
+.reports-error {
+  color: #ef4444;
+}
+
+.dark .reports-error {
+  color: #fca5a5;
 }

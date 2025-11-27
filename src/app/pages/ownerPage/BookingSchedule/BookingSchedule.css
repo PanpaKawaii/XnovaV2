@@ -1,0 +1,471 @@
+.booking-schedule-wrapper {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-title svg {
+  color: var(--accent-primary);
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.header-title p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Month Navigation */
+.month-navigation {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.nav-button,
+.today-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-button:hover,
+.today-button:hover {
+  background: var(--bg-secondary);
+  border-color: var(--accent-primary);
+}
+
+.today-button {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-color: var(--accent-primary);
+}
+
+.today-button:hover {
+  background: var(--accent-hover);
+}
+
+/* Month Overview */
+.month-overview {
+  margin-bottom: 24px;
+}
+
+.month-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+/* Week day headers */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.weekday-header {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Calendar Month Grid */
+.calendar-month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.calendar-day {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.calendar-day.empty {
+  background: transparent;
+  border: none;
+  pointer-events: none;
+}
+
+.calendar-day.other-month {
+  opacity: 0.4;
+}
+
+.calendar-day.has-bookings {
+  cursor: pointer;
+  border-color: rgba(var(--accent-primary-rgb), 0.3);
+}
+
+.calendar-day.has-bookings:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--shadow-primary);
+  border-color: var(--accent-primary);
+}
+
+.calendar-day.today {
+  border-color: var(--accent-primary);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-width: 3px;
+}
+
+/* Day Number */
+.day-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.calendar-day.today .day-number {
+  color: var(--accent-primary);
+}
+
+/* Day Bookings */
+.day-bookings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.booking-badge {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.detail-modal {
+  background: var(--bg-primary);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px var(--shadow-tertiary);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Modal Content */
+.modal-content {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Booking Item */
+.booking-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.booking-item:hover {
+  box-shadow: 0 4px 12px var(--shadow-secondary);
+  border-color: rgba(var(--accent-primary-rgb), 0.3);
+}
+
+.booking-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.time-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.time-info svg {
+  color: var(--accent-primary);
+}
+
+.time-range {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background: var(--warning-light);
+  color: var(--warning-dark);
+}
+
+.status-confirmed {
+  background: rgba(var(--info-rgb), 0.15);
+  color: var(--info);
+}
+
+.status-completed {
+  background: rgba(var(--success-rgb), 0.15);
+  color: var(--success-dark);
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--error);
+}
+
+/* Booking Item Body */
+.booking-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.booking-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.booking-info-row svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--text-secondary);
+}
+
+.booking-info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.info-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* No Bookings Message */
+.no-bookings-message {
+  text-align: center;
+  padding: 48px 20px;
+}
+
+.no-bookings-message p {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+/* Loading */
+.reports-loading {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.125rem;
+  color: #4b5563;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark .reports-loading {
+  background-color: #1f2937;
+  color: #9ca3af;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .calendar-month-grid {
+    gap: 6px;
+  }
+  
+  .calendar-day {
+    min-height: 80px;
+    padding: 8px;
+  }
+  
+  .day-number {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .schedule-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .month-navigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .calendar-month-grid {
+    gap: 4px;
+  }
+
+  .calendar-day {
+    min-height: 60px;
+    padding: 6px;
+    border-radius: 6px;
+  }
+
+  .day-number {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .booking-badge {
+    padding: 4px 8px;
+    font-size: 11px;
+    min-width: 24px;
+  }
+
+  .weekday-header {
+    font-size: 11px;
+    padding: 8px 4px;
+  }
+
+  .month-title {
+    font-size: 20px;
+  }
+
+  .detail-modal {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-button span,
+  .today-button {
+    font-size: 13px;
+  }
+
+  .header-title h1 {
+    font-size: 22px;
+  }
+
+  .header-title p {
+    font-size: 12px;
+  }
+}

@@ -60,7 +60,9 @@ const BookingPage = () => {
 
         // Filter venues by badminton type
         const badmintonVenues = venues.filter(venue =>
-          venue.fields?.some(field => field.typeId === badmintonType.id)
+          venue.fields?.some(field => 
+            field.typeId === badmintonType.id && field.status === 1
+          )
           && venue.status === 1
         );
 
@@ -83,7 +85,9 @@ const BookingPage = () => {
         // Map venues data
         const formattedVenues = badmintonVenues.map(venue => {
           const venueImages = images.filter(image => image.venueId === venue.id && image.status === 1);
-          const venueFields = venue.fields?.filter(field => field.typeId === badmintonType.id) || [];
+          const venueFields = venue.fields?.filter(field => 
+            field.typeId === badmintonType.id && field.status === 1
+          ) || [];
           const venueSlots = activeSlots.filter(slot =>
             venueFields.some(field => field.id === slot.fieldId)
           );

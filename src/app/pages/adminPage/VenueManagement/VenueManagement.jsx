@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Plus, Edit, ToggleLeft, ToggleRight, MapPin, Building2, User, ChevronDown, ChevronUp, Eye } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { SearchInput } from '../../components/admincomponents/UI/SearchInput';
-import { FilterSelect } from '../../components/admincomponents/UI/FilterSelect';
-import { StatusBadge } from '../../components/admincomponents/UI/StatusBadge';
-import { Button } from '../../components/admincomponents/UI/Button';
-import { fetchData, postData, putData, deleteData } from '../../../mocks/CallingAPI';
-import { useAuth } from '../../hooks/AuthContext/AuthContext';
-import { ConfirmModal } from '../../components/ui/ConfirmModal';
-import { AlertModal } from '../../components/ui/AlertModal';
+import { SearchInput } from '../../../components/admincomponents/UI/SearchInput';
+import { FilterSelect } from '../../../components/admincomponents/UI/FilterSelect';
+import { StatusBadge } from '../../../components/admincomponents/UI/StatusBadge';
+import { Button } from '../../../components/admincomponents/UI/Button';
+import { fetchData, postData, putData, deleteData } from '../../../../mocks/CallingAPI';
+import { useAuth } from '../../../hooks/AuthContext/AuthContext';
+import { ConfirmModal } from '../../../components/ui/ConfirmModal';
+import { AlertModal } from '../../../components/ui/AlertModal';
+import { VenueEditModal } from './VenueEditModal';
 import './VenueManagement.css';
 
 export const VenueManagement = () => {
@@ -34,6 +35,8 @@ export const VenueManagement = () => {
   const [confirmMessage, setConfirmMessage] = useState('');
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedVenue, setSelectedVenue] = useState(null);
 
   // Set owner filter from URL query parameter
   useEffect(() => {
@@ -112,6 +115,67 @@ export const VenueManagement = () => {
       console.error('Error toggling venue status:', err);
       setAlertMessage('Không thể thay đổi trạng thái venue');
       setShowAlertModal(true);
+    }
+  };
+
+  // Edit venue handlers
+  const handleEditVenue = (venue) => {
+    setSelectedVenue(venue);
+    setShowEditModal(true);
+  };
+
+  const handleSaveVenue = async (venueData) => {
+    const token = user?.token || null;
+    try {
+      let venueId = venueData.id;
+      
+      if (venueData.id) {
+        // Update existing venue
+        const { imageData, ...venuePayload } = venueData;
+        await putData(`Venue/${venueData.id}`, venuePayload, token);
+      } else {
+        // Create new venue
+        const { imageData, ...venuePayload } = venueData;
+        const createdVenue = await postData('Venue', venuePayload, token);
+        venueId = createdVenue.id || createdVenue;
+      }
+
+      // Handle image operations if imageData exists
+      if (venueData.imageData) {
+        // Delete images marked for deletion
+        if (venueData.imageData.imagesToDelete?.length > 0) {
+          await Promise.all(
+            venueData.imageData.imagesToDelete.map(imageId =>
+              deleteData(`Image/${imageId}`, token).catch(err => 
+                console.error(`Failed to delete image ${imageId}:`, err)
+              )
+            )
+          );
+        }
+
+        // Add new images
+        if (venueData.imageData.newImageLinks?.length > 0 && venueId) {
+          await Promise.all(
+            venueData.imageData.newImageLinks.map((link, index) =>
+              postData('Image', {
+                name: `${venueData.name || 'Venue'} - Image ${index + 1}`,
+                link: link,
+                status: 1,
+                venueId: venueId
+              }, token).catch(err => 
+                console.error(`Failed to create image:`, err)
+              )
+            )
+          );
+        }
+      }
+
+      await fetchAllData();
+      setShowEditModal(false);
+      setSelectedVenue(null);
+    } catch (err) {
+      console.error('Error saving venue:', err);
+      throw err;
     }
   };
 
@@ -262,10 +326,7 @@ export const VenueManagement = () => {
           <Button 
             variant="primary" 
             icon={Plus} 
-            onClick={() => {
-              setAlertMessage('Form thêm Venue sẽ được triển khai sau');
-              setShowAlertModal(true);
-            }}
+            onClick={() => handleEditVenue(null)}
           >
             Thêm Venue mới
           </Button>
@@ -355,7 +416,7 @@ export const VenueManagement = () => {
               {/* Venue Header with Image */}
               <div className="ad-venue-card__image-container">
                 <img 
-                  src={venueImages.length > 0 ? venueImages[0].name : 'https://i.pinimg.com/736x/30/e8/00/30e8005d937ed7f5eefd42a31761860e.jpg'} 
+                  src={venueImages.length > 0 ? venueImages[0].link : 'https://i.pinimg.com/736x/30/e8/00/30e8005d937ed7f5eefd42a31761860e.jpg'} 
                   alt={venue.name}
                   className="ad-venue-card__image"
                 />
@@ -370,7 +431,7 @@ export const VenueManagement = () => {
                     {venue.name}
                   </h3>
                   <p className="ad-venue-card__location">
-                    <MapPin size={16} /> {venue.location}
+                    <MapPin size={16} /> {venue.address || venue.location}
                   </p>
                 </div>
               </div>
@@ -471,7 +532,12 @@ export const VenueManagement = () => {
               {/* Actions */}
               <div className="ad-venue-card__actions">
                 <div className="ad-venue-card__button-group">
-                  <Button variant="ghost" size="sm" icon={Edit}>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    icon={Edit}
+                    onClick={() => handleEditVenue(venue)}
+                  >
                     Sửa
                   </Button>
                   <Button 
@@ -515,6 +581,19 @@ export const VenueManagement = () => {
         message={alertMessage}
         onClose={() => setShowAlertModal(false)}
       />
+
+      {showEditModal && (
+        <VenueEditModal
+          venue={selectedVenue}
+          owners={owners}
+          images={images}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedVenue(null);
+          }}
+          onSave={handleSaveVenue}
+        />
+      )}
     </div>
   );
 };
