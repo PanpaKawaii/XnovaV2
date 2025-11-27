@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { UserPlus, Edit, Lock, Unlock, Activity } from 'lucide-react';
+import { UserPlus, Edit, Lock, Unlock, Activity, X } from 'lucide-react';
 import { SearchInput } from '../../../components/admincomponents/UI/SearchInput';
 import { FilterSelect } from '../../../components/admincomponents/UI/FilterSelect';
 import { StatusBadge } from '../../../components/admincomponents/UI/StatusBadge';
 import { Button } from '../../../components/admincomponents/UI/Button';
-import { fetchData } from '../../../../mocks/CallingAPI.js';
+import { fetchData, patchData, putData } from '../../../../mocks/CallingAPI.js';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
+import { ConfirmModal } from '../../../components/ui/ConfirmModal';
+import { AlertModal } from '../../../components/ui/AlertModal';
 import './UserManagement.css';
 
 const normalizeText = (value) => (value ?? '').toString().trim().toLowerCase();
@@ -80,6 +82,24 @@ export const UserManagement = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+
+  // Modal states
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [confirmMessage, setConfirmMessage] = useState('');
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [editForm, setEditForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    status: ''
+  });
+  const [originalForm, setOriginalForm] = useState(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -191,6 +211,182 @@ export const UserManagement = () => {
     { value: 'active', label: 'Hoạt động' },
     { value: 'inactive', label: 'Không hoạt động' }
   ];
+
+  // Handle edit user
+  const handleEditClick = async (customer) => {
+    setEditError(null);
+    setEditLoading(true);
+    setEditModalOpen(true);
+    setSelectedUser(customer);
+    
+    try {
+      // Fetch detailed user info from API
+      const userDetail = await fetchData(`User/${customer.id}`, user?.token);
+      
+      const formData = {
+        name: userDetail?.name || userDetail?.fullName || userDetail?.username || '',
+        email: userDetail?.email || '',
+        phone: userDetail?.phone || userDetail?.phoneNumber || userDetail?.contactPhone || '',
+        status: customer.status
+      };
+      
+      setEditForm(formData);
+      setOriginalForm(formData);
+    } catch (err) {
+      const formData = {
+        name: customer.name || '',
+        email: customer.email || '',
+        phone: customer.phone || '',
+        status: customer.status
+      };
+      
+      setEditForm(formData);
+      setOriginalForm(formData);
+      setEditError('Không thể tải đầy đủ thông tin. Hiển thị dữ liệu cache.');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  const handleEditFormChange = (field, value) => {
+    setEditForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveUser = async () => {
+    if (!selectedUser || !user?.token || !originalForm) return;
+    
+    setEditLoading(true);
+    setEditError(null);
+    
+    try {
+      const token = user.token;
+      
+      // Build payload with only changed fields
+      const changedFields = {};
+      
+      if (editForm.name !== originalForm.name) {
+        changedFields.name = editForm.name;
+      }
+      
+      if (editForm.phone !== originalForm.phone) {
+        changedFields.phoneNumber = editForm.phone;
+      }
+      
+      if (editForm.status !== originalForm.status) {
+        changedFields.status = editForm.status;
+      }
+      
+      // Update User info only if there are changes (using PATCH)
+      if (Object.keys(changedFields).length > 0) {
+        // Fetch current user data to get required fields
+        const currentUser = await fetchData(`User/${selectedUser.id}`, token);
+        
+        // Convert status string to number if changed
+        let statusValue = currentUser.status;
+        if (changedFields.status) {
+          statusValue = changedFields.status === 'active' ? 1 : 0;
+        }
+        
+        // Build complete payload with all required fields
+        const userPayload = {
+          id: currentUser.id || selectedUser.id,
+          name: changedFields.name || currentUser.name || '',
+          email: currentUser.email || editForm.email || '',
+          password: currentUser.password || '',
+          image: currentUser.image || '',
+          role: currentUser.role || 'customer',
+          description: currentUser.description || '',
+          phoneNumber: changedFields.phoneNumber || currentUser.phoneNumber || currentUser.phone || '',
+          point: currentUser.point || 0,
+          type: currentUser.type || 'customer',
+          status: statusValue
+        };
+        
+        console.log('🔍 Sending PATCH request to User API:', {
+          endpoint: `User/${selectedUser.id}`,
+          changedFields: changedFields,
+          fullPayload: userPayload
+        });
+        
+        await patchData(`User/${selectedUser.id}`, userPayload, token);
+        console.log('✅ Updated User successfully');
+        
+        // Reload users
+        const response = await fetchData('User', token);
+        const dataArray = Array.isArray(response) ? response : (response ? [response] : []);
+        const customerRecords = dataArray
+          .filter(hasCustomerRole)
+          .map((record, index) => mapApiUserToCustomer(record, index));
+        
+        setCustomers(customerRecords);
+        
+        setAlertMessage('Cập nhật thông tin khách hàng thành công!');
+        setShowAlertModal(true);
+      } else {
+        setAlertMessage('Không có thay đổi nào để cập nhật.');
+        setShowAlertModal(true);
+      }
+
+      setEditModalOpen(false);
+      setSelectedUser(null);
+      setOriginalForm(null);
+    } catch (err) {
+      setEditError(err.message || 'Lỗi cập nhật thông tin khách hàng');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  const handleToggleStatus = (userId, currentStatus) => {
+    setConfirmMessage(`Bạn có chắc muốn ${currentStatus === 'active' ? 'khóa' : 'mở khóa'} khách hàng này?`);
+    setConfirmAction(() => () => handleToggleStatusInternal(userId, currentStatus));
+    setShowConfirmModal(true);
+  };
+
+  const handleToggleStatusInternal = async (userId, currentStatus) => {
+    if (!user?.token) return;
+    
+    try {
+      setShowConfirmModal(false);
+      
+      // Fetch current user data
+      const currentUser = await fetchData(`User/${userId}`, user.token);
+      const newStatus = currentStatus === 'active' ? 0 : 1;
+      
+      // Build complete payload
+      const userPayload = {
+        id: currentUser.id,
+        name: currentUser.name || '',
+        email: currentUser.email || '',
+        password: currentUser.password || '',
+        image: currentUser.image || '',
+        role: currentUser.role || 'customer',
+        description: currentUser.description || '',
+        phoneNumber: currentUser.phoneNumber || currentUser.phone || '',
+        point: currentUser.point || 0,
+        type: currentUser.type || 'customer',
+        status: newStatus
+      };
+      
+      await patchData(`User/${userId}`, userPayload, user.token);
+      
+      // Reload users
+      const response = await fetchData('User', user.token);
+      const dataArray = Array.isArray(response) ? response : (response ? [response] : []);
+      const customerRecords = dataArray
+        .filter(hasCustomerRole)
+        .map((record, index) => mapApiUserToCustomer(record, index));
+      
+      setCustomers(customerRecords);
+      
+      setAlertMessage('Thay đổi trạng thái thành công!');
+      setShowAlertModal(true);
+    } catch (err) {
+      console.error('Error toggling user status:', err);
+      setAlertMessage('Lỗi thay đổi trạng thái khách hàng');
+      setShowAlertModal(true);
+    }
+  };
 
   return (
     <div className="ad-user-page">
@@ -344,13 +540,14 @@ export const UserManagement = () => {
                   </td>
                   <td className="ad-user-table__td">
                     <div className="ad-user-table__button-group">
-                      <Button variant="ghost" size="sm" icon={Edit}>
+                      <Button variant="ghost" size="sm" icon={Edit} onClick={() => handleEditClick(user)}>
                         Sửa
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
                         icon={user.status === 'active' ? Lock : Unlock}
+                        onClick={() => handleToggleStatus(user.id, user.status)}
                       >
                         {user.status === 'active' ? 'Khóa' : 'Mở'}
                       </Button>
@@ -400,6 +597,107 @@ export const UserManagement = () => {
           </div>
         )}
       </div>
+
+      {/* Edit User Modal */}
+      {editModalOpen && selectedUser && (
+        <div className="ad-owner-modal-overlay" onClick={() => setEditModalOpen(false)}>
+          <div className="ad-owner-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="ad-owner-modal__header">
+              <h2 className="ad-owner-modal__title">Chỉnh sửa thông tin khách hàng</h2>
+              <button 
+                className="ad-owner-modal__close"
+                onClick={() => setEditModalOpen(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="ad-owner-modal__body">
+              {editError && (
+                <div className="ad-owner-modal__error">{editError}</div>
+              )}
+
+              <div className="ad-owner-modal__form">
+                <div className="ad-owner-modal__field">
+                  <label className="ad-owner-modal__label">Tên:</label>
+                  <input
+                    type="text"
+                    className="ad-owner-modal__input"
+                    value={editForm.name}
+                    onChange={(e) => handleEditFormChange('name', e.target.value)}
+                  />
+                </div>
+
+                <div className="ad-owner-modal__field">
+                  <label className="ad-owner-modal__label">Email:</label>
+                  <input
+                    type="email"
+                    className="ad-owner-modal__input"
+                    value={editForm.email}
+                    readOnly
+                    disabled
+                    style={{ cursor: 'not-allowed' }}
+                  />
+                </div>
+
+                <div className="ad-owner-modal__field">
+                  <label className="ad-owner-modal__label">Số điện thoại:</label>
+                  <input
+                    type="text"
+                    className="ad-owner-modal__input"
+                    value={editForm.phone}
+                    onChange={(e) => handleEditFormChange('phone', e.target.value)}
+                  />
+                </div>
+
+                <div className="ad-owner-modal__field">
+                  <label className="ad-owner-modal__label">Trạng thái:</label>
+                  <select
+                    className="ad-owner-modal__select"
+                    value={editForm.status}
+                    onChange={(e) => handleEditFormChange('status', e.target.value)}
+                  >
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="ad-owner-modal__footer">
+              <div className="ad-owner-modal__actions">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setEditModalOpen(false)}
+                  disabled={editLoading}
+                >
+                  Hủy
+                </Button>
+                <Button 
+                  variant="primary" 
+                  onClick={handleSaveUser}
+                  disabled={editLoading}
+                >
+                  {editLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        message={confirmMessage}
+        onConfirm={confirmAction}
+        onCancel={() => setShowConfirmModal(false)}
+      />
+
+      <AlertModal
+        isOpen={showAlertModal}
+        message={alertMessage}
+        onClose={() => setShowAlertModal(false)}
+      />
     </div>
   );
 };
