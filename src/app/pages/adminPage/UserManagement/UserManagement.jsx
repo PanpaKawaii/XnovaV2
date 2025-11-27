@@ -106,7 +106,8 @@ export const UserManagement = () => {
     name: '',
     email: '',
     phone: '',
-    status: ''
+    status: '',
+    userType: ''
   });
   const [originalForm, setOriginalForm] = useState(null);
   const [editLoading, setEditLoading] = useState(false);
@@ -244,7 +245,8 @@ export const UserManagement = () => {
         name: userDetail?.name || userDetail?.fullName || userDetail?.username || '',
         email: userDetail?.email || '',
         phone: userDetail?.phone || userDetail?.phoneNumber || userDetail?.contactPhone || '',
-        status: customer.status
+        status: customer.status,
+        userType: customer.userType
       };
       
       setEditForm(formData);
@@ -254,7 +256,8 @@ export const UserManagement = () => {
         name: customer.name || '',
         email: customer.email || '',
         phone: customer.phone || '',
-        status: customer.status
+        status: customer.status,
+        userType: customer.userType
       };
       
       setEditForm(formData);
@@ -293,6 +296,10 @@ export const UserManagement = () => {
         changedFields.status = editForm.status;
       }
       
+      if (editForm.userType !== originalForm.userType) {
+        changedFields.userType = editForm.userType;
+      }
+      
       // Update User info only if there are changes (using PATCH)
       if (Object.keys(changedFields).length > 0) {
         // Fetch current user data to get required fields
@@ -302,6 +309,13 @@ export const UserManagement = () => {
         let statusValue = currentUser.status;
         if (changedFields.status) {
           statusValue = changedFields.status === 'active' ? 1 : 0;
+        }
+        
+        // Convert userType to proper format (VIP or empty for Regular)
+        let userTypeValue = currentUser.userType || currentUser.type || '';
+        if (changedFields.userType) {
+          // Convert to proper format: VIP -> "VIP", Regular -> empty/null
+          userTypeValue = changedFields.userType === 'VIP' ? 'VIP' : '';
         }
         
         // Build complete payload with all required fields
@@ -315,7 +329,8 @@ export const UserManagement = () => {
           description: currentUser.description || '',
           phoneNumber: changedFields.phoneNumber || currentUser.phoneNumber || currentUser.phone || '',
           point: currentUser.point || 0,
-          type: currentUser.type || 'customer',
+          type: userTypeValue,
+          userType: userTypeValue,
           status: statusValue
         };
         
@@ -690,6 +705,18 @@ export const UserManagement = () => {
                     <option value="inactive">Không hoạt động</option>
                   </select>
                 </div>
+
+                <div className="ad-owner-modal__field">
+                  <label className="ad-owner-modal__label">Loại tài khoản:</label>
+                  <select
+                    className="ad-owner-modal__select"
+                    value={editForm.userType}
+                    onChange={(e) => handleEditFormChange('userType', e.target.value)}
+                  >
+                    <option value="Regular">Regular</option>
+                    <option value="VIP">VIP</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -704,10 +731,14 @@ export const UserManagement = () => {
                 </Button>
                 <Button 
                   variant="primary" 
-                  onClick={handleSaveUser}
+                  onClick={() => {
+                    setConfirmMessage('Bạn có chắc muốn cập nhật thông tin khách hàng này?');
+                    setConfirmAction(() => handleSaveUser);
+                    setShowConfirmModal(true);
+                  }}
                   disabled={editLoading}
                 >
-                  {editLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
+                  {editLoading ? 'Đang lưu...' : 'Xác nhận cập nhật'}
                 </Button>
               </div>
             </div>
