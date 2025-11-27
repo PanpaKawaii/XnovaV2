@@ -8,6 +8,7 @@ import { fetchData, patchData, putData } from '../../../../mocks/CallingAPI.js';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
 import { ConfirmModal } from '../../../components/ui/ConfirmModal';
 import { AlertModal } from '../../../components/ui/AlertModal';
+import { generatePagination } from '../../../utils/pagination.js';
 import './UserManagement.css';
 
 const normalizeText = (value) => (value ?? '').toString().trim().toLowerCase();
@@ -275,6 +276,7 @@ export const UserManagement = () => {
   const handleSaveUser = async () => {
     if (!selectedUser || !user?.token || !originalForm) return;
     
+    setShowConfirmModal(false);
     setEditLoading(true);
     setEditError(null);
     
@@ -297,7 +299,7 @@ export const UserManagement = () => {
       }
       
       if (editForm.userType !== originalForm.userType) {
-        changedFields.userType = editForm.userType;
+        changedFields.type = editForm.userType;
       }
       
       // Update User info only if there are changes (using PATCH)
@@ -311,14 +313,14 @@ export const UserManagement = () => {
           statusValue = changedFields.status === 'active' ? 1 : 0;
         }
         
-        // Convert userType to proper format (VIP or empty for Regular)
-        let userTypeValue = currentUser.userType || currentUser.type || '';
-        if (changedFields.userType) {
-          // Convert to proper format: VIP -> "VIP", Regular -> empty/null
-          userTypeValue = changedFields.userType === 'VIP' ? 'VIP' : '';
+        // Convert type to proper format (VIP or Regular)
+        let typeValue = currentUser.type || 'Regular';
+        if (changedFields.type) {
+          // API expects "VIP" or "Regular" (not empty)
+          typeValue = changedFields.type === 'VIP' ? 'VIP' : 'Regular';
         }
         
-        // Build complete payload with all required fields
+        // Build complete payload with all required fields (API only has 'type', not 'userType')
         const userPayload = {
           id: currentUser.id || selectedUser.id,
           name: changedFields.name || currentUser.name || '',
@@ -329,8 +331,7 @@ export const UserManagement = () => {
           description: currentUser.description || '',
           phoneNumber: changedFields.phoneNumber || currentUser.phoneNumber || currentUser.phone || '',
           point: currentUser.point || 0,
-          type: userTypeValue,
-          userType: userTypeValue,
+          type: typeValue,
           status: statusValue
         };
         
@@ -364,6 +365,8 @@ export const UserManagement = () => {
       setOriginalForm(null);
     } catch (err) {
       setEditError(err.message || 'Lỗi cập nhật thông tin khách hàng');
+      setAlertMessage(err.message || 'Lỗi cập nhật thông tin khách hàng');
+      setShowAlertModal(true);
     } finally {
       setEditLoading(false);
     }
@@ -385,7 +388,7 @@ export const UserManagement = () => {
       const currentUser = await fetchData(`User/${userId}`, user.token);
       const newStatus = currentStatus === 'active' ? 0 : 1;
       
-      // Build complete payload
+      // Build complete payload (API only has 'type', not 'userType')
       const userPayload = {
         id: currentUser.id,
         name: currentUser.name || '',
@@ -396,7 +399,7 @@ export const UserManagement = () => {
         description: currentUser.description || '',
         phoneNumber: currentUser.phoneNumber || currentUser.phone || '',
         point: currentUser.point || 0,
-        type: currentUser.type || 'customer',
+        type: currentUser.type || 'Regular',
         status: newStatus
       };
       
@@ -620,14 +623,20 @@ export const UserManagement = () => {
                 Trước
               </button>
               <div className="ad-user-pagination__pages">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`ad-user-pagination__page ${currentPage === page ? 'ad-user-pagination__page--active' : ''}`}
-                  >
-                    {page}
-                  </button>
+                {generatePagination(currentPage, totalPages).map((page, index) => (
+                  page === '...' ? (
+                    <span key={`ellipsis-${index}`} className="ad-user-pagination__ellipsis">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`ad-user-pagination__page ${currentPage === page ? 'ad-user-pagination__page--active' : ''}`}
+                    >
+                      {page}
+                    </button>
+                  )
                 ))}
               </div>
               <button

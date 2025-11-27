@@ -9,6 +9,7 @@ import { useAuth } from '../../../hooks/AuthContext/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { ConfirmModal } from '../../../components/ui/ConfirmModal';
 import { AlertModal } from '../../../components/ui/AlertModal';
+import { generatePagination } from '../../../utils/pagination.js';
 import './FieldOwnerManagement.css';
 
 // Note: Replaced mock data with real API fetching (User, Field, Booking, BookingSlot, Slot)
@@ -691,14 +692,20 @@ export const FieldOwnerManagement = () => {
                 Trước
               </button>
               <div className="ad-owner-pagination__pages">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`ad-owner-pagination__page ${currentPage === page ? 'ad-owner-pagination__page--active' : ''}`}
-                  >
-                    {page}
-                  </button>
+                {generatePagination(currentPage, totalPages).map((page, index) => (
+                  page === '...' ? (
+                    <span key={`ellipsis-${index}`} className="ad-owner-pagination__ellipsis">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`ad-owner-pagination__page ${currentPage === page ? 'ad-owner-pagination__page--active' : ''}`}
+                    >
+                      {page}
+                    </button>
+                  )
                 ))}
               </div>
               <button

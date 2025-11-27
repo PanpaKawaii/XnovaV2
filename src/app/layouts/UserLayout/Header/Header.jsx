@@ -76,6 +76,7 @@ const Header = ({ onLoginClick }) => {
     { to: "/", icon: Zap, label: t("Home") },
     { to: "/booking", icon: Calendar, label: t("Book Field") },
     { to: "/find-teammates", icon: Users, label: t("Find Teammates") },
+    { to: "/membership", icon: Zap, label: "Get VIP", isVip: true },
   ];
 
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
@@ -93,11 +94,11 @@ const Header = ({ onLoginClick }) => {
           </Link>
 
           <nav className="nav">
-            {navLinks.map(({ to, icon: Icon, label }) => (
+            {navLinks.map(({ to, icon: Icon, label, isVip }) => (
               <Link
                 key={to}
                 to={to}
-                className={`nav-link ${location.pathname === to ? "nav-link--active" : ""}`}
+                className={`nav-link ${isVip ? "nav-link--vip" : ""} ${location.pathname === to ? "nav-link--active" : ""}`}
               >
                 <Icon className="nav-icon" />
                 <span>{label}</span>
@@ -175,12 +176,12 @@ const Header = ({ onLoginClick }) => {
       {isMenuOpen && (
         <div className="mobile-menu">
           <div className="mobile-content">
-            {navLinks.map(({ to, icon: Icon, label }) => (
+            {navLinks.map(({ to, icon: Icon, label, isVip }) => (
               <Link
                 key={to}
                 to={to}
                 onClick={() => setIsMenuOpen(false)}
-                className={`mobile-link ${location.pathname === to ? "mobile-link--active" : ""}`}
+                className={`mobile-link ${isVip ? "mobile-link--vip" : ""} ${location.pathname === to ? "mobile-link--active" : ""}`}
               >
                 <Icon className="mobile-link-icon" />
                 <span>{label}</span>

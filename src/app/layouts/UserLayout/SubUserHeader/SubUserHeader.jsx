@@ -40,15 +40,6 @@ const SubUserHeader = ({ activeTab, onTabChange }) => {
             <span className="tab-label">Reward</span>
           </button>
         </div>
-
-        {localStorage.getItem('ActivateMembership') ?
-          <Link to='/payment-status/?message=Thanh%20toán%20Membership%20thành%20công'>
-            <button className='tab-button active'>ACTIVATE MEMBERSHIP</button>
-          </Link>
-          :
-          <Link to='/membership'>
-            <button className='tab-button active'>MEMBERSHIP</button>
-          </Link>}
       </div>
     </div>
   );

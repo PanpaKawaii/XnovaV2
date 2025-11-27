@@ -126,6 +126,13 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.ad-header__avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .ad-header__avatar-text {

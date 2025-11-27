@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, 
@@ -20,6 +20,7 @@ import {
 import { useTheme } from '../../../hooks/ThemeContext';
 import { useAuth } from '../../../hooks/AuthContext/AuthContext';
 import { ConfirmModal } from '../../../components/ui/ConfirmModal';
+import { fetchData } from '../../../../mocks/CallingAPI';
 import './Sidebar.css';
 import LOGO from "../../../assets/LOGO.png";
 
@@ -33,8 +34,36 @@ const Sidebar = ({
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
-  const [showConfirmModal, setShowConfirmModal] = React.useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  // Fetch user data from API
+  React.useEffect(() => {
+    
+    const token = user?.token || null;
+    console.log('aaaaaaaaa:', user?.token);
+    const loadUserData = async () => {
+      if (user?.id) {
+        try {
+          setLoading(true);
+          const response = await fetchData(`User/${user?.id}`, token);
+          setUserData(response);
+          console.log('Fetched user data:', user);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          setUserData(null);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, [user?.id]);
 
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: Home, path: '/owner/dashboard' },
@@ -121,11 +150,15 @@ const Sidebar = ({
             <div className="mobile-footer">
               <div className="user-info">
                 <div className="avatar">
-                  <User className="avatar-icon" />
+                  {userData?.image ? (
+                    <img src={userData.image} alt="User avatar" className="avatar-image" />
+                  ) : (
+                    <User className="avatar-icon" />
+                  )}
                 </div>
                 <div className="user-details">
-                  <p className="user-name">{user?.name || user?.username || 'Venue Owner'}</p>
-                  <p className="user-email">{user?.email || 'owner@xnova.com'}</p>
+                  <p className="user-name">{userData?.name || user?.name || user?.username || 'Venue Owner'}</p>
+                  <p className="user-email">{userData?.email || user?.email || 'owner@xnova.com'}</p>
                 </div>
               </div>
               <div className="footer-actions">
@@ -181,11 +214,15 @@ const Sidebar = ({
           <div className="sidebar-footer">
             <div className="user-info">
               <div className="avatar">
-                <User className="avatar-icon" />
+                {userData?.image ? (
+                  <img src={userData.image} alt="User avatar" className="avatar-image" />
+                ) : (
+                  <User className="avatar-icon" />
+                )}
               </div>
               <div className="user-details">
-                <p className="user-name">{user?.name || user?.username || 'Venue Owner'}</p>
-                <p className="user-email">{user?.email || 'owner@xnova.com'}</p>
+                <p className="user-name">{userData?.name || user?.name || user?.username || 'Venue Owner'}</p>
+                <p className="user-email">{userData?.email || user?.email || 'owner@xnova.com'}</p>
               </div>
             </div>
             <div className="footer-actions">
