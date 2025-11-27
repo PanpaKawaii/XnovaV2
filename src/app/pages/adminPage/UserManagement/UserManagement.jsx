@@ -61,6 +61,15 @@ const mapApiUserToCustomer = (record, index) => {
   const bookingsArray = Array.isArray(record.bookings) ? record.bookings : null;
   const bookingsCount = bookingsArray ? bookingsArray.length : Number(record.bookingCount ?? record.bookingsCount ?? 0) || 0;
 
+  // Map user type, default to 'Regular' if null/undefined
+  const getUserType = (type) => {
+    if (!type) return 'Regular';
+    const normalized = normalizeText(type);
+    // Handle both "VIP" and "vip" cases
+    if (normalized === 'vip') return 'VIP';
+    return 'Regular';
+  };
+
   return {
     id: String(record.id ?? record.userId ?? record.email ?? `customer-${index}`),
     name: record.name || record.fullName || record.username || 'Khách hàng',
@@ -69,7 +78,8 @@ const mapApiUserToCustomer = (record, index) => {
     image: record.image || record.avatar || record.photo || null,
     registrationDate: pickRegistrationDate(record),
     status: mapUserStatus(record.status ?? record.isActive ?? record.state),
-    bookingsCount
+    bookingsCount,
+    userType: getUserType(record.userType || record.type || record.accountType)
   };
 };
 
@@ -77,6 +87,7 @@ export const UserManagement = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [userTypeFilter, setUserTypeFilter] = useState('');
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -154,14 +165,15 @@ export const UserManagement = () => {
         customer.name.toLowerCase().includes(normalizedSearch) ||
         customer.email.toLowerCase().includes(normalizedSearch);
       const matchesStatus = !statusFilter || customer.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesUserType = !userTypeFilter || customer.userType === userTypeFilter;
+      return matchesSearch && matchesStatus && matchesUserType;
     });
-  }, [customers, searchTerm, statusFilter]);
+  }, [customers, searchTerm, statusFilter, userTypeFilter]);
 
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, statusFilter]);
+  }, [searchTerm, statusFilter, userTypeFilter]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -210,6 +222,11 @@ export const UserManagement = () => {
   const statusOptions = [
     { value: 'active', label: 'Hoạt động' },
     { value: 'inactive', label: 'Không hoạt động' }
+  ];
+
+  const userTypeOptions = [
+    { value: 'Regular', label: 'Regular' },
+    { value: 'VIP', label: 'VIP' }
   ];
 
   // Handle edit user
@@ -420,6 +437,12 @@ export const UserManagement = () => {
           onChange={setStatusFilter}
           placeholder="Lọc theo trạng thái"
         />
+        <FilterSelect
+          options={userTypeOptions}
+          value={userTypeFilter}
+          onChange={setUserTypeFilter}
+          placeholder="Lọc theo loại người dùng"
+        />
         <div className="ad-user-page__actions">
           <Button variant="secondary" size="sm">
             Xuất danh sách
@@ -474,6 +497,7 @@ export const UserManagement = () => {
                 <th className="ad-user-table__th">Số điện thoại</th>
                 {/* Removed 'Ngày đăng ký' column header */}
                 <th className="ad-user-table__th">Số lần đặt</th>
+                <th className="ad-user-table__th">Loại TK</th>
                 <th className="ad-user-table__th">Trạng thái</th>
                 <th className="ad-user-table__th">Hành động</th>
               </tr>
@@ -481,7 +505,7 @@ export const UserManagement = () => {
             <tbody className="ad-user-table__body">
               {error && (
                 <tr>
-                  <td className="ad-user-table__td" colSpan={6} style={{ textAlign: 'center' }}>
+                  <td className="ad-user-table__td" colSpan={7} style={{ textAlign: 'center' }}>
                     Không thể tải danh sách khách hàng. {error}
                   </td>
                 </tr>
@@ -489,7 +513,7 @@ export const UserManagement = () => {
 
               {!error && filteredUsers.length === 0 && (
                 <tr>
-                  <td className="ad-user-table__td" colSpan={6} style={{ textAlign: 'center' }}>
+                  <td className="ad-user-table__td" colSpan={7} style={{ textAlign: 'center' }}>
                     Không có khách hàng phù hợp với bộ lọc hiện tại.
                   </td>
                 </tr>
@@ -533,6 +557,11 @@ export const UserManagement = () => {
                   <td className="ad-user-table__td">
                     <span className="ad-user-table__badge">
                       {user.bookingsCount} lần
+                    </span>
+                  </td>
+                  <td className="ad-user-table__td">
+                    <span className={`ad-user-table__user-type ad-user-table__user-type--${user.userType.toLowerCase()}`}>
+                      {user.userType}
                     </span>
                   </td>
                   <td className="ad-user-table__td">
