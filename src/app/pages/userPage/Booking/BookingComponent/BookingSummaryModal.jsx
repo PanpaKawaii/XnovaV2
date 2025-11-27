@@ -92,9 +92,9 @@ const BookingSummaryModal = ({ isOpen, onClose, venue, preSelectedDate, preSelec
         setVenueSlots(venueSlotsData);
         setBookings(bookingsData);
         setMyVouchers(MyVoucher);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error fetching data:', err);
+      } catch (error) {
+        console.error('Error', error);
+        setError(error);
       } finally {
         setLoading(false);
       }
