@@ -33,25 +33,34 @@ export default function Membership() {
         setLoading(true);
         const token = user?.token || null;
         try {
-            const BookingData = {
-                id: 0,
-                date: new Date().toLocaleDateString('en-CA'),
-                rating: 0,
-                feedback: '',
-                currentDate: new Date(),
-                status: 2,
-                userId: user?.id,
-                fieldId: 45,
-                slotIds: [508],
-            };
-            console.log('BookingData:', BookingData);
+            // const BookingData = {
+            //     id: 0,
+            //     date: new Date().toLocaleDateString('en-CA'),
+            //     rating: 0,
+            //     feedback: '',
+            //     currentDate: new Date(),
+            //     status: 2,
+            //     userId: user?.id,
+            //     fieldId: 45,
+            //     slotIds: [508],
+            // };
+            // console.log('BookingData:', BookingData);
 
-            const result = await postData('Booking', BookingData, token);
+            // const result = await postData('Booking', BookingData, token);
+            // console.log('result', result);
+
+            const result = await fetchData('Booking', token);
             console.log('result', result);
+            const maxBooking = result?.reduce((max, item) =>
+                item.id > max.id ? item : max
+            )?.id;
+            console.log('maxBooking', maxBooking);
 
-            if (result.id) {
+            // if (result.id) {
+            if (maxBooking) {
                 const PaymentData = {
-                    orderId: result.id,
+                    // orderId: result.id,
+                    orderId: maxBooking + 1,
                     amount: amount,
                 };
                 console.log('PaymentData:', PaymentData);
@@ -84,7 +93,11 @@ export default function Membership() {
         { name: 'Nhận voucher siêu hot', type: 'VIP' },
         { name: 'Tặng điểm mỗi tháng', type: 'VIP' },
         { name: 'Hủy đặt sân hoàn tiền', type: 'VIP' },
-    ]
+    ];
+
+    // console.log('Date: ', (new Date().toLocaleString()?.replace(':', '')?.replace(':', '')?.replace(' ', '')?.replace('/', '')?.replace('/', '')) + 'ID' + user?.id);
+    // console.log('Date: ', Number(new Date().toLocaleString()?.replace(':', '')?.replace(':', '')?.replace(' ', '')?.replace('/', '')?.replace('/', '')) * 1000 + Number(user?.id));
+    // console.log('Date: ', (new Date())?.getTime());
 
     return (
         <div className='membership'>
@@ -126,7 +139,7 @@ export default function Membership() {
                             onClick={() => Purchase()}
                             disabled={
                                 loading
-                                // || thisUser?.type == 'VIP'
+                                || thisUser?.type == 'VIP'
                             }
                         >
                             {loading ? 'ĐANG XỬ LÝ...' : (thisUser?.type == 'VIP' ? 'BẠN ĐANG SỬ DỤNG GÓI VIP' : `ĐĂNG KÝ NGAY ${amount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`)}

@@ -84,7 +84,9 @@
                 }
 
                 .btn {
-                    margin: 24px 0 0 0;
+                    display: flex;
+                    justify-content: center;
+                    margin: 32px 0 0 0;
                     width: 100%;
                     padding: 8px 12px;
                     background: linear-gradient(135deg, #a259ff, #a8ff00);

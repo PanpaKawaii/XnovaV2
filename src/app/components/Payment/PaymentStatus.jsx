@@ -59,7 +59,8 @@ export default function PaymentStatus() {
             console.log('result', result);
 
             if (result?.message == 'Cập nhật người dùng thành công.' && type == 'VIP') {
-                localStorage.setItem('ActivateMembership', 'Activated');
+                // localStorage.setItem('ActivateMembership', 'Activated');
+                localStorage.removeItem('ActivateMembership');
             }
             if (result?.message == 'Cập nhật người dùng thành công.' && type == 'Regular') {
                 localStorage.setItem('ActivateMembership', 'ReadyToActivate');
@@ -98,15 +99,18 @@ export default function PaymentStatus() {
                     <div className='icon'><i className='fa-solid fa-spinner' /></div>
                 }
                 <div className='buttons'>
-                    {ActivateMembership &&
+                    {(ActivateMembership && message == 'Thanh toán Membership thành công') &&
                         <>
                             {ActivateMembership == 'ReadyToActivate' &&
                                 <button className='btn-in-payment-status' onClick={() => changeUserType('VIP')} disabled={loading}>
                                     {loading ? 'ĐANG KÍCH HOẠT...' : 'KÍCH HOẠT MEMBERSHIP ✓'}
                                 </button>
                             }
-                            {ActivateMembership == 'Activated' && <button className='btn-in-payment-status' disabled={ActivateMembership == 'Activated'}>BẠN ĐÃ KÍCH HOẠT MEMBERSHIP</button>}
+                            {/* {ActivateMembership == 'Activated' && <button className='btn-in-payment-status' disabled={ActivateMembership == 'Activated'}>BẠN ĐÃ KÍCH HOẠT MEMBERSHIP</button>} */}
                         </>
+                    }
+                    {(!ActivateMembership && thisUser?.type == 'VIP') &&
+                        <button className='btn-in-payment-status' disabled={thisUser?.type == 'VIP'}>BẠN ĐÃ KÍCH HOẠT MEMBERSHIP</button>
                     }
                     <Link to='/'><button className='btn-in-payment-status'>VỀ TRANG CHỦ</button></Link>
                     {/* <div>A</div>
