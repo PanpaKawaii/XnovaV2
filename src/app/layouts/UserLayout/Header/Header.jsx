@@ -76,7 +76,7 @@ const Header = ({ onLoginClick }) => {
     { to: "/", icon: Zap, label: t("Home") },
     { to: "/booking", icon: Calendar, label: t("Book Field") },
     { to: "/find-teammates", icon: Users, label: t("Find Teammates") },
-    { to: "/membership", icon: Zap, label: "Get VIP", isVip: true },
+    { to: localStorage.getItem('ActivateMembership') ? "/payment-status/?message=Thanh%20toán%20Membership%20thành%20công" : "/membership", icon: Zap, label: "Get VIP", isVip: true },
   ];
 
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];

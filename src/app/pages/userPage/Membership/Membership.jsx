@@ -117,7 +117,7 @@ export default function Membership() {
                                 </li>
                             ))}
                         </ul>
-                        <button className='btn' disabled>ĐANG SỬ DỤNG</button>
+                        <button className='btn' disabled>MẶC ĐỊNH</button>
                     </div>
                 </div>
 
