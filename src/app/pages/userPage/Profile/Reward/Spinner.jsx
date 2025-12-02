@@ -85,7 +85,7 @@ export default function Spinner({ items, setResult, setPopupOpen, thisUser, setT
 
     return (
         <div className='spinner-container'>
-            <div className='spinner'>
+            <div className='reward-spinner'>
                 <div
                     className='spinner-wheel'
                     style={{

@@ -9,7 +9,7 @@ export default function RewardResult({ result, PopupOpen, setPopupOpen }) {
                 <i className='fa-solid fa-xmark' onClick={() => setPopupOpen(false)}></i>
                 <div className='title'>CHÚC MỪNG</div>
                 <div>Bạn đã nhận được "{result?.name}"</div>
-                <button className='btn' onClick={() => setPopupOpen(false)}>NHẬN VOUCHER</button>
+                <button className='btn-receive' onClick={() => setPopupOpen(false)}>NHẬN VOUCHER</button>
             </div>
         </div>
     )

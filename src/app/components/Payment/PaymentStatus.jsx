@@ -22,7 +22,9 @@ export default function PaymentStatus() {
             && messageParam == 'Thanh toán Membership thành công'
         ) {
             console.log('Set');
-            if (!localStorage.getItem('ActivateMembership')) localStorage.setItem('ActivateMembership', 'ReadyToActivate');
+            if (!localStorage.getItem('ActivateMembership')) {
+                localStorage.setItem('ActivateMembership', 'ReadyToActivate');
+            }
             console.log('Set DONE');
         }
     }, []);
@@ -59,7 +61,6 @@ export default function PaymentStatus() {
             console.log('result', result);
 
             if (result?.message == 'Cập nhật người dùng thành công.' && type == 'VIP') {
-                // localStorage.setItem('ActivateMembership', 'Activated');
                 localStorage.removeItem('ActivateMembership');
             }
             if (result?.message == 'Cập nhật người dùng thành công.' && type == 'Regular') {
@@ -106,16 +107,14 @@ export default function PaymentStatus() {
                                     {loading ? 'ĐANG KÍCH HOẠT...' : 'KÍCH HOẠT MEMBERSHIP ✓'}
                                 </button>
                             }
-                            {/* {ActivateMembership == 'Activated' && <button className='btn-in-payment-status' disabled={ActivateMembership == 'Activated'}>BẠN ĐÃ KÍCH HOẠT MEMBERSHIP</button>} */}
                         </>
                     }
                     {(!ActivateMembership && thisUser?.type == 'VIP') &&
                         <button className='btn-in-payment-status' disabled={thisUser?.type == 'VIP'}>BẠN ĐÃ KÍCH HOẠT MEMBERSHIP</button>
                     }
                     <Link to='/'><button className='btn-in-payment-status'>VỀ TRANG CHỦ</button></Link>
-                    {/* <div>A</div>
+                    {/* <div>Controll Button</div>
                     <button className='btn-in-payment-status' onClick={() => localStorage.setItem('ActivateMembership', 'ReadyToActivate')}>SET ReadyToActivate</button>
-                    <button className='btn-in-payment-status' onClick={() => localStorage.setItem('ActivateMembership', 'Activated')}>SET Activated</button>
                     <button className='btn-in-payment-status' onClick={() => localStorage.removeItem('ActivateMembership')}>REMOVE</button>
                     <div>Navigate</div>
                     <Link to='/payment-status/?message=Thanh%20toán%20Membership%20thành%20công'><button className='btn-in-payment-status'>Thanh toán Membership thành công</button></Link>
