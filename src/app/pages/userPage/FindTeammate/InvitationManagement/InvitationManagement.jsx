@@ -283,11 +283,16 @@ const InvitationManagement = () => {
       });
       
       // Gọi API PUT với userinvitationId trong URL
-      await putData(`UserInvitation/${userInvitationId}`, updateData, user.token);
+      const response = await putData(`UserInvitation/${userInvitationId}`, updateData, user.token);
+      
+      console.log('PUT Response:', response);
+      
+      // Xử lý response có cấu trúc { message, data }
+      const updatedUserInvitation = response?.data || { ...userInvitation, status: newStatus };
       
       // Update local state
       setAllUserInvitations(prev =>
-        prev.map(ui => ui.id === userInvitationId ? { ...ui, status: newStatus } : ui)
+        prev.map(ui => ui.id === userInvitationId ? updatedUserInvitation : ui)
       );
       
       setParticipants(prev =>

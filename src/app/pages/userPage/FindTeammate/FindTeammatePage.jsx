@@ -261,6 +261,16 @@ export const FindTeammatePage = () => {
         }
       }
       
+      // Sắp xếp theo thời gian tạo mới nhất (ID lớn nhất hoặc createdAt nếu có)
+      filteredData.sort((a, b) => {
+        // Nếu có trường createdAt, sử dụng nó
+        if (a.createdAt && b.createdAt) {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        }
+        // Nếu không có, sử dụng ID (giả định ID lớn hơn = mới hơn)
+        return (b.id || 0) - (a.id || 0);
+      });
+      
       const mapped = filteredData.map(mapInvitationToMatchCard);
       setMatches(mapped);
     } catch (err) {
