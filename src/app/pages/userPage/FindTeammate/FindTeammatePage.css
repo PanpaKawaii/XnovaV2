@@ -551,6 +551,26 @@
   color: var(--error);
 }
 
+.find-teammate-page__match-status--pending {
+  background: rgba(255, 165, 0, 0.1);
+  color: #ff8c00;
+}
+
+[data-theme="dark"] .find-teammate-page__match-status--pending {
+  background: rgba(255, 165, 0, 0.2);
+  color: #ffa500;
+}
+
+.find-teammate-page__match-status--approved {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+[data-theme="dark"] .find-teammate-page__match-status--approved {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
 .find-teammate-page__match-join-btn {
   background: var(--accent-primary);
   color: var(--bg-primary);

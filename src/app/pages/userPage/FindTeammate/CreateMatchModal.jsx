@@ -196,27 +196,26 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
     setError('');
 
     try {
-      // Prepare invitation data theo API documentation Invitation_UserInvitation.md
-      // Date & PostingDate: DateTime format
-      // StartTime & EndTime: string parseable by TimeOnly.Parse (HH:mm:ss hoặc HH:mm)
+      // Prepare invitation data theo API mới
+      // Nếu booked = 1 thì có bookingId, nếu booked = 0 thì bookingId = null
       const invitationData = {
         name: formData.name,
-        booked: formData.booked,
+        booked: formData.booked, // 0 = chưa đặt sân, 1 = đã đặt sân
         joiningCost: parseFloat(formData.joiningCost) || 0,
         totalPlayer: parseInt(formData.totalPlayer),
         availablePlayer: parseInt(formData.availablePlayer),
         standard: formData.standard || '',
         kindOfSport: formData.kindOfSport,
         location: formData.location,
-        longitude: formData.longitude || '',
-        latitude: formData.latitude || '',
-        date: `${formData.date}T00:00:00`, // DateTime format
-        startTime: `${formData.startTime}:00`, // TimeOnly format (HH:mm:ss)
-        endTime: `${formData.endTime}:00`, // TimeOnly format (HH:mm:ss)
-        postingDate: new Date().toISOString(), // DateTime format
+        longitude: formData.longitude || '0',
+        latitude: formData.latitude || '0',
+        date: formData.date, // Format: "YYYY-MM-DD"
+        startTime: formData.startTime, // Format: "HH:mm" hoặc "HH:mm:ss"
+        endTime: formData.endTime, // Format: "HH:mm" hoặc "HH:mm:ss"
+        postingDate: new Date().toISOString().split('T')[0], // Format: "YYYY-MM-DD"
         status: 1, // 1 = active
         userId: user.id,
-        bookingId: formData.bookingId || 0
+        bookingId: formData.booked === 1 ? formData.bookingId : null // null nếu booked = 0, id nếu booked = 1
       };
 
       console.log('Creating invitation with data:', invitationData);
@@ -231,6 +230,7 @@ export const CreateMatchModal = ({ isOpen, onClose, onSuccess }) => {
       }
       onClose();
     } catch (err) {
+      console.log('Creating invitation data error:', invitationData);
       console.error('Error creating match:', err);
       setError(err.message || 'Có lỗi xảy ra khi tạo trận đấu');
     } finally {
