@@ -56,6 +56,9 @@ export const postData = async (endpoint, data, token) => {
 // Hàm gọi API PUT
 export const putData = async (endpoint, data, token) => {
     try {
+        console.log(`PUT Request to: ${apiUrl}${endpoint}`);
+        console.log('Request body:', JSON.stringify(data, null, 2));
+        
         const response = await fetch(`${apiUrl}${endpoint}`, {
             method: 'PUT',
             headers: {
@@ -64,11 +67,26 @@ export const putData = async (endpoint, data, token) => {
             },
             body: JSON.stringify(data),
         });
+        
+        // Log response details for debugging
+        console.log('Response status:', response.status, response.statusText);
+        
         if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
+            // Try to get error details from response body
+            let errorDetails = '';
+            try {
+                const errorText = await response.text();
+                console.error('Error response body:', errorText);
+                errorDetails = errorText ? ` - ${errorText}` : '';
+            } catch (e) {
+                console.error('Could not read error response:', e);
+            }
+            throw new Error(`Error: ${response.statusText}${errorDetails}`);
         }
+        
         // Check if response has content before parsing JSON
         const text = await response.text();
+        console.log('Response text:', text || '(empty)');
         return text ? JSON.parse(text) : null;
     } catch (error) {
         console.error('Error putting data:', error);

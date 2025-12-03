@@ -227,19 +227,63 @@ const InvitationManagement = () => {
   };
 
   // Handle approve/reject participant
+  // userInvitationId: ID của bản ghi UserInvitation (bảng mapping)
+  // newStatus: 0 = pending (chờ duyệt), 1 = approved (đã duyệt), 2 = rejected (từ chối)
   const handleUpdateParticipantStatus = async (userInvitationId, newStatus) => {
     if (!user?.token) return;
     
     try {
+      // Tìm bản ghi UserInvitation hiện tại
       const userInvitation = allUserInvitations.find(ui => ui.id === userInvitationId);
-      if (!userInvitation) return;
+      if (!userInvitation) {
+        console.error('UserInvitation not found:', userInvitationId);
+        return;
+      }
+      
+      // Log raw data để debug
+      console.log('Raw UserInvitation data:', userInvitation);
+      
+      // Chuẩn bị request body theo API specification
+      // PUT api/userinvitation/{userinvitationId}
+      // Đảm bảo joinDate là ISO string format
+      let joinDateISO = userInvitation.joinDate;
+      if (joinDateISO) {
+        // Nếu joinDate là Date object, convert sang ISO string
+        if (joinDateISO instanceof Date) {
+          joinDateISO = joinDateISO.toISOString();
+        } else if (typeof joinDateISO === 'string') {
+          // Nếu là string, đảm bảo format ISO
+          try {
+            joinDateISO = new Date(joinDateISO).toISOString();
+          } catch (e) {
+            console.warn('Invalid joinDate format, using current date:', e);
+            joinDateISO = new Date().toISOString();
+          }
+        }
+      } else {
+        joinDateISO = new Date().toISOString();
+      }
       
       const updateData = {
-        ...userInvitation,
-        status: newStatus
+        joinDate: joinDateISO,
+        status: parseInt(newStatus), // Đảm bảo là số nguyên
+        userId: parseInt(userInvitation.userId), // Đảm bảo là số nguyên
+        invitationId: parseInt(userInvitation.invitationId) // Đảm bảo là số nguyên
       };
       
-      await putData(`userinvitation/${userInvitationId}`, updateData, user.token);
+      console.log('Sending PUT request:', {
+        url: `UserInvitation/${userInvitationId}`,
+        body: updateData,
+        bodyTypes: {
+          joinDate: typeof updateData.joinDate,
+          status: typeof updateData.status,
+          userId: typeof updateData.userId,
+          invitationId: typeof updateData.invitationId
+        }
+      });
+      
+      // Gọi API PUT với userinvitationId trong URL
+      await putData(`UserInvitation/${userInvitationId}`, updateData, user.token);
       
       // Update local state
       setAllUserInvitations(prev =>

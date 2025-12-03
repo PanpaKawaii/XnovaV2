@@ -48,6 +48,8 @@ export const FindTeammatePage = () => {
   const [showCreateMatchModal, setShowCreateMatchModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [matches, setMatches] = useState([]);
+  const [userInvitations, setUserInvitations] = useState([]); // Danh sách các invitation user đã tham gia
+  const [allUserInvitations, setAllUserInvitations] = useState([]); // Tất cả UserInvitations để đếm số người tham gia
   // Pagination for matches list
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
@@ -98,6 +100,14 @@ export const FindTeammatePage = () => {
       'Chuyên nghiệp': 'pro'
     };
 
+    // Đếm số người đã tham gia (UserInvitations có status = 1)
+    const approvedPlayers = allUserInvitations.filter(
+      ui => ui.invitationId === invitation.id && ui.status === 1
+    ).length;
+
+    const totalPlayers = invitation.totalPlayer || 0;
+    const playersNeeded = Math.max(0, totalPlayers - approvedPlayers);
+
     return {
       id: invitation.id,
       title: invitation.name || 'Trận đấu',
@@ -106,8 +116,9 @@ export const FindTeammatePage = () => {
         ? `${invitation.startTime.substring(0, 5)} - ${invitation.endTime.substring(0, 5)}`
         : '',
       location: invitation.location || '',
-      playersNeeded: invitation.availablePlayer || 0,
-      currentPlayers: (invitation.totalPlayer || 0) - (invitation.availablePlayer || 0),
+      playersNeeded: playersNeeded,
+      currentPlayers: approvedPlayers,
+      totalPlayers: totalPlayers,
       skillLevel: standardToSkill[invitation.standard] || 'intermediate',
       price: invitation.joiningCost || 0,
       organizer: {
@@ -122,85 +133,149 @@ export const FindTeammatePage = () => {
     };
   };
 
+  // Hàm fetch tất cả UserInvitations để đếm số người tham gia
+  const fetchAllUserInvitations = async () => {
+    try {
+      const data = await fetchData('UserInvitation', user?.token);
+      const allInvitations = Array.isArray(data) ? data : [];
+      setAllUserInvitations(allInvitations);
+    } catch (err) {
+      console.error('Error fetching all user invitations:', err);
+      setAllUserInvitations([]);
+    }
+  };
+
+  // Hàm fetch UserInvitations để có thể gọi lại khi cần refresh
+  const fetchUserInvitations = async () => {
+    if (!user?.id || !user?.token) {
+      setUserInvitations([]);
+      return;
+    }
+
+    try {
+      const data = await fetchData('UserInvitation', user.token);
+      // Lọc chỉ lấy các invitation của user hiện tại
+      const filtered = Array.isArray(data) 
+        ? data.filter(ui => ui.userId === user.id)
+        : [];
+      setUserInvitations(filtered);
+    } catch (err) {
+      console.error('Error fetching user invitations:', err);
+      setUserInvitations([]);
+    }
+  };
+
+  // Fetch tất cả UserInvitations để đếm số người tham gia cho mỗi trận
   useEffect(() => {
-    // Helper to map UI filters -> API params
-    const levelToStandard = (lvl) => {
-      const m = {
-        beginner: 'Mới bắt đầu',
-        intermediate: 'Trung bình',
-        advanced: 'Nâng cao',
-        pro: 'Chuyên nghiệp',
-      };
-      return m[lvl] || '';
+    let cancelled = false;
+    const loadAllUserInvitations = async () => {
+      await fetchAllUserInvitations();
     };
 
-    // Map time slot to start/end range (server expects HH:mm:ss)
-    const timeSlotToRange = (slot) => {
-      switch (slot) {
-        case 'Buổi sáng (6:00 - 12:00)':
-          return { startTimeFrom: '06:00:00', startTimeTo: '12:00:00' };
-        case 'Buổi chiều (12:00 - 18:00)':
-          return { startTimeFrom: '12:00:00', startTimeTo: '18:00:00' };
-        case 'Buổi tối (18:00 - 22:00)':
-          return { startTimeFrom: '18:00:00', startTimeTo: '22:00:00' };
-        default:
-          return {};
+    loadAllUserInvitations();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Fetch UserInvitations khi user đăng nhập để kiểm tra trạng thái tham gia
+  useEffect(() => {
+    if (!user?.id || !user?.token) {
+      setUserInvitations([]);
+      return;
+    }
+
+    let cancelled = false;
+    const loadUserInvitations = async () => {
+      await fetchUserInvitations();
+    };
+
+    loadUserInvitations();
+    return () => { cancelled = true; };
+  }, [user?.id, user?.token]);
+
+  // Helper to map UI filters -> API params
+  const levelToStandard = (lvl) => {
+    const m = {
+      beginner: 'Mới bắt đầu',
+      intermediate: 'Trung bình',
+      advanced: 'Nâng cao',
+      pro: 'Chuyên nghiệp',
+    };
+    return m[lvl] || '';
+  };
+
+  // Map time slot to start/end range (server expects HH:mm:ss)
+  const timeSlotToRange = (slot) => {
+    switch (slot) {
+      case 'Buổi sáng (6:00 - 12:00)':
+        return { startTimeFrom: '06:00:00', startTimeTo: '12:00:00' };
+      case 'Buổi chiều (12:00 - 18:00)':
+        return { startTimeFrom: '12:00:00', startTimeTo: '18:00:00' };
+      case 'Buổi tối (18:00 - 22:00)':
+        return { startTimeFrom: '18:00:00', startTimeTo: '22:00:00' };
+      default:
+        return {};
+    }
+  };
+
+  // Hàm fetch matches để có thể gọi lại khi cần refresh
+  const fetchMatches = async () => {
+    setLoading(true);
+    try {
+      // Fetch all invitations using CallingAPI (no token needed for GET)
+      // Token is optional for viewing invitations
+      const data = await fetchData('Invitation', user?.token);
+      
+      // Filter data on client side based on selected filters
+      let filteredData = Array.isArray(data) ? data : [];
+      
+      // Filter by search query (name)
+      if (searchQuery?.trim()) {
+        const query = searchQuery.toLowerCase();
+        filteredData = filteredData.filter(inv => 
+          inv.name?.toLowerCase().includes(query)
+        );
       }
-    };
+      
+      // Filter by skill level (standard)
+      if (selectedSkillLevel) {
+        const standard = levelToStandard(selectedSkillLevel);
+        filteredData = filteredData.filter(inv => inv.standard === standard);
+      }
+      
+      // Filter by location
+      if (selectedLocation) {
+        filteredData = filteredData.filter(inv => 
+          inv.location?.includes(selectedLocation)
+        );
+      }
+      
+      // Filter by time slot
+      if (selectedTime) {
+        const timeRange = timeSlotToRange(selectedTime);
+        if (timeRange.startTimeFrom && timeRange.startTimeTo) {
+          filteredData = filteredData.filter(inv => {
+            if (!inv.startTime) return false;
+            return inv.startTime >= timeRange.startTimeFrom && 
+                   inv.startTime <= timeRange.startTimeTo;
+          });
+        }
+      }
+      
+      const mapped = filteredData.map(mapInvitationToMatchCard);
+      setMatches(mapped);
+    } catch (err) {
+      console.error('Failed to load invitations with filters', err);
+      setMatches([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     let cancelled = false;
     let timer;
     const fetchWithFilters = async () => {
-      setLoading(true);
-      try {
-        // Fetch all invitations using CallingAPI (no token needed for GET)
-        // Token is optional for viewing invitations
-        const data = await fetchData('Invitation', user?.token);
-        
-        // Filter data on client side based on selected filters
-        let filteredData = Array.isArray(data) ? data : [];
-        
-        // Filter by search query (name)
-        if (searchQuery?.trim()) {
-          const query = searchQuery.toLowerCase();
-          filteredData = filteredData.filter(inv => 
-            inv.name?.toLowerCase().includes(query)
-          );
-        }
-        
-        // Filter by skill level (standard)
-        if (selectedSkillLevel) {
-          const standard = levelToStandard(selectedSkillLevel);
-          filteredData = filteredData.filter(inv => inv.standard === standard);
-        }
-        
-        // Filter by location
-        if (selectedLocation) {
-          filteredData = filteredData.filter(inv => 
-            inv.location?.includes(selectedLocation)
-          );
-        }
-        
-        // Filter by time slot
-        if (selectedTime) {
-          const timeRange = timeSlotToRange(selectedTime);
-          if (timeRange.startTimeFrom && timeRange.startTimeTo) {
-            filteredData = filteredData.filter(inv => {
-              if (!inv.startTime) return false;
-              return inv.startTime >= timeRange.startTimeFrom && 
-                     inv.startTime <= timeRange.startTimeTo;
-            });
-          }
-        }
-        
-        const mapped = filteredData.map(mapInvitationToMatchCard);
-        if (!cancelled) setMatches(mapped);
-      } catch (err) {
-        console.error('Failed to load invitations with filters', err);
-        if (!cancelled) setMatches([]);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+      await fetchMatches();
     };
 
     // Debounce to avoid spamming API when typing search
@@ -233,9 +308,17 @@ export const FindTeammatePage = () => {
         joinDate: new Date().toISOString()
       };
 
-      await postData('UserInvitation', userInvitationData, user.token);
+      const newUserInvitation = await postData('UserInvitation', userInvitationData, user.token);
       
       console.log('Joined match successfully - waiting for approval');
+      
+      // Refresh dữ liệu để cập nhật trạng thái mới
+      await Promise.all([
+        fetchUserInvitations(),
+        fetchAllUserInvitations(),
+        fetchMatches()
+      ]);
+      
       setAlertPopup({
         isOpen: true,
         type: 'success',
@@ -257,6 +340,16 @@ export const FindTeammatePage = () => {
         onConfirm: null
       });
     }
+  };
+
+  // Helper function để kiểm tra user đã tham gia trận nào và trạng thái
+  const getUserInvitationStatus = (matchId) => {
+    const userInv = userInvitations.find(ui => ui.invitationId === matchId);
+    if (!userInv) return null;
+    return {
+      status: userInv.status, // 0 = pending, 1 = approved, 2 = rejected
+      data: userInv
+    };
   };
 
   const players = [
@@ -541,6 +634,11 @@ export const FindTeammatePage = () => {
             <div className="find-teammate-page__matches-list">
               {paginatedMatches.map((match, index) => {
                 const SkillIcon = getSkillIcon(match.skillLevel);
+                const userInvStatus = getUserInvitationStatus(match.id);
+                const isJoined = !!userInvStatus;
+                const isPending = userInvStatus?.status === 0;
+                const isApproved = userInvStatus?.status === 1;
+                
                 return (
                   <Card 
                     key={match.id} 
@@ -565,7 +663,7 @@ export const FindTeammatePage = () => {
                           </div>
                           <div className="find-teammate-page__match-detail">
                             <Users size={16} className="find-teammate-page__match-detail-icon" />
-                            <span>{match.currentPlayers}/{match.totalPlayers} cầu thủ</span>
+                            <span>{match.currentPlayers}/{match.totalPlayers || 22} cầu thủ</span>
                           </div>
                         </div>
                       </div>
@@ -599,20 +697,24 @@ export const FindTeammatePage = () => {
                       <div className="find-teammate-page__match-actions">
                         <div className={`find-teammate-page__match-status ${
                           match.playersNeeded === 0 
-                            ? 'find-teammate-page__match-status--full' 
+                            ? 'find-teammate-page__match-status--full'
+                            : isPending
+                            ? 'find-teammate-page__match-status--pending'
+                            : isApproved
+                            ? 'find-teammate-page__match-status--approved' 
                             : 'find-teammate-page__match-status--available'
                         }`}>
-                          {match.playersNeeded === 0 ? 'Đã đủ' : `${match.playersNeeded} chỗ trống`}
+                          {isPending ? 'Đang chờ duyệt' : isApproved ? 'Đã tham gia' : match.playersNeeded === 0 ? 'Đã đủ' : `${match.playersNeeded} chỗ trống`}
                         </div>
                         <Button
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedMatch(match);
                           }}
-                          disabled={match.playersNeeded === 0}
+                          disabled={match.playersNeeded === 0 || isJoined}
                           className="find-teammate-page__match-join-btn"
                         >
-                          Tham gia trận đấu
+                          {isPending ? 'Đang chờ duyệt' : isApproved ? 'Đã tham gia' : 'Tham gia trận đấu'}
                         </Button>
                       </div>
                     </div>
@@ -739,7 +841,13 @@ export const FindTeammatePage = () => {
       </div>
 
       {/* Match Details Modal */}
-      {selectedMatch && (
+      {selectedMatch && (() => {
+        const userInvStatus = getUserInvitationStatus(selectedMatch.id);
+        const isJoined = !!userInvStatus;
+        const isPending = userInvStatus?.status === 0;
+        const isApproved = userInvStatus?.status === 1;
+        
+        return (
         <Modal
           isOpen={!!selectedMatch}
           onClose={() => setSelectedMatch(null)}
@@ -780,7 +888,7 @@ export const FindTeammatePage = () => {
                 <Users className="find-teammate-page__modal-detail-icon" size={20} />
                 <div>
                   <div className="find-teammate-page__modal-detail-label">Cầu thủ</div>
-                  <div className="find-teammate-page__modal-detail-value">{selectedMatch.currentPlayers}/22</div>
+                  <div className="find-teammate-page__modal-detail-value">{selectedMatch.currentPlayers}/{selectedMatch.totalPlayers || 22}</div>
                 </div>
               </div>
             </div>
@@ -816,10 +924,10 @@ export const FindTeammatePage = () => {
               <Button 
                 size="lg" 
                 glow
-                disabled={selectedMatch.playersNeeded === 0}
+                disabled={selectedMatch.playersNeeded === 0 || isJoined}
                 onClick={() => handleJoinMatch(selectedMatch)}
               >
-                {selectedMatch.playersNeeded === 0 ? 'Đã đủ' : 'Tham gia trận đấu'}
+                {isPending ? 'Đang chờ duyệt' : isApproved ? 'Đã tham gia' : selectedMatch.playersNeeded === 0 ? 'Đã đủ' : 'Tham gia trận đấu'}
               </Button>
               <Button variant="outline" size="lg">
                 <MessageCircle size={20} />
@@ -828,7 +936,8 @@ export const FindTeammatePage = () => {
             </div>
           </div>
         </Modal>
-      )}
+        );
+      })()}
 
       {/* Player Profile Modal */}
       {showPlayerProfile && (
@@ -900,8 +1009,15 @@ export const FindTeammatePage = () => {
       <CreateMatchModal
         isOpen={showCreateMatchModal}
         onClose={() => setShowCreateMatchModal(false)}
-        onSuccess={(newMatch) => {
+        onSuccess={async (newMatch) => {
           console.log('Match created successfully:', newMatch);
+          
+          // Refresh dữ liệu để hiển thị trận đấu mới tạo
+          await Promise.all([
+            fetchAllUserInvitations(),
+            fetchMatches()
+          ]);
+          
           setAlertPopup({
             isOpen: true,
             type: 'success',
@@ -909,12 +1025,6 @@ export const FindTeammatePage = () => {
             message: 'Trận đấu đã được tạo thành công!',
             onConfirm: null
           });
-          
-          // Add new match to the list
-          if (newMatch) {
-            const mappedMatch = mapInvitationToMatchCard(newMatch);
-            setMatches((prev) => [mappedMatch, ...prev]);
-          }
         }}
       />
 
