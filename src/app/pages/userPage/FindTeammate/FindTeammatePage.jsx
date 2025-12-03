@@ -91,7 +91,7 @@ export const FindTeammatePage = () => {
   ];
 
   // Helper function to map Invitation API data to match card format
-  const mapInvitationToMatchCard = (invitation) => {
+  const mapInvitationToMatchCard = (invitation, userInvitationsList = allUserInvitations) => {
     // Map standard to skill level
     const standardToSkill = {
       'Mới bắt đầu': 'beginner',
@@ -101,7 +101,7 @@ export const FindTeammatePage = () => {
     };
 
     // Đếm số người đã tham gia (UserInvitations có status = 1)
-    const approvedPlayers = allUserInvitations.filter(
+    const approvedPlayers = userInvitationsList.filter(
       ui => ui.invitationId === invitation.id && ui.status === 1
     ).length;
 
@@ -221,12 +221,18 @@ export const FindTeammatePage = () => {
   const fetchMatches = async () => {
     setLoading(true);
     try {
-      // Fetch all invitations using CallingAPI (no token needed for GET)
-      // Token is optional for viewing invitations
-      const data = await fetchData('Invitation', user?.token);
+      // Fetch song song để tăng tốc độ
+      const [allUserInvData, invitationData] = await Promise.all([
+        fetchData('UserInvitation', user?.token),
+        fetchData('Invitation', user?.token)
+      ]);
+      
+      // Cập nhật allUserInvitations
+      const allInvitations = Array.isArray(allUserInvData) ? allUserInvData : [];
+      setAllUserInvitations(allInvitations);
       
       // Filter data on client side based on selected filters
-      let filteredData = Array.isArray(data) ? data : [];
+      let filteredData = Array.isArray(invitationData) ? invitationData : [];
       
       // Filter by search query (name)
       if (searchQuery?.trim()) {
@@ -271,7 +277,7 @@ export const FindTeammatePage = () => {
         return (b.id || 0) - (a.id || 0);
       });
       
-      const mapped = filteredData.map(mapInvitationToMatchCard);
+      const mapped = filteredData.map(inv => mapInvitationToMatchCard(inv, allInvitations));
       setMatches(mapped);
     } catch (err) {
       console.error('Failed to load invitations with filters', err);
